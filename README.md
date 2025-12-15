@@ -12,7 +12,7 @@ Fantasy football has inherent randomness. Your record doesn't just depend on how
 To quantify exactly how unlucky my season was, I created a Monte Carlo simulation that:
 
 1. Preserves actual performance: Uses the real weekly scores each team achieved throughout the season
-2.Randomizes matchups: Generates thousands of alternative valid schedules using a round-robin algorithm
+2. Randomizes matchups: Generates thousands of alternative valid schedules using a round-robin algorithm
 3. Simulates outcomes: For each random schedule, determines which teams would have made the playoffs
 4. Calculates probabilities: Tracks how often each team makes the playoffs across all simulations
 
