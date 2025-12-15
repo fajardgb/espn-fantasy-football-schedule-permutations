@@ -5,7 +5,7 @@ In my 2025 fantasy football season, I experienced a frustrating outcome: despite
 ![output_example](./output_example/league12345_year2025/league12345_year2025_playoff_probabilities.png)
 
 ## Understanding schedule luck
-Fantasy football has inherent randommnes. Your record doesn't just depend on how well your team performs - it also depends on when you face each opponent. You could have a great week but lose to the one person who had an even better week. Conversely, you could squeak by with a mediocre score because you happened to face the lowest-scoring team that week.
+Fantasy football has inherent randomness. Your record doesn't just depend on how well your team performs - it also depends on when you face each opponent. You could have a great week but lose to the one person who had an even better week. Conversely, you could squeak by with a mediocre score because you happened to face the lowest-scoring team that week.
 
 ## The simulation approach
 
