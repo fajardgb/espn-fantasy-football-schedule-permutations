@@ -339,11 +339,11 @@ def create_luck_scatterplot(results_df: pd.DataFrame, league_id: str, year: int,
             ha='left', va='top', rotation=45, rotation_mode='anchor')
 
     # Region labels: black text in a box outlined with the region's color
-    ax.text(3, 97, 'LUCKY\nWon more than schedule-neutral', color=text_primary,
+    ax.text(3, 97, 'LUCKY\nWon more than expected', color=text_primary,
             fontsize=8.5, fontweight='bold', ha='left', va='top',
             bbox=dict(boxstyle='square,pad=0.4', facecolor=surface,
                       edgecolor=lucky_green, linewidth=2))
-    ax.text(97, 3, 'UNLUCKY\nWon fewer than schedule-neutral', color=text_primary,
+    ax.text(97, 3, 'UNLUCKY\nWon fewer than expected', color=text_primary,
             fontsize=8.5, fontweight='bold', ha='right', va='bottom',
             bbox=dict(boxstyle='square,pad=0.4', facecolor=surface,
                       edgecolor=unlucky_red, linewidth=2))
