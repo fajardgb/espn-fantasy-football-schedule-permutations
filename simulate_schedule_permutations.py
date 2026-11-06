@@ -58,9 +58,10 @@ class ScheduleGenerator:
         remaining_weeks = self.n_weeks - (self.n_teams - 1)
         for week in range(remaining_weeks):
             schedule.append(schedule[week])
-        
-        return schedule
-    
+
+        # Season may be shorter than a full round-robin (e.g. still in progress)
+        return schedule[:self.n_weeks]
+
     def validate_schedule(self, schedule: List[List[Tuple[str, str]]]) -> bool:
         """
         Validate that each team plays every other team exactly once

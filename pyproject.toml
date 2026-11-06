@@ -1,0 +1,25 @@
+[project]
+name = "espn-fantasy-football-schedule-permutations"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "GabeF", email = "gabriel.j.fajardo.gr@dartmouth.edu" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "dotenv>=0.9.9",
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
+    "pandas>=3.1.1",
+    "pathlib>=1.0.1",
+    "requests>=2.34.2",
+    "typing>=3.10.0.0",
+]
+
+[project.scripts]
+espn-fantasy-football-schedule-permutations = "espn_fantasy_football_schedule_permutations:main"
+
+[build-system]
+requires = ["uv_build>=0.12.17,<0.13.0"]
+build-backend = "uv_build"
