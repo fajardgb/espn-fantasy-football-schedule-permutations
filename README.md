@@ -12,10 +12,24 @@ Fantasy football has inherent randomness. Your record doesn't just depend on how
 To quantify exactly how unlucky my season was, I created a Monte Carlo simulation that:
 
 1. Preserves actual performance: Uses the real weekly scores each team achieved throughout the season
-2. Randomizes matchups: Generates thousands of alternative valid schedules using a round-robin algorithm
-3. Simulates outcomes: For each random schedule, determines which teams would have made the playoffs
+2. Randomizes matchups: Generates thousands of alternative schedules by randomly reassigning teams to the slots of the league's real schedule, so every simulated season keeps the league's actual format (division games, repeat matchups, byes)
+3. Simulates outcomes: For each random schedule, applies the league's playoff rules to determine which teams would have made the playoffs
 4. Calculates probabilities: Tracks how often each team makes the playoffs across all simulations
 5. Measures expected wins: Tracks each team's average win percentage across all simulated schedules, i.e. the record a team "should" have had with a schedule-neutral draw
+
+## League formats
+
+The league's format and rules are read from ESPN, so the simulation adapts to:
+
+- **Any league size, odd or even:** in odd leagues one team has a bye each week. Byes don't count as games, so they don't affect win percentage.
+- **Divisions:** teams are reassigned to schedule slots completely at random, so a team can land in either division. Being placed in a tough or weak division is treated as part of the luck being measured.
+- **Playoff rules:** the number of playoff teams comes from the league settings. Each division winner gets a spot, then the remaining spots go to the best records in the league. Teams are ranked by win percentage, with total points scored as the tiebreaker. This matches the playoff seeds ESPN assigns.
+- **Ties:** equal weekly scores count as a tie (half a win) for both teams.
+- **Seasons in progress:** only completed weeks are simulated, and playoff weeks are never counted as regular-season games.
+
+If the schedule and settings files are missing (for example, data fetched with an older version of this tool), the simulation falls back to random round-robin schedules with no divisions and 6 playoff teams.
+
+Not yet modeled: playoff tiebreakers other than total points scored, and matchup tie rules other than allowing ties. The simulation prints a warning if a league uses one.
 
 ## Measuring luck
 
@@ -23,7 +37,7 @@ Playoff odds show *what* the schedule cost me, but not *how much* luck was invol
 
 ![luck_scatterplot](./output_example/league12345_year2025/league12345_year2025_luck_scatterplot.png)
 
-- **Expected Win % (x-axis):** a team's average win percentage across all simulated schedules
+- **Expected Win % (x-axis):** a team's average win percentage across all simulated schedules (ties count as half a win)
 - **Actual Win % (y-axis):** the team's real record (ties count as half a win)
 - **Luck Index (color):** actual minus expected win %, in percentage points, from red (unlucky) through yellow (neutral) to green (lucky)
 
@@ -67,7 +81,7 @@ To find these credentials:
 # Usage
 If you installed with pip, drop the `uv run` prefix from the commands below.
 
-1. Fetch league data
+1. Fetch league data (weekly scores, schedule, and league settings)
 ```
 uv run python get_espn_league_data.py
 ```
@@ -76,6 +90,14 @@ uv run python get_espn_league_data.py
 uv run python simulate_schedule_permutations.py
 ```
 
+## Running the tests
+```
+uv sync
+uv run pytest
+```
+With pip, install pytest first (`pip install pytest`), then run `pytest`.
+The tests cover league sizes from 4 to 16 teams (odd and even), different season lengths, divisions, ties, and parsing ESPN API responses. API tests use anonymized copies of real ESPN responses in `tests/fixtures/`, so no credentials or network access are needed.
+
 ## Outputs
 Everything is written to `output/league<LEAGUE_ID>_year<YEAR>/`:
 
@@ -83,7 +105,9 @@ Everything is written to `output/league<LEAGUE_ID>_year<YEAR>/`:
 |------|-------------|
 | `league<ID>_year<YEAR>_playoff_probabilities.png` | Bar chart of each team's playoff probability |
 | `league<ID>_year<YEAR>_luck_scatterplot.png` | Actual vs. expected win % scatterplot, colored by luck index |
-| `data/fantasy_scores_wide_league<ID>_y<YEAR>.csv` | Weekly scores fetched from ESPN (input to the simulation) |
+| `data/fantasy_scores_wide_league<ID>_y<YEAR>.csv` | Each team's ESPN team ID, division, record, and weekly scores (completed regular-season weeks only) |
+| `data/schedule_league<ID>_y<YEAR>.csv` | The league's full regular-season schedule, including weeks not yet played |
+| `data/league_settings_league<ID>_y<YEAR>.json` | League rules used by the simulation: playoff team count, playoff tiebreaker, season length, tie rule, and divisions |
 | `data/playoff_probabilities_league<ID>_y<YEAR>.csv` | Per-team simulation results |
 
 The results CSV contains these columns:
@@ -91,12 +115,12 @@ The results CSV contains these columns:
 | Column | Description |
 |--------|-------------|
 | `Player` | Team owner name |
-| `Actual Record` | Real W-L record |
+| `Actual Record` | Real W-L (or W-L-T) record |
 | `Points For` | Total points scored |
 | `Actual Win %` | Win percentage from the real record |
-| `Expected Win %` | Average win percentage across all simulated schedules |
+| `Expected Win %` | Average win percentage across all simulated schedules (ties count as half a win) |
 | `Luck (pp)` | Actual minus expected win %, in percentage points |
 | `Playoff %` | Share of simulated schedules in which the team made the playoffs |
 
-See [`output_example/`](./output_example/league12345_year2025/) for a full set of example outputs.
+See [`output_example/`](./output_example/league12345_year2025/) for a full set of example outputs. The example data predates the schedule and settings files, so it uses the round-robin fallback.
 
