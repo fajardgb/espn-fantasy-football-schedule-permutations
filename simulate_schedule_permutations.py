@@ -5,10 +5,11 @@ This module simulates random schedules to calculate playoff probabilities
 for each team in a fantasy football league.
 """
 
+import json
 import os
 import random
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap, Normalize
@@ -17,6 +18,19 @@ from matplotlib.transforms import Bbox
 import numpy as np
 import pandas as pd
 from dotenv import load_dotenv
+
+from get_espn_league_data import league_data_paths
+
+
+def games_played(record: Dict[str, float]) -> int:
+    """Games in a simulated record (wins + losses + ties)."""
+    return record['wins'] + record['losses'] + record.get('ties', 0)
+
+
+def win_pct(record: Dict[str, float]) -> float:
+    """Win fraction of a simulated record; ties count as half a win."""
+    games = games_played(record)
+    return (record['wins'] + 0.5 * record.get('ties', 0)) / games if games else 0.0
 
 
 class ScheduleGenerator:
@@ -33,10 +47,17 @@ class ScheduleGenerator:
         self.teams = teams.copy()
         self.n_teams = len(teams)
         self.n_weeks = n_weeks
+        # Weeks in one full round-robin. Odd leagues need one extra week so
+        # that every team gets exactly one bye per cycle.
+        self.cycle_length = self.n_teams - 1 if self.n_teams % 2 == 0 else self.n_teams
         
     def generate_schedule(self) -> List[List[Tuple[str, str]]]:
         """
         Generate a single round-robin schedule.
+
+        Odd leagues are padded with a placeholder bye slot (the standard circle
+        method), so each week exactly one team sits out, and every team gets
+        exactly one bye per cycle. Bye matchups are dropped from the schedule.
         
         Returns:
             List of weeks, where each week contains matchup tuples
@@ -44,31 +65,43 @@ class ScheduleGenerator:
         schedule = []
         teams = self.teams.copy()
         random.shuffle(teams)
+        if self.n_teams % 2 == 1:
+            teams.append(None)  # bye slot
+        n_slots = len(teams)
         
-        # Generate round-robin for n_teams - 1 weeks
-        for week in range(self.n_teams - 1):
+        # Generate one full round-robin cycle
+        for week in range(self.cycle_length):
             week_matches = []
-            for i in range(self.n_teams // 2):
+            for i in range(n_slots // 2):
                 team1 = teams[i]
-                team2 = teams[self.n_teams - 1 - i]
-                week_matches.append((team1, team2))
+                team2 = teams[n_slots - 1 - i]
+                if team1 is not None and team2 is not None:
+                    week_matches.append((team1, team2))
             schedule.append(week_matches)
             
             # Rotate teams (keep first fixed)
             teams = [teams[0]] + [teams[-1]] + teams[1:-1]
         
         # Repeat early weeks for remaining schedule
-        remaining_weeks = self.n_weeks - (self.n_teams - 1)
+        remaining_weeks = self.n_weeks - self.cycle_length
         for week in range(remaining_weeks):
             schedule.append(schedule[week])
 
         # Season may be shorter than a full round-robin (e.g. still in progress)
         return schedule[:self.n_weeks]
 
+    def generate(self) -> Tuple[List[List[Tuple[str, str]]], Dict[str, str]]:
+        """Generate a schedule; round-robin leagues have no divisions."""
+        return self.generate_schedule(), {}
+
     def validate_schedule(self, schedule: List[List[Tuple[str, str]]]) -> bool:
         """
-        Validate that each team plays every other team exactly once
-        in the first n_teams - 1 weeks.
+        Validate a schedule:
+        - each week, every team plays at most once (odd leagues: exactly one bye)
+        - within each round-robin cycle, no pair of teams meets twice
+        - every complete cycle pairs each team with every other team exactly once
+
+        Partial cycles (e.g. a season still in progress) are allowed.
         
         Args:
             schedule: Schedule to validate
@@ -76,35 +109,97 @@ class ScheduleGenerator:
         Returns:
             True if schedule is valid
         """
-        for team in self.teams:
-            opponents = set()
-            for week_idx in range(self.n_teams - 1):
-                for match in schedule[week_idx]:
-                    if team in match:
-                        opponent = match[1] if match[0] == team else match[0]
-                        opponents.add(opponent)
-            
-            if len(opponents) != self.n_teams - 1:
+        teams = set(self.teams)
+        expected_byes = self.n_teams % 2
+        for week in schedule:
+            playing = [team for match in week for team in match]
+            if len(playing) != len(set(playing)) or not set(playing) <= teams:
+                return False
+            if len(teams) - len(playing) != expected_byes:
+                return False
+
+        all_pairs = self.n_teams * (self.n_teams - 1) // 2
+        for start in range(0, len(schedule), self.cycle_length):
+            cycle = schedule[start:start + self.cycle_length]
+            pairs = [frozenset(match) for week in cycle for match in week]
+            if len(pairs) != len(set(pairs)):
+                return False
+            if len(cycle) == self.cycle_length and len(pairs) != all_pairs:
                 return False
         return True
+
+
+class TemplateScheduleGenerator:
+    """
+    Generates schedules by randomly assigning teams to the slots of the
+    league's real schedule.
+
+    Every simulated season has exactly the real schedule's structure (division
+    games, repeat matchups, byes). Assignment is fully random, so a team can
+    land in any slot, and takes on that slot's division: being in a tough or
+    weak division is part of the luck being measured.
+    """
+
+    def __init__(self, template: List[List[Tuple]], slot_divisions: Dict,
+                 teams: List[str], n_weeks: int):
+        """
+        Args:
+            template: Real schedule as weeks of (slot, slot) matchups, week 1 first
+            slot_divisions: Division of each slot (slots are the real team IDs)
+            teams: Team names to assign to slots (one per slot)
+            n_weeks: Number of weeks to simulate (weeks played so far)
+        """
+        self.slots = sorted(slot_divisions)
+        if len(teams) != len(self.slots):
+            raise ValueError(
+                f"Schedule has {len(self.slots)} teams but scores have {len(teams)}"
+            )
+        if n_weeks > len(template):
+            raise ValueError(f"Schedule has {len(template)} weeks but {n_weeks} were played")
+        self.template = template[:n_weeks]
+        self.slot_divisions = slot_divisions
+        self.teams = list(teams)
+        self.n_weeks = n_weeks
+
+    def generate(self) -> Tuple[List[List[Tuple[str, str]]], Dict[str, str]]:
+        """
+        Returns:
+            (schedule, divisions): weekly matchups by team name, and each
+            team's division for this simulated season
+        """
+        shuffled = self.teams.copy()
+        random.shuffle(shuffled)
+        team_in_slot = dict(zip(self.slots, shuffled))
+
+        schedule = [[(team_in_slot[a], team_in_slot[b]) for a, b in week]
+                    for week in self.template]
+        divisions = {team_in_slot[slot]: self.slot_divisions[slot] for slot in self.slots}
+        return schedule, divisions
 
 
 class PlayoffSimulator:
     """Simulates playoff outcomes based on different schedules."""
     
-    def __init__(self, scores_df: pd.DataFrame, n_playoff_teams: int = 6):
+    def __init__(self, scores_df: pd.DataFrame, n_playoff_teams: int = 6,
+                 generator=None):
         """
         Initialize the simulator.
         
         Args:
             scores_df: DataFrame with weekly scores (Player, Record, W1, W2, ...)
             n_playoff_teams: Number of teams that make playoffs
+            generator: Schedule generator with a generate() -> (schedule, divisions)
+                method. Defaults to a random round-robin with no divisions.
         """
         self.scores_df = scores_df
         self.n_playoff_teams = n_playoff_teams
         self.teams = scores_df['Player'].tolist()
         self.week_columns = [col for col in scores_df.columns if col.startswith('W')]
         self.n_weeks = len(self.week_columns)
+        self.generator = generator or ScheduleGenerator(self.teams, self.n_weeks)
+        self.season_points = dict(zip(self.teams, scores_df[self.week_columns].sum(axis=1)))
+        # Weekly scores per team, for fast lookup inside the simulation loop
+        self.weekly_scores = dict(zip(self.teams, scores_df[self.week_columns].to_numpy().tolist()))
     
     def simulate_schedule(self, schedule: List[List[Tuple[str, str]]]) -> Dict[str, Dict[str, float]]:
         """
@@ -114,48 +209,65 @@ class PlayoffSimulator:
             schedule: Weekly matchups
             
         Returns:
-            Dictionary of team records with wins, losses, and points_for
+            Dictionary of team records with wins, losses, ties, and points_for.
+            Equal scores are a tie for both teams.
+            points_for is the full season total (bye weeks included), which
+            doesn't depend on the schedule.
         """
         team_records = {
-            team: {'wins': 0, 'losses': 0, 'points_for': 0.0}
+            team: {'wins': 0, 'losses': 0, 'ties': 0, 'points_for': self.season_points[team]}
             for team in self.teams
         }
         
         for week_idx, week_matchups in enumerate(schedule):
-            week_col = self.week_columns[week_idx]
-            
             for team1, team2 in week_matchups:
-                score1 = self.scores_df[self.scores_df['Player'] == team1][week_col].values[0]
-                score2 = self.scores_df[self.scores_df['Player'] == team2][week_col].values[0]
-                
-                team_records[team1]['points_for'] += score1
-                team_records[team2]['points_for'] += score2
+                score1 = self.weekly_scores[team1][week_idx]
+                score2 = self.weekly_scores[team2][week_idx]
                 
                 if score1 > score2:
                     team_records[team1]['wins'] += 1
                     team_records[team2]['losses'] += 1
-                else:
+                elif score2 > score1:
                     team_records[team2]['wins'] += 1
                     team_records[team1]['losses'] += 1
+                else:
+                    team_records[team1]['ties'] += 1
+                    team_records[team2]['ties'] += 1
         
         return team_records
     
-    def get_playoff_teams(self, team_records: Dict[str, Dict[str, float]]) -> List[str]:
+    def get_playoff_teams(self, team_records: Dict[str, Dict[str, float]],
+                          divisions: Optional[Dict[str, str]] = None) -> List[str]:
         """
-        Determine which teams make the playoffs.
+        Determine which teams make the playoffs, in seed order.
+
+        Matches ESPN's format: each division winner gets a playoff spot and a
+        top seed; remaining spots go to the best other teams. Teams are ranked
+        by win % (not raw wins, since in odd leagues teams can play different
+        numbers of games; ties count as half a win), with total points as the
+        tiebreaker.
         
         Args:
             team_records: Dictionary of team records
+            divisions: Each team's division; None or empty means no divisions
             
         Returns:
-            List of playoff team names
+            List of playoff team names, best seed first
         """
-        sorted_teams = sorted(
-            team_records.items(),
-            key=lambda x: (x[1]['wins'], x[1]['points_for']),
-            reverse=True
-        )
-        return [team for team, _ in sorted_teams[:self.n_playoff_teams]]
+        def rank_key(team):
+            record = team_records[team]
+            return (win_pct(record), record['points_for'])
+
+        ranked = sorted(team_records, key=rank_key, reverse=True)
+        if not divisions:
+            return ranked[:self.n_playoff_teams]
+
+        winners = []
+        for team in ranked:
+            if divisions[team] not in {divisions[w] for w in winners}:
+                winners.append(team)
+        wild_cards = [team for team in ranked if team not in winners]
+        return (winners + wild_cards)[:self.n_playoff_teams]
     
     def run_simulation(self, num_schedules: int, seed: int = 42) -> pd.DataFrame:
         """
@@ -171,18 +283,18 @@ class PlayoffSimulator:
         random.seed(seed)
         playoff_count = {team: 0 for team in self.teams}
         total_wins = {team: 0 for team in self.teams}
-        
-        generator = ScheduleGenerator(self.teams, self.n_weeks)
+        total_games = {team: 0 for team in self.teams}
         
         for i in range(num_schedules):
             if i % 1000 == 0:
                 print(f"Processing schedule {i}/{num_schedules}")
             
-            schedule = generator.generate_schedule()
+            schedule, divisions = self.generator.generate()
             team_records = self.simulate_schedule(schedule)
             for team, record in team_records.items():
-                total_wins[team] += record['wins']
-            playoff_teams = self.get_playoff_teams(team_records)
+                total_wins[team] += record['wins'] + 0.5 * record['ties']
+                total_games[team] += games_played(record)
+            playoff_teams = self.get_playoff_teams(team_records, divisions)
             
             for team in playoff_teams:
                 playoff_count[team] += 1
@@ -199,8 +311,10 @@ class PlayoffSimulator:
             actual_record = self.scores_df[self.scores_df['Player'] == team]['Record'].values[0]
             points_for = self.scores_df[self.scores_df['Player'] == team][self.week_columns].sum(axis=1).values[0]
             
-            # Mean win % across every simulated schedule permutation
-            expected_win_pct = total_wins[team] / (num_schedules * self.n_weeks) * 100
+            # Win % across every simulated schedule permutation
+            # (byes excluded, ties count as half a win)
+            games = total_games[team]
+            expected_win_pct = total_wins[team] / games * 100 if games else 0.0
 
             results.append({
                 'Player': team,
@@ -213,6 +327,59 @@ class PlayoffSimulator:
             })
         
         return pd.DataFrame(results).sort_values('Playoff %', ascending=False)
+
+
+def load_league_structure(scores_df: pd.DataFrame, schedule_path: Path,
+                          settings_path: Path) -> dict:
+    """
+    Load the league's real schedule and playoff settings, if available.
+
+    Args:
+        scores_df: Scores with 'Team ID' and 'Player' columns (names final)
+        schedule_path: Schedule CSV written by get_espn_league_data.py
+        settings_path: League settings JSON written by get_espn_league_data.py
+
+    Returns:
+        {'generator': TemplateScheduleGenerator or None, 'n_playoff_teams': int}.
+        generator is None when the files (or team IDs) are missing; the
+        simulator then falls back to a random round-robin with no divisions.
+    """
+    settings = {}
+    if Path(settings_path).exists():
+        settings = json.loads(Path(settings_path).read_text())
+    n_playoff_teams = settings.get('playoff_team_count', 6)
+
+    rule = settings.get('playoff_seeding_rule')
+    if rule not in (None, 'TOTAL_POINTS_SCORED'):
+        print(f"Warning: playoff tiebreaker '{rule}' isn't modeled; using total points")
+    tie_rule = settings.get('matchup_tie_rule')
+    if tie_rule not in (None, 'NONE'):
+        print(f"Warning: matchup tie rule '{tie_rule}' isn't modeled; equal scores count as ties")
+
+    if not Path(schedule_path).exists() or 'Team ID' not in scores_df.columns:
+        return {'generator': None, 'n_playoff_teams': n_playoff_teams}
+
+    schedule_df = pd.read_csv(schedule_path)
+    weeks: Dict[int, List[Tuple[int, int]]] = {}
+    for row in schedule_df.itertuples(index=False):
+        weeks.setdefault(int(row[0]), []).append((int(row[1]), int(row[3])))
+
+    # Align the template with the score columns (W1, W2, ... by week number)
+    week_columns = [c for c in scores_df.columns if c.startswith('W')]
+    missing = [col for col in week_columns if int(col[1:]) not in weeks]
+    if missing:
+        raise ValueError(f"Schedule file has no matchups for weeks {missing}")
+    template = [weeks[int(col[1:])] for col in week_columns]
+
+    # Slots are the real team IDs; each slot keeps its real division
+    team_ids = scores_df['Team ID'].astype(int).tolist()
+    divisions = (scores_df['Division'].fillna('').tolist()
+                 if 'Division' in scores_df.columns else [''] * len(team_ids))
+    slot_divisions = dict(zip(team_ids, divisions))
+
+    generator = TemplateScheduleGenerator(template, slot_divisions,
+                                          scores_df['Player'].tolist(), len(week_columns))
+    return {'generator': generator, 'n_playoff_teams': n_playoff_teams}
 
 
 def standardize_name(name: str) -> str:
@@ -461,8 +628,9 @@ def main():
         raise ValueError("LEAGUE_ID and YEAR must be set in environment variables")
     
     # Set up paths
-    data_dir = Path(f'./output/league{league_id}_year{year}/data')
-    csv_path = data_dir / f'fantasy_scores_wide_league{league_id}_y{year}.csv'
+    paths = league_data_paths(league_id, year)
+    data_dir = paths['dir']
+    csv_path = paths['scores']
     
     if not csv_path.exists():
         raise FileNotFoundError(f"Data file not found: {csv_path}")
@@ -479,9 +647,20 @@ def main():
     print(f"Number of teams: {len(df)}")
     print(f"Number of weeks: {len([col for col in df.columns if col.startswith('W')])}")
     
+    # Use the league's real schedule format and playoff rules when available
+    structure = load_league_structure(df, paths['schedule'], paths['settings'])
+    if structure['generator'] is None:
+        print("No schedule file found: using random round-robin schedules without divisions")
+    else:
+        divisions = sorted(set(structure['generator'].slot_divisions.values()) - {''})
+        print("Using the league's real schedule format"
+              + (f" with divisions {divisions}" if divisions else ""))
+    print(f"Playoff teams: {structure['n_playoff_teams']}")
+
     # Run simulation
     num_schedules = 10000
-    simulator = PlayoffSimulator(df)
+    simulator = PlayoffSimulator(df, n_playoff_teams=structure['n_playoff_teams'],
+                                 generator=structure['generator'])
     
     print(f"\nRunning {num_schedules:,} schedule simulations...")
     results_df = simulator.run_simulation(num_schedules)
