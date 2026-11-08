@@ -77,9 +77,30 @@
     border-bottom: 1px solid var(--border);
     display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center;
   }
-  .controls label { font-weight: 600; white-space: nowrap; }
-  .controls input[type=range] { flex: 1 1 220px; accent-color: var(--accent); }
+  .controls .label { font-weight: 600; white-space: nowrap; }
   .controls .hint { color: var(--text-muted); font-size: 13px; }
+  /* Stepped week slider: one square block per week, labeled underneath */
+  .weeks {
+    flex: 1 1 260px; display: flex; gap: 4px; max-width: 640px;
+    touch-action: none; user-select: none; -webkit-user-select: none;
+    border-radius: 6px; outline-offset: 4px;
+  }
+  .weeks:focus-visible { outline: 2px solid var(--accent); }
+  .week {
+    flex: 1 1 0; min-width: 0; max-width: 44px;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    cursor: pointer;
+  }
+  .week .block {
+    width: 100%; aspect-ratio: 1; max-height: 28px;
+    border-radius: 4px; background: var(--bar-off);
+    transition: background-color 120ms ease, transform 120ms ease;
+  }
+  .week.on .block { background: var(--accent); opacity: 0.45; }
+  .week.current .block { background: var(--accent); opacity: 1; transform: scale(1.08); }
+  .week:hover .block { opacity: 0.8; }
+  .week .num { font-size: 11px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+  .week.current .num { color: var(--text-primary); font-weight: 700; }
   .notes {
     margin: 16px 0 0; padding: 10px 14px;
     background: var(--note-bg); border-left: 3px solid var(--note-border);
@@ -112,8 +133,8 @@
   </header>
 
   <div class="controls" id="controls">
-    <label for="week">Through week <span id="week-label"></span></label>
-    <input type="range" id="week" min="1" step="1">
+    <span class="label" id="week-title">Through week <span id="week-label"></span></span>
+    <div class="weeks" id="week" role="slider" tabindex="0" aria-labelledby="week-title"></div>
     <span class="hint" id="week-hint"></span>
   </div>
 
@@ -209,14 +230,60 @@
     notes.hidden = false;
   }
 
+  // Stepped week slider: click a week, drag across weeks, or use arrow keys
   const slider = document.getElementById('week');
   const cutoffs = DATA.weeks.map((w) => w.week);
-  slider.min = 0; slider.max = cutoffs.length - 1; slider.value = cutoffs.length - 1;
+  let current = cutoffs.length - 1;
+  slider.innerHTML = cutoffs.map((wk, i) =>
+    `<div class="week" data-i="${i}"><div class="block"></div><span class="num">${wk}</span></div>`).join('');
+  slider.setAttribute('aria-valuemin', cutoffs[0]);
+  slider.setAttribute('aria-valuemax', cutoffs[cutoffs.length - 1]);
+  const weekEls = [...slider.children];
+
+  function paintWeeks() {
+    weekEls.forEach((el, i) => {
+      el.classList.toggle('on', i < current);
+      el.classList.toggle('current', i === current);
+    });
+    slider.setAttribute('aria-valuenow', cutoffs[current]);
+    slider.setAttribute('aria-valuetext', `Through week ${cutoffs[current]}`);
+  }
+
+  function selectWeek(i) {
+    i = Math.max(0, Math.min(cutoffs.length - 1, i));
+    if (i === current) return;
+    current = i;
+    history.replaceState(null, '', `#week=${cutoffs[current]}`);
+    render();
+  }
+
+  function weekAt(clientX) {
+    const index = weekEls.findIndex((el) => {
+      const r = el.getBoundingClientRect();
+      return clientX <= r.right + 2;
+    });
+    return index === -1 ? cutoffs.length - 1 : index;
+  }
+
+  slider.addEventListener('pointerdown', (e) => {
+    slider.setPointerCapture(e.pointerId);
+    selectWeek(weekAt(e.clientX));
+  });
+  slider.addEventListener('pointermove', (e) => {
+    if (slider.hasPointerCapture(e.pointerId)) selectWeek(weekAt(e.clientX));
+  });
+  slider.addEventListener('keydown', (e) => {
+    const step = { ArrowLeft: -1, ArrowDown: -1, ArrowRight: 1, ArrowUp: 1 }[e.key];
+    if (step) { e.preventDefault(); selectWeek(current + step); }
+    if (e.key === 'Home') { e.preventDefault(); selectWeek(0); }
+    if (e.key === 'End') { e.preventDefault(); selectWeek(cutoffs.length - 1); }
+  });
+
   if (cutoffs.length === 1) {
     slider.hidden = true;
     document.getElementById('week-hint').textContent = 'Only the full season is available (no schedule file).';
   } else {
-    document.getElementById('week-hint').textContent = 'Drag to see how the luck built up over the season.';
+    document.getElementById('week-hint').textContent = 'Click or drag across the weeks to see how the luck built up.';
   }
 
   // ---------------------------------------------------------------- charts
@@ -429,8 +496,9 @@
   }
 
   function render() {
-    const w = DATA.weeks[Number(slider.value)];
+    const w = DATA.weeks[current];
     document.getElementById('week-label').textContent = `${w.week} of ${L.weeks_played}`;
+    paintWeeks();
     const t = theme();
     drawPlayoff(w, t);
     drawLuck(w, t);
@@ -441,11 +509,7 @@
 
   // #week=N in the URL opens the report at that week (handy for sharing)
   const linked = cutoffs.indexOf(Number((location.hash.match(/week=(\d+)/) || [])[1]));
-  if (linked >= 0) slider.value = linked;
-  slider.addEventListener('input', () => {
-    history.replaceState(null, '', `#week=${cutoffs[Number(slider.value)]}`);
-    render();
-  });
+  if (linked >= 0) current = linked;
   let resizeTimer;
   window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(render, 200); });
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', render);
