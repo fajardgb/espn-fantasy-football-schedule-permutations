@@ -146,23 +146,18 @@ This downloads your league from ESPN, runs the simulations, saves the plots, and
 ## The shareable report
 The report is a single `.html` file with interactive charts and a **"through week N"** slider that shows how the luck built up over the season. Open it in any browser, send it to your league, or host it as a static web page. Add `#week=5` to the end of its address to open it at a given week.
 
-![report_preview](./output_example/leaguedemo_year2025/report_preview.png)
-
 It contains:
 - **Playoff odds** for each team
 - **Schedule luck**: actual vs. expected win %, colored by luck index
-- **What if you had their schedule?**: a heatmap of every team's record if it had played every other team's real schedule (shown above)
+- **What if you had their schedule?**: a heatmap of every team's record if it had played every other team's real schedule
 - **Where each team finishes**: the distribution of final seeds for each team, one small chart per team
 - A table view of the numbers
 
-<details>
-<summary><b>See the full example report</b> (click to expand)</summary>
+Here's the full report for the example league (built from an anonymized real league):
 
 ![full_report](./output_example/leaguedemo_year2025/report_full.png)
 
-</details>
-
-This example was built from an anonymized real league. To try the interactive version (slider, hover details), download [the example report file](./output_example/leaguedemo_year2025/leaguedemo_year2025_report.html) and open it in your browser.
+To try the interactive version (slider, hover details), download [the example report file](./output_example/leaguedemo_year2025/leaguedemo_year2025_report.html) and open it in your browser.
 
 ## Running the steps separately
 `run_all.py` runs these three scripts in order. You can also run them one at a time:
