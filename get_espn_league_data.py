@@ -3,7 +3,9 @@
 import csv
 import json
 import os
-from typing import Dict, List, Optional, Tuple
+import re
+import sys
+from typing import Callable, Dict, List, Optional, Tuple
 from pathlib import Path
 
 import requests
@@ -12,6 +14,24 @@ from dotenv import load_dotenv
 
 # Views requested from the ESPN API: league settings, teams, and all matchups
 API_VIEWS = ["mSettings", "mTeam", "mMatchup"]
+
+README_HINT = 'See "Configure your league" in the README for help.'
+
+
+class SetupError(Exception):
+    """A problem the user can fix (settings, credentials, missing files).
+
+    The message is shown as-is, without a Python traceback.
+    """
+
+
+def run_cli(main_func: Callable[[], None]) -> None:
+    """Run a script's main(), showing setup problems as a plain message."""
+    try:
+        main_func()
+    except SetupError as error:
+        print(f"\nError: {error}", file=sys.stderr)
+        sys.exit(1)
 
 
 # ---------------------------------------------------------------------------
@@ -183,7 +203,7 @@ def write_scores_csv(data: dict, filepath: Path) -> None:
 
     with open(filepath, 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
-        writer.writerow(['Team ID', 'Player', 'Division', 'Record'] + [f'W{w}' for w in weeks])
+        writer.writerow(['Team ID', 'Team', 'Division', 'Record'] + [f'W{w}' for w in weeks])
 
         for team_id in sorted(records):
             record = records[team_id]
@@ -266,12 +286,41 @@ class ESPNFantasyFootball:
             requests.RequestException: If the API request fails
         """
         params = {"view": views}
-        response = requests.get(
-            self.base_url,
-            params=params,
-            cookies=self.cookies,
-            timeout=30
-        )
+        try:
+            response = requests.get(
+                self.base_url,
+                params=params,
+                cookies=self.cookies,
+                timeout=30
+            )
+        except requests.ConnectionError:
+            raise SetupError("Couldn't reach ESPN. Check your internet connection and try again.")
+        except requests.Timeout:
+            raise SetupError("ESPN took too long to respond. Try again in a minute.")
+
+        if response.status_code == 401:
+            if self.cookies:
+                raise SetupError(
+                    "ESPN refused access to this league (401 Unauthorized). Your ESPN_S2 or "
+                    "SWID is probably wrong or expired: make sure you copied all of ESPN_S2 "
+                    "and SWID exactly as shown in your browser, and haven't logged out of ESPN since "
+                    f"copying them. {README_HINT}")
+            raise SetupError(
+                "This league is private (401 Unauthorized), so ESPN_S2 and SWID are needed "
+                f"in your .env file. {README_HINT}")
+        if response.status_code == 404:
+            raise SetupError(
+                f"ESPN couldn't find league {self.league_id} for the {self.year} season "
+                f"(404 Not Found). Check LEAGUE_ID and YEAR in your .env file. {README_HINT}")
+        if 400 <= response.status_code < 500:
+            raise SetupError(
+                f"ESPN rejected the request for league {self.league_id}, {self.year} season "
+                f"(error {response.status_code}). Check LEAGUE_ID and YEAR in your .env file. "
+                f"{README_HINT}")
+        if response.status_code >= 500:
+            raise SetupError(
+                f"ESPN's servers had a problem (error {response.status_code}). "
+                "This is on ESPN's side: try again in a few minutes.")
         response.raise_for_status()
         return response.json()
 
@@ -352,47 +401,106 @@ def league_data_paths(league_id, year) -> Dict[str, Path]:
     }
 
 
+PLACEHOLDER_PREFIX = 'your_'
+
+
+def parse_league_input(value: str) -> Tuple[int, Optional[int]]:
+    """
+    Read a league ID from either a plain number or a pasted ESPN league URL.
+
+    Returns:
+        (league_id, season): season comes from the URL's seasonId, if present
+
+    Example:
+        'https://fantasy.espn.com/football/league?leagueId=123&seasonId=2025'
+        -> (123, 2025)
+    """
+    value = value.strip().strip('"\'')
+    if value.isdigit():
+        return int(value), None
+    league = re.search(r'leagueId=(\d+)', value)
+    if not league:
+        raise SetupError(
+            f"LEAGUE_ID should be a number (or your league's web address), but it's "
+            f"'{value}'. {README_HINT}")
+    season = re.search(r'seasonId=(\d{4})', value)
+    return int(league.group(1)), int(season.group(1)) if season else None
+
+
+def _env(name: str) -> Optional[str]:
+    """An environment variable, treating empty and example values as unset."""
+    value = (os.getenv(name) or '').strip()
+    return None if not value or value.startswith(PLACEHOLDER_PREFIX) else value
+
+
+def load_league_and_year() -> Tuple[int, int]:
+    """
+    League ID and season from the .env file (or environment).
+
+    LEAGUE_ID may be the league's ID or its full web address. YEAR may be left
+    out when that address includes seasonId.
+
+    Raises:
+        SetupError: with a plain-language explanation of what to fix
+    """
+    load_dotenv()
+    raw_league = _env('LEAGUE_ID')
+    if raw_league is None:
+        raise SetupError(
+            "LEAGUE_ID isn't set. Make sure you've copied .env_example to a file named .env "
+            f"in the project folder and filled in your league's details. {README_HINT}")
+    league_id, url_season = parse_league_input(raw_league)
+
+    raw_year = _env('YEAR')
+    if raw_year is None:
+        if url_season is None:
+            raise SetupError(
+                f"YEAR isn't filled in in your .env file (e.g. YEAR=2025). {README_HINT}")
+        return league_id, url_season
+    if not (raw_year.isdigit() and len(raw_year) == 4):
+        raise SetupError(f"YEAR should be a 4-digit year like 2025, but it's '{raw_year}'.")
+    return league_id, int(raw_year)
+
+
 def load_config() -> tuple[int, int, Optional[str], Optional[str]]:
     """
     Load configuration from environment variables.
 
     Returns:
-        Tuple of (league_id, year, espn_s2, swid)
+        Tuple of (league_id, year, espn_s2, swid); the cookies are None when
+        not set (public leagues don't need them)
 
     Raises:
-        ValueError: If required environment variables are missing
+        SetupError: If required settings are missing or malformed
     """
-    load_dotenv()
-
-    league_id = os.getenv('LEAGUE_ID')
-    year = os.getenv('YEAR')
-
-    if not league_id or not year:
-        raise ValueError("LEAGUE_ID and YEAR must be set in environment variables (.env file).")
-
-    return (
-        int(league_id),
-        int(year),
-        os.getenv('ESPN_S2'),
-        os.getenv('SWID')
-    )
+    league_id, year = load_league_and_year()
+    espn_s2, swid = _env('ESPN_S2'), _env('SWID')
+    if bool(espn_s2) != bool(swid):
+        missing = 'SWID' if espn_s2 else 'ESPN_S2'
+        print(f"Warning: {missing} is empty, so ESPN_S2 and SWID will both be ignored. "
+              "Private leagues need both.")
+        espn_s2 = swid = None
+    return league_id, year, espn_s2, swid
 
 
-def main():
-    """Main execution function."""
-    league_id, year, espn_s2, swid = load_config()
+def fetch_league_data(league_id: int, year: int, espn_s2: Optional[str] = None,
+                      swid: Optional[str] = None) -> Dict[str, Path]:
+    """Download a league's scores, schedule and settings to its output folder."""
     client = ESPNFantasyFootball(league_id, year, espn_s2, swid)
-
-    # Print weekly scores to console
-    # client.print_weekly_scores()
-    # client.print_records()
-
     paths = league_data_paths(league_id, year)
     paths['dir'].mkdir(parents=True, exist_ok=True)
     client.save_to_csv_wide(paths['scores'])
     client.save_schedule(paths['schedule'])
     client.save_league_settings(paths['settings'])
+    return paths
+
+
+def main():
+    """Main execution function."""
+    league_id, year, espn_s2, swid = load_config()
+    print(f"Downloading league {league_id}, {year} season, from ESPN...")
+    fetch_league_data(league_id, year, espn_s2, swid)
 
 
 if __name__ == "__main__":
-    main()
+    run_cli(main)

@@ -47,17 +47,27 @@ In my case, my scores were good enough to win about 60% of the time across all p
 
 
 # Installation
-## Quick setup
+## Before you start
+You'll need:
+- **uv**, a tool that installs Python and everything this project needs in one step. Install it by following the one-line instructions at [docs.astral.sh/uv](https://docs.astral.sh/uv/getting-started/installation/). uv downloads the right Python version (3.14) automatically, so you don't need to install Python yourself.
+- A **terminal**: Terminal on a Mac, or PowerShell on Windows. Every command below is typed there.
 
-1. Clone the repository
+*Already have Python?* You can use pip instead of uv, but you'll need **Python 3.14 or newer** (check with `python --version`).
+
+## Setup (one time)
+
+**1. Download the project**
+
+If you have git:
 ```
 git clone https://github.com/fajardgb/espn-fantasy-football-schedule-permutations.git
 cd espn-fantasy-football-schedule-permutations
 ```
+No git? On the [GitHub page](https://github.com/fajardgb/espn-fantasy-football-schedule-permutations), click the green **Code** button → **Download ZIP**, unzip it, then in your terminal `cd` into the unzipped folder.
 
-2. Install dependencies
+**2. Install dependencies**
 
-With [uv](https://docs.astral.sh/uv/) (recommended):
+With uv (recommended):
 ```
 uv sync
 ```
@@ -66,46 +76,99 @@ Or with pip:
 pip install -r requirements.txt
 ```
 
-3. Configure credentials
+**3. Configure your league**
+
+Make a copy of the example settings file named `.env`:
 ```
 cp .env_example .env
-# Edit .env with your league ID, year, ESPN S2 and SWID
 ```
-To find these credentials:
-- Log into ESPN Fantasy Football in your browser
-    - Your league ID will be in the URL
-    - The year is the fantasy season of interest
-- Open Developer Tools (F12)
-- Go to Application/Storage > Cookies
-- Find 'espn_s2' and 'SWID' values
+(On Windows PowerShell: `Copy-Item .env_example .env`.) Files starting with a dot can be hidden. On a Mac, press `Cmd + Shift + .` in Finder to show them.
+
+Open `.env` in any text editor and fill in the four values below. When you're done it should look like this (with your own values):
+```
+LEAGUE_ID=12345678
+YEAR=2025
+ESPN_S2=AEBx7k...a long string of letters, numbers and % signs...
+SWID={1A2B3C4D-5E6F-7A8B-9C0D-1E2F3A4B5C6D}
+```
+
+### Step 1: League ID and year
+1. Open your league on [fantasy.espn.com](https://fantasy.espn.com) in a web browser (not the app).
+2. Look at the address bar. It will look something like:
+   `https://fantasy.espn.com/football/league?leagueId=12345678&seasonId=2025`
+3. The number after `leagueId=` is your **LEAGUE_ID** (`12345678` here).
+   *Shortcut:* you can paste the whole address as `LEAGUE_ID` instead, and the scripts will pick out the league ID (and the year, if `seasonId=` is in it).
+4. **YEAR** is the season you want to analyze: the year the season *started*. For example, the season that ran September 2025 – January 2026 is `2025`. It's the number after `seasonId=` when you're viewing that season.
+
+### Step 2: ESPN_S2 and SWID (private leagues only)
+These two values are "cookies": small pieces of text your browser stores to remember you're logged in to ESPN. The scripts need them to read a private league's data, just as your browser does.
+
+> **Is your league public?** If your commissioner has made the league viewable to the public (a setting in the league's basic settings), skip this step. Leave `ESPN_S2=` and `SWID=` empty in `.env`.
+
+1. In the same browser, make sure you're **logged in** to ESPN and on your league page.
+2. Open the browser's developer tools:
+
+   | Browser | How to open | Where the cookies are |
+   |---|---|---|
+   | **Chrome / Edge** | `F12`, or `Cmd + Option + I` on a Mac | **Application** tab → **Storage** → **Cookies** → `https://fantasy.espn.com` |
+   | **Firefox** | `F12`, or `Cmd + Option + I` on a Mac | **Storage** tab → **Cookies** → `https://fantasy.espn.com` |
+   | **Safari** | First turn on Safari → Settings → Advanced → "Show features for web developers". Then `Cmd + Option + I` | **Storage** tab → **Cookies** → `fantasy.espn.com` |
+
+   If you don't see the tab, click `>>` at the top of the developer tools panel to find it.
+3. You'll see a table of cookies. Type `espn_s2` into the **Filter** box above it, then double-click the **Value** cell and copy the whole thing. That's your **ESPN_S2**. It's long (a few hundred characters), so make sure you copy all of it.
+4. Clear the filter, type `SWID`, and copy its value the same way. That's your **SWID**. It looks like `{1A2B3C4D-...}`. Copy it exactly as shown, including the curly braces if there are any.
+5. Paste each value into `.env` right after the `=` sign, with no spaces or quotes.
+
+> **Keep these private.** Your `ESPN_S2` and `SWID` act like a password: anyone who has them can use your ESPN account. Don't share your `.env` file or post the values anywhere. (`.env` is already excluded from git.)
+
+### Troubleshooting
+The scripts explain what went wrong in plain language. The most common problems:
+- **`401 Unauthorized` error:** the league is private and the cookies are missing, mistyped, or expired. Check that you copied all of `ESPN_S2`, and `SWID` exactly as shown. Logging out of ESPN expires the cookies, so if you've logged out since copying them, log back in and copy them again.
+- **`404 Not Found` or `error 400`:** the `LEAGUE_ID` or `YEAR` is wrong, or the league didn't exist that season.
+- **"No data found for league..."** when running the simulation or report on its own: download the data first (`get_espn_league_data.py`), or just use `run_all.py`.
+
 # Usage
 If you installed with pip, drop the `uv run` prefix from the commands below.
 
-1. Fetch league data (weekly scores, schedule, and league settings)
+## Run everything (recommended)
 ```
-uv run python get_espn_league_data.py
+uv run python run_all.py
 ```
-2. Simulate schedule permutations and generate plots
-```
-uv run python simulate_schedule_permutations.py
-```
-3. Build the shareable HTML report (optional)
-```
-uv run python build_report.py
-```
-This writes one self-contained `.html` file with interactive charts and a **"through week N"** slider that shows how the luck built up over the season. Open it in any browser, send it to your league, or host it as a static page. Options:
-- `--sims 20000` sets the number of simulated schedules per week (default 10000)
-- `--seed 7` changes the random seed (default 42)
-- `--offline` embeds the charting library so the file works without internet (adds ~5 MB)
+This downloads your league from ESPN, runs the simulations, saves the plots, and builds the shareable report. When it's done, the report opens in your browser. Options:
+- `--sims 20000`: number of simulated schedules (default 10000; more is more precise but slower)
+- `--offline`: embed the charting library in the report so it works without internet (adds ~5 MB)
+- `--skip-download`: reuse the data downloaded last time instead of fetching it again
+- `--no-open`: don't open the report automatically
+- `--seed 7`: change the random seed (default 42)
 
-Add `#week=5` to the end of the report's URL to open it at a given week.
+## The shareable report
+The report is a single `.html` file with interactive charts and a **"through week N"** slider that shows how the luck built up over the season. Open it in any browser, send it to your league, or host it as a static web page. Add `#week=5` to the end of its address to open it at a given week.
 
-The report contains:
+![report_preview](./output_example/leaguedemo_year2025/report_preview.png)
+
+It contains:
 - **Playoff odds** for each team
 - **Schedule luck**: actual vs. expected win %, colored by luck index
-- **What if you had their schedule?**: a heatmap of every team's record if it had played every other team's real schedule
+- **What if you had their schedule?**: a heatmap of every team's record if it had played every other team's real schedule (shown above)
 - **Where each team finishes**: the distribution of final seeds for each team, one small chart per team
 - A table view of the numbers
+
+<details>
+<summary><b>See the full example report</b> (click to expand)</summary>
+
+![full_report](./output_example/leaguedemo_year2025/report_full.png)
+
+</details>
+
+This example was built from an anonymized real league. To try the interactive version (slider, hover details), download [the example report file](./output_example/leaguedemo_year2025/leaguedemo_year2025_report.html) and open it in your browser.
+
+## Running the steps separately
+`run_all.py` runs these three scripts in order. You can also run them one at a time:
+```
+uv run python get_espn_league_data.py           # 1. download scores, schedule, and league settings
+uv run python simulate_schedule_permutations.py # 2. simulate and save the PNG plots
+uv run python build_report.py                   # 3. build the HTML report (takes --sims, --seed, --offline)
+```
 
 ## Running the tests
 ```
@@ -113,16 +176,16 @@ uv sync
 uv run pytest
 ```
 With pip, install pytest first (`pip install pytest`), then run `pytest`.
-The tests cover league sizes from 4 to 16 teams (odd and even), different season lengths, divisions, ties, and parsing ESPN API responses. API tests use anonymized copies of real ESPN responses in `tests/fixtures/`, so no credentials or network access are needed.
+The tests cover league sizes from 4 to 16 teams (odd and even), different season lengths, divisions, ties, head-to-head tiebreakers, setup errors, and parsing ESPN API responses. API tests use anonymized copies of real ESPN responses in `tests/fixtures/`, so no credentials or network access are needed.
 
 ## Outputs
 Everything is written to `output/league<LEAGUE_ID>_year<YEAR>/`:
 
 | File | Description |
 |------|-------------|
+| `league<ID>_year<YEAR>_report.html` | Shareable interactive report |
 | `league<ID>_year<YEAR>_playoff_probabilities.png` | Bar chart of each team's playoff probability |
 | `league<ID>_year<YEAR>_luck_scatterplot.png` | Actual vs. expected win % scatterplot, colored by luck index |
-| `league<ID>_year<YEAR>_report.html` | Shareable interactive report (from `build_report.py`) |
 | `data/fantasy_scores_wide_league<ID>_y<YEAR>.csv` | Each team's ESPN team ID, division, record, and weekly scores (completed regular-season weeks only) |
 | `data/schedule_league<ID>_y<YEAR>.csv` | The league's full regular-season schedule, including weeks not yet played |
 | `data/league_settings_league<ID>_y<YEAR>.json` | League rules used by the simulation: playoff team count, playoff tiebreaker, season length, tie rule, and divisions |
@@ -132,7 +195,7 @@ The results CSV contains these columns:
 
 | Column | Description |
 |--------|-------------|
-| `Player` | Team owner name |
+| `Team` | The team, shown by its owner's name |
 | `Actual Record` | Real W-L (or W-L-T) record |
 | `Points For` | Total points scored |
 | `Actual Win %` | Win percentage from the real record |
@@ -140,5 +203,6 @@ The results CSV contains these columns:
 | `Luck (pp)` | Actual minus expected win %, in percentage points |
 | `Playoff %` | Share of simulated schedules in which the team made the playoffs |
 
-See [`output_example/`](./output_example/league12345_year2025/) for a full set of example outputs. The example data predates the schedule and settings files, so it uses the round-robin fallback.
-
+Example outputs:
+- [`output_example/leaguedemo_year2025/`](./output_example/leaguedemo_year2025/): a complete set of outputs (report, plots, and data files) built from an anonymized real league.
+- [`output_example/league12345_year2025/`](./output_example/league12345_year2025/): the plots from my 2025 season shown at the top of this page. They were made before schedule and settings files existed, so they use random round-robin schedules without divisions.

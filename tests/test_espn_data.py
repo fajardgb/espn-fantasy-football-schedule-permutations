@@ -124,10 +124,10 @@ def test_scores_csv_has_team_id_and_division(in_progress, tmp_path):
     path = tmp_path / 'scores.csv'
     write_scores_csv(in_progress, path)
     df = pd.read_csv(path)
-    assert list(df.columns[:4]) == ['Team ID', 'Player', 'Division', 'Record']
+    assert list(df.columns[:4]) == ['Team ID', 'Team', 'Division', 'Record']
     assert [c for c in df.columns if c.startswith('W')] == [f'W{w}' for w in range(1, 9)]
     assert Counter(df['Division']) == {'East': 6, 'West': 6}
-    assert df['Player'].str.startswith('Owner').all()
+    assert df['Team'].str.startswith('Owner').all()
 
 
 def test_schedule_csv_round_trips(in_progress, tmp_path):

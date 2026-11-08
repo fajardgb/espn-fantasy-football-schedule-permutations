@@ -224,7 +224,7 @@ __PLOTLY__
     const rows = [...w.results].sort((a, b) => a.playoff - b.playoff);
     Plotly.react('chart-playoff', [{
       type: 'bar', orientation: 'h',
-      y: rows.map((r) => r.player), x: rows.map((r) => r.playoff),
+      y: rows.map((r) => r.team), x: rows.map((r) => r.playoff),
       marker: { color: t.accent, cornerradius: 4 },
       text: rows.map((r) => fmtPct(r.playoff)), textposition: 'outside', cliponaxis: false,
       textfont: { color: t.text },
@@ -235,8 +235,8 @@ __PLOTLY__
       height: 60 + rows.length * 34, bargap: 0.3,
       xaxis: axis(t, { range: [0, document.getElementById('chart-playoff').clientWidth < 560 ? 128 : 112], ticksuffix: '%', tickvals: [0, 25, 50, 75, 100] }),
       yaxis: axis(t, { ticksuffix: '  ', gridcolor: 'rgba(0,0,0,0)',
-                       tickvals: rows.map((r) => r.player),
-                       ticktext: rows.map((r) => `<b>${esc(r.player)}</b> <span style="color:${t.muted}">${r.record}</span>`) }),
+                       tickvals: rows.map((r) => r.team),
+                       ticktext: rows.map((r) => `<b>${esc(r.team)}</b> <span style="color:${t.muted}">${r.record}</span>`) }),
     }), CONFIG);
   }
 
@@ -253,7 +253,7 @@ __PLOTLY__
     const plotW = Math.max(200, document.getElementById('chart-luck').clientWidth - (narrow ? 60 : 170));
     const plotH = HEIGHT - (narrow ? 150 : 90);
     const extremes = new Set([...rows].sort((a, b) => Math.abs(b.luck) - Math.abs(a.luck))
-                                      .slice(0, narrow ? 4 : rows.length).map((r) => r.player));
+                                      .slice(0, narrow ? 4 : rows.length).map((r) => r.team));
     const toPx = (x, y) => [(x - X_RANGE[0]) / (X_RANGE[1] - X_RANGE[0]) * plotW,
                             (Y_RANGE[1] - y) / (Y_RANGE[1] - Y_RANGE[0]) * plotH];
     const overlaps = (a, b) => a.l < b.r && b.l < a.r && a.t < b.b && b.t < a.b;
@@ -267,12 +267,12 @@ __PLOTLY__
     placed.push({ l: lx, r: lx + boxW, t: ly, b: ly + boxH },
                 { l: ux - boxW, r: ux, t: uy - boxH, b: uy });
     const labels = [];
-    const order = [...rows].filter((r) => extremes.has(r.player))
+    const order = [...rows].filter((r) => extremes.has(r.team))
                            .sort((a, b) => a.actual - b.actual || a.expected - b.expected);
     order.forEach((r, i) => {
       const [px, py] = toPx(r.expected, r.actual);
       const xanchor = r.expected < 10 ? 'left' : r.expected > 90 ? 'right' : 'center';
-      const w = r.player.length * 6.6 + 6;
+      const w = r.team.length * 6.6 + 6;
       const l = xanchor === 'left' ? px : xanchor === 'right' ? px - w : px - w / 2;
       const first = i % 2 === 0 ? 1 : -1;
       const offsets = [16, 32, 48, 64].flatMap((d) => [first * d, -first * d]);
@@ -285,7 +285,7 @@ __PLOTLY__
       }
       placed.push(box);
       labels.push({
-        x: r.expected, y: r.actual, text: esc(r.player), ax: 0, ay: -dy,
+        x: r.expected, y: r.actual, text: esc(r.team), ax: 0, ay: -dy,
         xanchor, yanchor: dy > 0 ? 'bottom' : 'top', font: { size: 12, color: t.text },
         showarrow: true, arrowhead: 0, arrowwidth: 0.8, standoff: 7,
         arrowcolor: Math.abs(dy) > 16 ? t.neutral : 'rgba(0,0,0,0)',
@@ -297,7 +297,7 @@ __PLOTLY__
     }, {
       type: 'scatter', mode: 'markers',
       x: rows.map((r) => r.expected), y: rows.map((r) => r.actual),
-      text: rows.map((r) => r.player), cliponaxis: false,
+      text: rows.map((r) => r.team), cliponaxis: false,
       marker: {
         size: 14, color: rows.map((r) => r.luck), cmin: -limit, cmax: limit,
         colorscale: LUCK_COLORS.map((c, i) => [i / (LUCK_COLORS.length - 1), c]),
@@ -340,7 +340,7 @@ __PLOTLY__
     const section = el.closest('section');
     if (!w.swap) { section.hidden = true; return; }
     section.hidden = false;
-    const order = [...w.results].sort((a, b) => b.playoff - a.playoff).map((r) => r.player);
+    const order = [...w.results].sort((a, b) => b.playoff - a.playoff).map((r) => r.team);
     const idx = Object.fromEntries(w.swap.teams.map((name, i) => [name, i]));
     const z = order.map((x) => order.map((y) => w.swap.wins[idx[x]][idx[y]]));
     const rec = order.map((x) => order.map((y) => w.swap.records[idx[x]][idx[y]]));
@@ -386,7 +386,7 @@ __PLOTLY__
     const order = [...w.results].sort((a, b) => b.playoff - a.playoff);
     const nSeeds = L.n_teams;
     const seeds = Array.from({ length: nSeeds }, (_, i) => i + 1);
-    const yMax = Math.max(...order.flatMap((r) => w.seeds[r.player])) * 1.12;
+    const yMax = Math.max(...order.flatMap((r) => w.seeds[r.team])) * 1.12;
     const traces = [], annotations = [], shapes = [];
     const layout = baseLayout(t, {
       height: rows * (narrow ? 180 : 200) + 60, showlegend: false, bargap: 0.15,
@@ -396,10 +396,10 @@ __PLOTLY__
     order.forEach((r, i) => {
       const s = i === 0 ? '' : String(i + 1);
       traces.push({
-        type: 'bar', x: seeds, y: w.seeds[r.player], xaxis: 'x' + s, yaxis: 'y' + s,
+        type: 'bar', x: seeds, y: w.seeds[r.team], xaxis: 'x' + s, yaxis: 'y' + s,
         marker: { color: seeds.map((k) => (k <= L.n_playoff_teams ? t.accent : t.barOff)),
                   cornerradius: 2 },
-        hovertemplate: `<b>${esc(r.player)}</b><br>Seed %{x}: %{y:.1f}%<extra></extra>`,
+        hovertemplate: `<b>${esc(r.team)}</b><br>Seed %{x}: %{y:.1f}%<extra></extra>`,
       });
       layout['xaxis' + s] = axis(t, { tickvals: seeds.filter((k) => nSeeds <= 8 || k % 2 === 1),
                                       tickangle: 0, range: [0.4, nSeeds + 0.6], showgrid: false,
@@ -408,7 +408,7 @@ __PLOTLY__
                                       showticklabels: i % cols === 0, tickfont: { size: 10, color: t.text2 } });
       annotations.push({ xref: `x${s} domain`, yref: `y${s} domain`, x: 0, y: 1.04,
                          xanchor: 'left', yanchor: 'bottom', showarrow: false, align: 'left',
-                         text: `<b>${esc(r.player)}</b><br><span style="color:${t.muted}">${fmtPct(r.playoff)} playoffs</span>`,
+                         text: `<b>${esc(r.team)}</b><br><span style="color:${t.muted}">${fmtPct(r.playoff)} playoffs</span>`,
                          font: { size: 12, color: t.text } });
       shapes.push({ type: 'line', xref: 'x' + s, yref: `y${s} domain`,
                     x0: L.n_playoff_teams + 0.5, x1: L.n_playoff_teams + 0.5, y0: 0, y1: 1,
@@ -421,7 +421,7 @@ __PLOTLY__
 
   function drawTable(w) {
     const head = ['Team', 'Record', 'Points for', 'Actual win %', 'Expected win %', 'Luck (pts)', 'Playoff %'];
-    const body = w.results.map((r) => `<tr><td>${esc(r.player)}</td><td>${r.record}</td>` +
+    const body = w.results.map((r) => `<tr><td>${esc(r.team)}</td><td>${r.record}</td>` +
       `<td>${r.points_for.toFixed(1)}</td><td>${fmtPct(r.actual)}</td><td>${fmtPct(r.expected)}</td>` +
       `<td>${fmtLuck(r.luck)}</td><td>${fmtPct(r.playoff)}</td></tr>`).join('');
     document.getElementById('table').innerHTML =

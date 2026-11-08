@@ -37,7 +37,7 @@ def make_league(n_teams: int, n_weeks: int, seed: int = 0) -> pd.DataFrame:
     """Synthetic league with distinct random weekly scores (no ties)."""
     rng = np.random.default_rng(seed)
     df = pd.DataFrame({
-        'Player': [f'T{i}' for i in range(n_teams)],
+        'Team': [f'T{i}' for i in range(n_teams)],
         'Record': ['0-0'] * n_teams,
     })
     for week in range(n_weeks):
@@ -50,7 +50,7 @@ def all_play_win_pct(df: pd.DataFrame) -> pd.Series:
     scores = df[[c for c in df.columns if c.startswith('W')]].to_numpy()
     beaten = (scores[:, None, :] > scores[None, :, :]).sum(axis=1)
     pct = beaten.sum(axis=1) / ((len(df) - 1) * scores.shape[1]) * 100
-    return pd.Series(pct, index=df['Player'])
+    return pd.Series(pct, index=df['Team'])
 
 
 def cycle_length(n_teams: int) -> int:
@@ -65,7 +65,7 @@ def generate(n_teams: int, n_weeks: int, seed: int = 0):
 
 
 def run(df: pd.DataFrame, num_schedules: int = 1500, **kwargs) -> pd.DataFrame:
-    return PlayoffSimulator(df, **kwargs).run_simulation(num_schedules).set_index('Player')
+    return PlayoffSimulator(df, **kwargs).run_simulation(num_schedules).set_index('Team')
 
 
 # --------------------------------------------------------------- schedule structure
@@ -159,7 +159,7 @@ def test_points_for_counts_every_week_including_byes(n_teams):
     _, schedule = generate(n_teams, 14)
     records = PlayoffSimulator(df).simulate_schedule(schedule)
 
-    season_totals = df.set_index('Player')[[f'W{w}' for w in range(1, 15)]].sum(axis=1)
+    season_totals = df.set_index('Team')[[f'W{w}' for w in range(1, 15)]].sum(axis=1)
     for team, record in records.items():
         assert record['points_for'] == pytest.approx(season_totals[team])
 
@@ -229,7 +229,7 @@ def test_disambiguate_names_suffixes_repeats():
 # ------------------------------------------------------------------------- ties
 
 def two_team_league(scores_a, scores_b, records=('0-0', '0-0')):
-    df = pd.DataFrame({'Player': ['A', 'B'], 'Record': list(records)})
+    df = pd.DataFrame({'Team': ['A', 'B'], 'Record': list(records)})
     for week, (a, b) in enumerate(zip(scores_a, scores_b), start=1):
         df[f'W{week}'] = [a, b]
     return df
@@ -244,7 +244,7 @@ def test_equal_scores_are_a_tie_for_both_teams():
 
 def test_ties_count_as_half_a_win_in_expected_win_pct():
     df = two_team_league([100.0, 100.0, 120.0, 90.0], [100.0, 100.0, 110.0, 95.0])
-    results = PlayoffSimulator(df).run_simulation(50).set_index('Player')
+    results = PlayoffSimulator(df).run_simulation(50).set_index('Team')
     # A: 2 ties + 1 win + 1 loss = 2 wins out of 4 -> 50%
     assert results.loc['A', 'Expected Win %'] == pytest.approx(50.0)
     assert results.loc['B', 'Expected Win %'] == pytest.approx(50.0)

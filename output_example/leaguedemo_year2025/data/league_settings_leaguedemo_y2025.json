@@ -1,0 +1,10 @@
+{
+  "playoff_team_count": 6,
+  "playoff_seeding_rule": "TOTAL_POINTS_SCORED",
+  "regular_season_weeks": 14,
+  "matchup_tie_rule": "NONE",
+  "divisions": [
+    "East",
+    "West"
+  ]
+}

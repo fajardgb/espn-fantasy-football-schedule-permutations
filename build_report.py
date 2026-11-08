@@ -12,14 +12,11 @@ Usage:
 import argparse
 import json
 import math
-import os
 from datetime import date
 from pathlib import Path
 
 import pandas as pd
-from dotenv import load_dotenv
-
-from get_espn_league_data import league_data_paths
+from get_espn_league_data import SetupError, league_data_paths, load_league_and_year, run_cli
 from simulate_schedule_permutations import (
     format_record,
     load_league_structure,
@@ -62,7 +59,7 @@ def build_report_data(scores_df: pd.DataFrame, structure: dict,
             'week': week,
             'results': [
                 {
-                    'player': row['Player'],
+                    'team': row['Team'],
                     'record': row['Actual Record'],
                     'points_for': round(float(row['Points For']), 2),
                     'actual': round(float(row['Actual Win %']), 2),
@@ -121,26 +118,22 @@ def render_html(data: dict, title: str, offline: bool = False) -> str:
             .replace('__DATA__', payload))
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__,
-                                     formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--sims', type=int, default=10000,
-                        help='simulated schedules per week (default 10000)')
-    parser.add_argument('--seed', type=int, default=42, help='random seed (default 42)')
-    parser.add_argument('--offline', action='store_true',
-                        help='embed Plotly in the file so it works without internet (~5 MB)')
-    args = parser.parse_args()
+def build_report(league_id, year, num_schedules: int = 10000, seed: int = 42,
+                 offline: bool = False) -> Path:
+    """
+    Build the HTML report for a league from its downloaded data.
 
-    load_dotenv()
-    league_id = os.getenv('LEAGUE_ID')
-    year = os.getenv('YEAR')
-    if not league_id or not year:
-        raise ValueError("LEAGUE_ID and YEAR must be set in environment variables")
+    Returns:
+        Path of the saved report
 
+    Raises:
+        SetupError: if the league's data hasn't been downloaded yet
+    """
     paths = league_data_paths(league_id, year)
     if not paths['scores'].exists():
-        raise FileNotFoundError(f"Data file not found: {paths['scores']} "
-                                "(run get_espn_league_data.py first)")
+        raise SetupError(f"No data found for league {league_id}, {year} season "
+                         f"({paths['scores']}). Download it first with "
+                         "get_espn_league_data.py (or run run_all.py).")
 
     scores = load_scores(paths['scores'])
     structure = load_league_structure(scores, paths['schedule'], paths['settings'])
@@ -148,16 +141,35 @@ def main():
         print(f"Note: {note}")
 
     n_weeks = len([c for c in scores.columns if c.startswith('W')])
-    print(f"Simulating {args.sims:,} schedules for each of {n_weeks} week cutoffs...")
-    data = build_report_data(scores, structure, args.sims, args.seed)
-    data['league'].update({'id': league_id, 'year': int(year),
+    print(f"Simulating {num_schedules:,} schedules for each of {n_weeks} week cutoffs...")
+    data = build_report_data(scores, structure, num_schedules, seed)
+    data['league'].update({'id': str(league_id), 'year': int(year),
                            'generated': date.today().isoformat()})
 
     output_path = paths['dir'].parent / f'league{league_id}_year{year}_report.html'
-    html = render_html(data, f'Schedule Luck {year}', offline=args.offline)
+    html = render_html(data, f'Schedule Luck {year}', offline=offline)
     output_path.write_text(html, encoding='utf-8')
     print(f"Report saved to {output_path}")
+    return output_path
+
+
+def add_report_arguments(parser: argparse.ArgumentParser) -> None:
+    """Command-line options shared with run_all.py."""
+    parser.add_argument('--sims', type=int, default=10000,
+                        help='simulated schedules (per week in the report; default 10000)')
+    parser.add_argument('--seed', type=int, default=42, help='random seed (default 42)')
+    parser.add_argument('--offline', action='store_true',
+                        help='embed Plotly in the report so it works without internet (~5 MB)')
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    add_report_arguments(parser)
+    args = parser.parse_args()
+    league_id, year = load_league_and_year()
+    build_report(league_id, year, args.sims, args.seed, args.offline)
 
 
 if __name__ == '__main__':
-    main()
+    run_cli(main)

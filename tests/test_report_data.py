@@ -44,7 +44,7 @@ def wins(record_str):
 def test_full_season_actual_records_match_scores_file(league):
     scores, structure = league
     sim = simulator_through_week(scores, structure)
-    assert sim.actual_records() == dict(zip(scores['Player'], scores['Record']))
+    assert sim.actual_records() == dict(zip(scores['Team'], scores['Record']))
 
 
 def test_cutoff_records_count_only_weeks_so_far(league):
@@ -58,8 +58,8 @@ def test_cutoff_records_count_only_weeks_so_far(league):
 def test_cutoff_points_for_sum_weeks_so_far(league):
     scores, structure = league
     results = simulator_through_week(scores, structure, 3).run_simulation(200)
-    expected = scores.set_index('Player')[['W1', 'W2', 'W3']].sum(axis=1)
-    got = results.set_index('Player')['Points For']
+    expected = scores.set_index('Team')[['W1', 'W2', 'W3']].sum(axis=1)
+    got = results.set_index('Team')['Points For']
     pd.testing.assert_series_equal(got.sort_index(), expected.sort_index(),
                                    check_names=False)
 
@@ -82,7 +82,7 @@ def test_partial_season_needs_schedule(league):
 def test_seed_counts_are_a_full_distribution(league):
     scores, structure = league
     sim = simulator_through_week(scores, structure)
-    results = sim.run_simulation(500).set_index('Player')
+    results = sim.run_simulation(500).set_index('Team')
     counts = sim.seed_counts
     n = len(scores)
     assert counts.shape == (n, n)
@@ -97,7 +97,7 @@ def test_seed_counts_are_a_full_distribution(league):
 
 def toy_league():
     scores = pd.DataFrame({
-        'Player': ['A', 'B', 'C', 'D'],
+        'Team': ['A', 'B', 'C', 'D'],
         'W1': [100.0, 90.0, 80.0, 70.0],
         'W2': [60.0, 95.0, 85.0, 75.0],
     })
@@ -121,12 +121,12 @@ def test_swap_matrix_by_hand():
 def test_swap_matrix_diagonal_is_actual_record(league):
     scores, structure = league
     m = schedule_swap_matrix(scores, structure['actual_schedule'])
-    for team, record in zip(scores['Player'], scores['Record']):
+    for team, record in zip(scores['Team'], scores['Record']):
         assert f"{m[team][team]['wins']}-{m[team][team]['losses']}" == record
 
 
 def test_swap_matrix_respects_byes():
-    scores = pd.DataFrame({'Player': ['A', 'B', 'C'], 'W1': [3.0, 2.0, 1.0],
+    scores = pd.DataFrame({'Team': ['A', 'B', 'C'], 'W1': [3.0, 2.0, 1.0],
                            'W2': [3.0, 2.0, 1.0]})
     schedule = [[('A', 'B')], [('B', 'C')]]  # C bye week 1, A bye week 2
     m = schedule_swap_matrix(scores, schedule)
@@ -141,7 +141,7 @@ def h2h_record(wins, losses, points, h2h):
 
 
 def blank_sim(rule, n=2):
-    df = pd.DataFrame({'Player': ['x'], 'Record': ['0-0'], 'W1': [0.0]})
+    df = pd.DataFrame({'Team': ['x'], 'Record': ['0-0'], 'W1': [0.0]})
     return PlayoffSimulator(df, n_playoff_teams=n, seeding_rule=rule)
 
 
@@ -161,7 +161,7 @@ def test_h2h_skipped_when_meetings_unequal():
 
 
 def test_h2h_tracked_during_simulation():
-    df = pd.DataFrame({'Player': ['A', 'B'], 'Record': ['0-0'] * 2,
+    df = pd.DataFrame({'Team': ['A', 'B'], 'Record': ['0-0'] * 2,
                        'W1': [10.0, 5.0], 'W2': [5.0, 10.0]})
     sim = PlayoffSimulator(df, seeding_rule='H2H_RECORD')
     records = sim.simulate_schedule([[('A', 'B')], [('A', 'B')]])

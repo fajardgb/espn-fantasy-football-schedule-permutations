@@ -1,7 +1,7 @@
 [project]
 name = "espn-fantasy-football-schedule-permutations"
 version = "0.1.0"
-description = "Add your description here"
+description = "Measure schedule luck in ESPN fantasy football leagues by replaying real weekly scores against thousands of simulated schedules."
 readme = "README.md"
 authors = [
     { name = "GabeF", email = "gabriel.j.fajardo.gr@dartmouth.edu" }

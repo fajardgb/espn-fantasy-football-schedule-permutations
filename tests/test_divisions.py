@@ -115,12 +115,12 @@ def test_expected_win_pct_matches_all_play_with_template(season):
     # opponent each week, so the all-play oracle still holds
     rng = np.random.default_rng(3)
     teams = [f'P{slot}' for slot in sorted(parse_divisions(season))]
-    df = pd.DataFrame({'Player': teams, 'Record': ['0-0'] * 12})
+    df = pd.DataFrame({'Team': teams, 'Record': ['0-0'] * 12})
     for w in range(1, 15):
         df[f'W{w}'] = rng.permutation(12) * 10.0 + rng.uniform(0, 5, 12)
 
     results = PlayoffSimulator(df, generator=make_generator(season, teams=teams)) \
-        .run_simulation(1500).set_index('Player')
+        .run_simulation(1500).set_index('Team')
 
     scores = df[[f'W{w}' for w in range(1, 15)]].to_numpy()
     all_play = (scores[:, None, :] > scores[None, :, :]).sum(1).sum(1) / (11 * 14) * 100
@@ -135,7 +135,7 @@ def record(wins, losses, points):
 
 
 def test_division_winner_makes_playoffs_even_with_weak_record():
-    sim = PlayoffSimulator(pd.DataFrame({'Player': ['x'], 'Record': ['0-0'], 'W1': [0.0]}),
+    sim = PlayoffSimulator(pd.DataFrame({'Team': ['x'], 'Record': ['0-0'], 'W1': [0.0]}),
                            n_playoff_teams=2)
     records = {
         'E1': record(10, 4, 1500), 'E2': record(9, 5, 1400), 'E3': record(8, 6, 1300),
@@ -146,7 +146,7 @@ def test_division_winner_makes_playoffs_even_with_weak_record():
 
 
 def test_division_winner_tiebreak_uses_points():
-    sim = PlayoffSimulator(pd.DataFrame({'Player': ['x'], 'Record': ['0-0'], 'W1': [0.0]}),
+    sim = PlayoffSimulator(pd.DataFrame({'Team': ['x'], 'Record': ['0-0'], 'W1': [0.0]}),
                            n_playoff_teams=2)
     records = {'A': record(7, 7, 1300), 'B': record(7, 7, 1400),
                'C': record(9, 5, 1000), 'D': record(8, 6, 1000)}
@@ -155,7 +155,7 @@ def test_division_winner_tiebreak_uses_points():
 
 
 def test_no_divisions_ranks_overall():
-    sim = PlayoffSimulator(pd.DataFrame({'Player': ['x'], 'Record': ['0-0'], 'W1': [0.0]}),
+    sim = PlayoffSimulator(pd.DataFrame({'Team': ['x'], 'Record': ['0-0'], 'W1': [0.0]}),
                            n_playoff_teams=2)
     records = {'A': record(10, 4, 1), 'B': record(9, 5, 1), 'C': record(3, 11, 1)}
     assert sim.get_playoff_teams(records) == ['A', 'B']
@@ -174,7 +174,7 @@ def test_playoff_rule_reproduces_espn_seeds(fixture):
     }
     espn_order = [t['id'] for t in sorted(data['teams'], key=lambda t: t['playoffSeed'])][:n]
 
-    sim = PlayoffSimulator(pd.DataFrame({'Player': ['x'], 'Record': ['0-0'], 'W1': [0.0]}),
+    sim = PlayoffSimulator(pd.DataFrame({'Team': ['x'], 'Record': ['0-0'], 'W1': [0.0]}),
                            n_playoff_teams=n)
     assert sim.get_playoff_teams(records, divisions) == espn_order
 
@@ -193,10 +193,10 @@ def test_load_league_structure_from_files(season, tmp_path):
     assert structure['n_playoff_teams'] == 6
     gen = structure['generator']
     assert isinstance(gen, TemplateScheduleGenerator)
-    assert sorted(gen.teams) == sorted(scores['Player'])
+    assert sorted(gen.teams) == sorted(scores['Team'])
     schedule, divisions = gen.generate()
     assert len(schedule) == 8  # only played weeks
-    assert set(divisions) == set(scores['Player'])
+    assert set(divisions) == set(scores['Team'])
 
 
 def test_load_league_structure_falls_back_without_files(season, tmp_path):

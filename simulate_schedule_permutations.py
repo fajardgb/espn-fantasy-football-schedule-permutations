@@ -6,7 +6,6 @@ for each team in a fantasy football league.
 """
 
 import json
-import os
 import random
 from pathlib import Path
 from itertools import groupby
@@ -18,9 +17,8 @@ from matplotlib.ticker import FuncFormatter
 from matplotlib.transforms import Bbox
 import numpy as np
 import pandas as pd
-from dotenv import load_dotenv
 
-from get_espn_league_data import league_data_paths
+from get_espn_league_data import SetupError, league_data_paths, load_league_and_year, run_cli
 
 
 def games_played(record: Dict[str, float]) -> int:
@@ -212,7 +210,7 @@ class PlayoffSimulator:
         Initialize the simulator.
         
         Args:
-            scores_df: DataFrame with weekly scores (Player, Record, W1, W2, ...)
+            scores_df: DataFrame with weekly scores (Team, Record, W1, W2, ...)
             n_playoff_teams: Number of teams that make playoffs
             generator: Schedule generator with a generate() -> (schedule, divisions)
                 method. Defaults to a random round-robin with no divisions.
@@ -225,7 +223,7 @@ class PlayoffSimulator:
         """
         self.scores_df = scores_df
         self.n_playoff_teams = n_playoff_teams
-        self.teams = scores_df['Player'].tolist()
+        self.teams = scores_df['Team'].tolist()
         self.week_columns = [col for col in scores_df.columns if col.startswith('W')]
         self.n_weeks = len(self.week_columns)
         self.generator = generator or ScheduleGenerator(self.teams, self.n_weeks)
@@ -418,7 +416,7 @@ class PlayoffSimulator:
             expected_win_pct = total_wins[team] / games * 100 if games else 0.0
 
             results.append({
-                'Player': team,
+                'Team': team,
                 'Actual Record': actual_record,
                 'Points For': points_for,
                 'Actual Win %': record_to_win_pct(actual_record),
@@ -455,14 +453,14 @@ def schedule_swap_matrix(scores_df: pd.DataFrame,
     where y had a bye is a bye for x. matrix[x][x] is x's actual record.
 
     Args:
-        scores_df: Weekly scores ('Player', W1..Wn) for the weeks in actual_schedule
+        scores_df: Weekly scores ('Team', W1..Wn) for the weeks in actual_schedule
         actual_schedule: Real weekly matchups by team name
 
     Returns:
         {x: {y: {'wins', 'losses', 'ties'}}}
     """
     week_columns = [c for c in scores_df.columns if c.startswith('W')]
-    teams = scores_df['Player'].tolist()
+    teams = scores_df['Team'].tolist()
     scores = dict(zip(teams, scores_df[week_columns].to_numpy().tolist()))
 
     opponents = []  # per week: team -> opponent
@@ -496,7 +494,7 @@ def load_league_structure(scores_df: pd.DataFrame, schedule_path: Path,
     Load the league's real schedule and playoff settings, if available.
 
     Args:
-        scores_df: Scores with 'Team ID' and 'Player' columns (names final)
+        scores_df: Scores with 'Team ID' and 'Team' columns (names final)
         schedule_path: Schedule CSV written by get_espn_league_data.py
         settings_path: League settings JSON written by get_espn_league_data.py
 
@@ -541,8 +539,8 @@ def load_league_structure(scores_df: pd.DataFrame, schedule_path: Path,
     slot_divisions = dict(zip(team_ids, divisions))
 
     generator = TemplateScheduleGenerator(template, slot_divisions,
-                                          scores_df['Player'].tolist(), len(week_columns))
-    name_of = dict(zip(team_ids, scores_df['Player']))
+                                          scores_df['Team'].tolist(), len(week_columns))
+    name_of = dict(zip(team_ids, scores_df['Team']))
     actual_schedule = [[(name_of[a], name_of[b]) for a, b in week] for week in template]
     return {**structure, 'generator': generator, 'actual_schedule': actual_schedule}
 
@@ -579,13 +577,15 @@ def simulator_through_week(scores_df: pd.DataFrame, structure: dict,
 
 
 def load_scores(csv_path: Path) -> pd.DataFrame:
-    """Read the scores CSV and make player names tidy and unique."""
+    """Read the scores CSV and make team names tidy and unique."""
     df = pd.read_csv(csv_path)
-    df['Player'] = df['Player'].map(standardize_name)
-    duplicates = sorted(df.loc[df['Player'].duplicated(), 'Player'].unique())
+    if 'Team' not in df.columns and 'Player' in df.columns:
+        df = df.rename(columns={'Player': 'Team'})  # files from older versions
+    df['Team'] = df['Team'].map(standardize_name)
+    duplicates = sorted(df.loc[df['Team'].duplicated(), 'Team'].unique())
     if duplicates:
-        print(f"Warning: duplicate player names {duplicates}; adding numeric suffixes")
-    df['Player'] = disambiguate_names(df['Player'])
+        print(f"Warning: duplicate team names {duplicates}; adding numeric suffixes")
+    df['Team'] = disambiguate_names(df['Team'])
     return df
 
 
@@ -599,7 +599,7 @@ def standardize_name(name: str) -> str:
 
 def disambiguate_names(names: pd.Series) -> pd.Series:
     """
-    Make player names unique by suffixing repeats: ['MM', 'BK', 'MM'] ->
+    Make team names unique by suffixing repeats: ['MM', 'BK', 'MM'] ->
     ['MM', 'BK', 'MM (2)']. Teams are keyed by name throughout the simulation,
     so duplicates would otherwise be silently merged into one team.
     """
@@ -623,9 +623,9 @@ def record_to_win_pct(record: str) -> float:
 def _place_name_labels(fig, ax, results_df: pd.DataFrame,
                        text_color: str, leader_color: str) -> None:
     """
-    Label each point with the player's name, avoiding overlaps.
+    Label each point with the team's name, avoiding overlaps.
 
-    Actual win % is discrete, so many players share a row. Each label tries
+    Actual win % is discrete, so many teams share a row. Each label tries
     vertical offsets (above/below the dot, in widening tiers) and takes the
     first one whose rendered box doesn't collide with an already-placed label,
     a dot, or existing text on the axes (region boxes, diagonal label).
@@ -652,7 +652,7 @@ def _place_name_labels(fig, ax, results_df: pd.DataFrame,
 
             def make_label(dy, leader=False):
                 return ax.annotate(
-                    row['Player'], (x, y),
+                    row['Team'], (x, y),
                     xytext=(0, dy), textcoords='offset points',
                     ha=ha, va='bottom' if dy > 0 else 'top',
                     fontsize=10.5, color=text_color, zorder=4,
@@ -757,7 +757,7 @@ def create_luck_scatterplot(results_df: pd.DataFrame, league_id: str, year: int,
     cbar.ax.tick_params(colors=text_secondary)
     cbar.outline.set_visible(False)
 
-    # Label every player by name (luck is carried by color). Done last, once the
+    # Label every team by name (luck is carried by color). Done last, once the
     # layout (incl. colorbar) is final, so collision checks use real positions.
     _place_name_labels(fig, ax, results_df, text_primary, neutral)
 
@@ -790,16 +790,16 @@ def create_visualization(results_df: pd.DataFrame, league_id: str, year: int,
     # Create horizontal bar chart
     bars = plt.barh(range(len(sorted_results)), sorted_results['Playoff %'], color=colors)
     
-    # Create y-axis labels with player name and stats
+    # Create y-axis labels with team name and stats
     y_labels = [
-        f"{row['Player']}\n{row['Actual Record']}| {row['Points For']:.1f} PF"
+        f"{row['Team']}\n{row['Actual Record']}| {row['Points For']:.1f} PF"
         for _, row in sorted_results.iterrows()
     ]
     plt.yticks(range(len(sorted_results)), y_labels, fontsize=9)
     
     # Labels and title
     plt.xlabel('Playoff Probability (%)', fontsize=12, fontweight='bold')
-    plt.ylabel('Player', fontsize=12, fontweight='bold')
+    plt.ylabel('Team', fontsize=12, fontweight='bold')
     plt.title(
         f'Fantasy Football Playoff Probability\n({num_schedules:,} Schedule Simulations)',
         fontsize=14, fontweight='bold', pad=20
@@ -824,31 +824,27 @@ def create_visualization(results_df: pd.DataFrame, league_id: str, year: int,
     # plt.show()
 
 
-def main():
-    """Main execution function."""
-    # Load environment variables
-    load_dotenv()
-    league_id = os.getenv('LEAGUE_ID')
-    year = os.getenv('YEAR')
-    
-    if not league_id or not year:
-        raise ValueError("LEAGUE_ID and YEAR must be set in environment variables")
-    
-    # Set up paths
+def run_league_simulation(league_id, year, num_schedules: int = 10000,
+                          seed: int = 42) -> pd.DataFrame:
+    """
+    Simulate a league's season from its downloaded data, then save the
+    playoff-probability and luck plots plus a results CSV.
+
+    Raises:
+        SetupError: if the league's data hasn't been downloaded yet
+    """
     paths = league_data_paths(league_id, year)
     data_dir = paths['dir']
     csv_path = paths['scores']
-    
     if not csv_path.exists():
-        raise FileNotFoundError(f"Data file not found: {csv_path}")
-    
-    # Load data
+        raise SetupError(f"No data found for league {league_id}, {year} season ({csv_path}). "
+                         "Download it first with get_espn_league_data.py (or run run_all.py).")
+
     print(f"Loading data for league {league_id} year {year}...")
     df = load_scores(csv_path)
-    
     print(f"Number of teams: {len(df)}")
     print(f"Number of weeks: {len([col for col in df.columns if col.startswith('W')])}")
-    
+
     # Use the league's real schedule format and playoff rules when available
     structure = load_league_structure(df, paths['schedule'], paths['settings'])
     if structure['generator'] is None:
@@ -861,27 +857,28 @@ def main():
     for note in structure['notes']:
         print(f"Note: {note}")
 
-    # Run simulation
-    num_schedules = 10000
     simulator = simulator_through_week(df, structure)
-    
     print(f"\nRunning {num_schedules:,} schedule simulations...")
-    results_df = simulator.run_simulation(num_schedules, verbose=True)
-    
-    # Display results
+    results_df = simulator.run_simulation(num_schedules, seed=seed, verbose=True)
+
     print("\nPlayoff Probabilities:")
     print(results_df.to_string(index=False))
-    
-    # Create visualization
+
     print("\nCreating visualization...")
     create_visualization(results_df, league_id, year, num_schedules, data_dir.parent)
     create_luck_scatterplot(results_df, league_id, year, num_schedules, data_dir.parent)
-    
-    # Save results to CSV
+
     results_path = data_dir / f'playoff_probabilities_league{league_id}_y{year}.csv'
     results_df.to_csv(results_path, index=False)
     print(f"Results saved to {results_path}")
+    return results_df
+
+
+def main():
+    """Simulate the league named in the .env file."""
+    league_id, year = load_league_and_year()
+    run_league_simulation(league_id, year)
 
 
 if __name__ == "__main__":
-    main()
+    run_cli(main)
