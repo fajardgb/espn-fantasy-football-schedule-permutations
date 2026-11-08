@@ -9,6 +9,7 @@ import json
 import os
 import random
 from pathlib import Path
+from itertools import groupby
 from typing import Dict, List, Optional, Tuple
 
 import matplotlib.pyplot as plt
@@ -31,6 +32,25 @@ def win_pct(record: Dict[str, float]) -> float:
     """Win fraction of a simulated record; ties count as half a win."""
     games = games_played(record)
     return (record['wins'] + 0.5 * record.get('ties', 0)) / games if games else 0.0
+
+
+def is_head_to_head_rule(rule: Optional[str]) -> bool:
+    """Whether an ESPN playoffSeedingRule means head-to-head record breaks ties."""
+    return bool(rule) and ('H2H' in rule.upper() or 'HEAD' in rule.upper())
+
+
+def seeding_rule_note(rule: Optional[str]) -> Optional[str]:
+    """User-facing note when a league's tiebreaker can't be modeled exactly."""
+    if rule in (None, 'TOTAL_POINTS_SCORED') or is_head_to_head_rule(rule):
+        return None
+    return f"Playoff tiebreaker '{rule}' isn't modeled; ties are broken by total points."
+
+
+def tie_rule_note(rule: Optional[str]) -> Optional[str]:
+    """User-facing note when a league's matchup tie rule can't be modeled."""
+    if rule in (None, 'NONE'):
+        return None
+    return f"Matchup tie rule '{rule}' isn't modeled; equal scores count as ties."
 
 
 class ScheduleGenerator:
@@ -176,12 +196,18 @@ class TemplateScheduleGenerator:
         divisions = {team_in_slot[slot]: self.slot_divisions[slot] for slot in self.slots}
         return schedule, divisions
 
+    def truncated(self, n_weeks: int) -> 'TemplateScheduleGenerator':
+        """Same league structure, simulating only the first n_weeks weeks."""
+        return TemplateScheduleGenerator(self.template, self.slot_divisions,
+                                         self.teams, n_weeks)
+
 
 class PlayoffSimulator:
     """Simulates playoff outcomes based on different schedules."""
     
     def __init__(self, scores_df: pd.DataFrame, n_playoff_teams: int = 6,
-                 generator=None):
+                 generator=None, seeding_rule: Optional[str] = None,
+                 actual_schedule: Optional[List[List[Tuple[str, str]]]] = None):
         """
         Initialize the simulator.
         
@@ -190,6 +216,12 @@ class PlayoffSimulator:
             n_playoff_teams: Number of teams that make playoffs
             generator: Schedule generator with a generate() -> (schedule, divisions)
                 method. Defaults to a random round-robin with no divisions.
+            seeding_rule: ESPN playoffSeedingRule. Head-to-head rules break
+                win % ties by H2H record first; anything else uses total points.
+            actual_schedule: The real weekly matchups (by team name) for the
+                simulated weeks. When given, actual records are computed from it
+                instead of the scores file's 'Record' column, so they match the
+                simulated weeks (e.g. "through week N").
         """
         self.scores_df = scores_df
         self.n_playoff_teams = n_playoff_teams
@@ -200,6 +232,10 @@ class PlayoffSimulator:
         self.season_points = dict(zip(self.teams, scores_df[self.week_columns].sum(axis=1)))
         # Weekly scores per team, for fast lookup inside the simulation loop
         self.weekly_scores = dict(zip(self.teams, scores_df[self.week_columns].to_numpy().tolist()))
+        self.use_h2h = is_head_to_head_rule(seeding_rule)
+        self.actual_schedule = actual_schedule
+        # Filled by run_simulation: seed_counts[team][k] = times team finished seed k+1
+        self.seed_counts: Optional[pd.DataFrame] = None
     
     def simulate_schedule(self, schedule: List[List[Tuple[str, str]]]) -> Dict[str, Dict[str, float]]:
         """
@@ -218,6 +254,10 @@ class PlayoffSimulator:
             team: {'wins': 0, 'losses': 0, 'ties': 0, 'points_for': self.season_points[team]}
             for team in self.teams
         }
+        if self.use_h2h:
+            # h2h[opponent] = [wins (ties count half), games] against that opponent
+            for record in team_records.values():
+                record['h2h'] = {}
         
         for week_idx, week_matchups in enumerate(schedule):
             for team1, team2 in week_matchups:
@@ -227,12 +267,23 @@ class PlayoffSimulator:
                 if score1 > score2:
                     team_records[team1]['wins'] += 1
                     team_records[team2]['losses'] += 1
+                    result1 = 1.0
                 elif score2 > score1:
                     team_records[team2]['wins'] += 1
                     team_records[team1]['losses'] += 1
+                    result1 = 0.0
                 else:
                     team_records[team1]['ties'] += 1
                     team_records[team2]['ties'] += 1
+                    result1 = 0.5
+
+                if self.use_h2h:
+                    h1 = team_records[team1]['h2h'].setdefault(team2, [0.0, 0])
+                    h2 = team_records[team2]['h2h'].setdefault(team1, [0.0, 0])
+                    h1[0] += result1
+                    h1[1] += 1
+                    h2[0] += 1.0 - result1
+                    h2[1] += 1
         
         return team_records
     
@@ -254,39 +305,84 @@ class PlayoffSimulator:
         Returns:
             List of playoff team names, best seed first
         """
-        def rank_key(team):
-            record = team_records[team]
-            return (win_pct(record), record['points_for'])
+        return self.get_seed_order(team_records, divisions)[:self.n_playoff_teams]
 
-        ranked = sorted(team_records, key=rank_key, reverse=True)
+    def rank_teams(self, team_records: Dict[str, Dict[str, float]]) -> List[str]:
+        """
+        All teams, best first: by win %, then the league's tiebreaker.
+
+        With a head-to-head rule, teams tied on win % are ordered by their
+        record against each other, but only when every pair of tied teams met
+        equally often (ESPN's condition); total points breaks remaining ties.
+        """
+        by_pct = sorted(team_records, key=lambda t: win_pct(team_records[t]), reverse=True)
+        ranked = []
+        for _, group in groupby(by_pct, key=lambda t: win_pct(team_records[t])):
+            ranked.extend(self._break_tie(list(group), team_records))
+        return ranked
+
+    def _break_tie(self, tied: List[str], team_records) -> List[str]:
+        """Order teams with equal win %."""
+        def points(team):
+            return team_records[team]['points_for']
+
+        if len(tied) < 2 or not self.use_h2h:
+            return sorted(tied, key=points, reverse=True)
+
+        def meetings(a, b):
+            return team_records[a]['h2h'].get(b, [0.0, 0])[1]
+
+        counts = {meetings(a, b) for i, a in enumerate(tied) for b in tied[i + 1:]}
+        if len(counts) != 1:
+            return sorted(tied, key=points, reverse=True)
+
+        def h2h_pct(team):
+            results = [team_records[team]['h2h'].get(o, [0.0, 0]) for o in tied if o != team]
+            games = sum(g for _, g in results)
+            return sum(w for w, _ in results) / games if games else 0.0
+
+        return sorted(tied, key=lambda t: (h2h_pct(t), points(t)), reverse=True)
+
+    def get_seed_order(self, team_records: Dict[str, Dict[str, float]],
+                       divisions: Optional[Dict[str, str]] = None) -> List[str]:
+        """
+        Every team's final seed, best first: division winners take the top
+        seeds, then everyone else in ranking order.
+        """
+        ranked = self.rank_teams(team_records)
         if not divisions:
-            return ranked[:self.n_playoff_teams]
+            return ranked
 
         winners = []
         for team in ranked:
             if divisions[team] not in {divisions[w] for w in winners}:
                 winners.append(team)
-        wild_cards = [team for team in ranked if team not in winners]
-        return (winners + wild_cards)[:self.n_playoff_teams]
+        return winners + [team for team in ranked if team not in winners]
     
-    def run_simulation(self, num_schedules: int, seed: int = 42) -> pd.DataFrame:
+    def run_simulation(self, num_schedules: int, seed: int = 42,
+                       verbose: bool = False) -> pd.DataFrame:
         """
         Run full playoff probability simulation.
         
         Args:
             num_schedules: Number of random schedules to simulate
             seed: Random seed for reproducibility
+            verbose: Print progress every 1000 schedules
             
         Returns:
-            DataFrame with playoff probabilities for each team
+            DataFrame with playoff probabilities for each team. Also sets
+            self.seed_counts (teams x seeds 1..n, number of simulations in
+            which each team finished at each seed).
         """
         random.seed(seed)
         playoff_count = {team: 0 for team in self.teams}
         total_wins = {team: 0 for team in self.teams}
         total_games = {team: 0 for team in self.teams}
+        team_index = {team: i for i, team in enumerate(self.teams)}
+        seed_counts = np.zeros((len(self.teams), len(self.teams)), dtype=int)
         
         for i in range(num_schedules):
-            if i % 1000 == 0:
+            if verbose and i % 1000 == 0:
                 print(f"Processing schedule {i}/{num_schedules}")
             
             schedule, divisions = self.generator.generate()
@@ -294,10 +390,14 @@ class PlayoffSimulator:
             for team, record in team_records.items():
                 total_wins[team] += record['wins'] + 0.5 * record['ties']
                 total_games[team] += games_played(record)
-            playoff_teams = self.get_playoff_teams(team_records, divisions)
-            
-            for team in playoff_teams:
+            seed_order = self.get_seed_order(team_records, divisions)
+            for seed_idx, team in enumerate(seed_order):
+                seed_counts[team_index[team], seed_idx] += 1
+            for team in seed_order[:self.n_playoff_teams]:
                 playoff_count[team] += 1
+
+        self.seed_counts = pd.DataFrame(seed_counts, index=self.teams,
+                                        columns=range(1, len(self.teams) + 1))
         
         # Calculate playoff percentages
         playoff_percentages = {
@@ -306,10 +406,11 @@ class PlayoffSimulator:
         }
         
         # Create results DataFrame
+        actual_records = self.actual_records()
         results = []
         for team in self.teams:
-            actual_record = self.scores_df[self.scores_df['Player'] == team]['Record'].values[0]
-            points_for = self.scores_df[self.scores_df['Player'] == team][self.week_columns].sum(axis=1).values[0]
+            actual_record = actual_records[team]
+            points_for = self.season_points[team]
             
             # Win % across every simulated schedule permutation
             # (byes excluded, ties count as half a win)
@@ -328,6 +429,66 @@ class PlayoffSimulator:
         
         return pd.DataFrame(results).sort_values('Playoff %', ascending=False)
 
+    def actual_records(self) -> Dict[str, str]:
+        """Each team's real 'W-L' / 'W-L-T' record over the simulated weeks."""
+        if self.actual_schedule is None:
+            return dict(zip(self.teams, self.scores_df['Record']))
+        h2h, self.use_h2h = self.use_h2h, False
+        records = self.simulate_schedule(self.actual_schedule)
+        self.use_h2h = h2h
+        return {team: format_record(r) for team, r in records.items()}
+
+
+def format_record(record: Dict[str, float]) -> str:
+    """'W-L', or 'W-L-T' when there are ties."""
+    text = f"{record['wins']}-{record['losses']}"
+    return text + f"-{record['ties']}" if record.get('ties') else text
+
+
+def schedule_swap_matrix(scores_df: pd.DataFrame,
+                         actual_schedule: List[List[Tuple[str, str]]]) -> Dict[str, Dict[str, Dict]]:
+    """
+    Every team's record if it had played every other team's real schedule.
+
+    matrix[x][y] is x's record using y's schedule: each week x faces y's
+    opponent, and when y's opponent was x itself, x faces y instead. A week
+    where y had a bye is a bye for x. matrix[x][x] is x's actual record.
+
+    Args:
+        scores_df: Weekly scores ('Player', W1..Wn) for the weeks in actual_schedule
+        actual_schedule: Real weekly matchups by team name
+
+    Returns:
+        {x: {y: {'wins', 'losses', 'ties'}}}
+    """
+    week_columns = [c for c in scores_df.columns if c.startswith('W')]
+    teams = scores_df['Player'].tolist()
+    scores = dict(zip(teams, scores_df[week_columns].to_numpy().tolist()))
+
+    opponents = []  # per week: team -> opponent
+    for week in actual_schedule:
+        lookup = {}
+        for a, b in week:
+            lookup[a], lookup[b] = b, a
+        opponents.append(lookup)
+
+    matrix = {}
+    for x in teams:
+        matrix[x] = {}
+        for y in teams:
+            record = {'wins': 0, 'losses': 0, 'ties': 0}
+            for week_idx, lookup in enumerate(opponents):
+                opponent = lookup.get(y)
+                if opponent is None:
+                    continue
+                if opponent == x:
+                    opponent = y
+                mine, theirs = scores[x][week_idx], scores[opponent][week_idx]
+                key = 'wins' if mine > theirs else 'losses' if mine < theirs else 'ties'
+                record[key] += 1
+            matrix[x][y] = record
+    return matrix
+
 
 def load_league_structure(scores_df: pd.DataFrame, schedule_path: Path,
                           settings_path: Path) -> dict:
@@ -340,24 +501,26 @@ def load_league_structure(scores_df: pd.DataFrame, schedule_path: Path,
         settings_path: League settings JSON written by get_espn_league_data.py
 
     Returns:
-        {'generator': TemplateScheduleGenerator or None, 'n_playoff_teams': int}.
-        generator is None when the files (or team IDs) are missing; the
-        simulator then falls back to a random round-robin with no divisions.
+        {'generator': TemplateScheduleGenerator or None,
+         'n_playoff_teams': int,
+         'seeding_rule': ESPN playoffSeedingRule or None,
+         'actual_schedule': real weekly matchups by team name, or None,
+         'notes': user-facing notes about rules that can't be modeled}.
+        generator and actual_schedule are None when the files (or team IDs)
+        are missing; the simulator then falls back to a random round-robin
+        with no divisions.
     """
     settings = {}
     if Path(settings_path).exists():
         settings = json.loads(Path(settings_path).read_text())
-    n_playoff_teams = settings.get('playoff_team_count', 6)
-
     rule = settings.get('playoff_seeding_rule')
-    if rule not in (None, 'TOTAL_POINTS_SCORED'):
-        print(f"Warning: playoff tiebreaker '{rule}' isn't modeled; using total points")
-    tie_rule = settings.get('matchup_tie_rule')
-    if tie_rule not in (None, 'NONE'):
-        print(f"Warning: matchup tie rule '{tie_rule}' isn't modeled; equal scores count as ties")
+    notes = [n for n in (seeding_rule_note(rule),
+                         tie_rule_note(settings.get('matchup_tie_rule'))) if n]
+    structure = {'generator': None, 'n_playoff_teams': settings.get('playoff_team_count', 6),
+                 'seeding_rule': rule, 'actual_schedule': None, 'notes': notes}
 
     if not Path(schedule_path).exists() or 'Team ID' not in scores_df.columns:
-        return {'generator': None, 'n_playoff_teams': n_playoff_teams}
+        return structure
 
     schedule_df = pd.read_csv(schedule_path)
     weeks: Dict[int, List[Tuple[int, int]]] = {}
@@ -379,7 +542,51 @@ def load_league_structure(scores_df: pd.DataFrame, schedule_path: Path,
 
     generator = TemplateScheduleGenerator(template, slot_divisions,
                                           scores_df['Player'].tolist(), len(week_columns))
-    return {'generator': generator, 'n_playoff_teams': n_playoff_teams}
+    name_of = dict(zip(team_ids, scores_df['Player']))
+    actual_schedule = [[(name_of[a], name_of[b]) for a, b in week] for week in template]
+    return {**structure, 'generator': generator, 'actual_schedule': actual_schedule}
+
+
+def simulator_through_week(scores_df: pd.DataFrame, structure: dict,
+                           week: Optional[int] = None) -> PlayoffSimulator:
+    """
+    A simulator for the season as if it ended after the first `week` weeks.
+
+    Args:
+        scores_df: Full scores (names final), as passed to load_league_structure
+        structure: Output of load_league_structure
+        week: Last week to include; None means every week played. Earlier
+            cutoffs need the real schedule (to know actual records then).
+    """
+    week_columns = [c for c in scores_df.columns if c.startswith('W')]
+    week = len(week_columns) if week is None else week
+    if not 1 <= week <= len(week_columns):
+        raise ValueError(f"week must be between 1 and {len(week_columns)}")
+    if week < len(week_columns) and structure['actual_schedule'] is None:
+        raise ValueError("Simulating part of the season needs the league's schedule file")
+
+    other_columns = [c for c in scores_df.columns if not c.startswith('W')]
+    df = scores_df[other_columns + week_columns[:week]]
+    generator = structure['generator']
+    actual = structure['actual_schedule']
+    return PlayoffSimulator(
+        df,
+        n_playoff_teams=structure['n_playoff_teams'],
+        generator=generator.truncated(week) if generator else None,
+        seeding_rule=structure['seeding_rule'],
+        actual_schedule=actual[:week] if actual else None,
+    )
+
+
+def load_scores(csv_path: Path) -> pd.DataFrame:
+    """Read the scores CSV and make player names tidy and unique."""
+    df = pd.read_csv(csv_path)
+    df['Player'] = df['Player'].map(standardize_name)
+    duplicates = sorted(df.loc[df['Player'].duplicated(), 'Player'].unique())
+    if duplicates:
+        print(f"Warning: duplicate player names {duplicates}; adding numeric suffixes")
+    df['Player'] = disambiguate_names(df['Player'])
+    return df
 
 
 def standardize_name(name: str) -> str:
@@ -637,12 +844,7 @@ def main():
     
     # Load data
     print(f"Loading data for league {league_id} year {year}...")
-    df = pd.read_csv(csv_path)
-    df['Player'] = df['Player'].map(standardize_name)
-    duplicates = sorted(df.loc[df['Player'].duplicated(), 'Player'].unique())
-    if duplicates:
-        print(f"Warning: duplicate player names {duplicates}; adding numeric suffixes")
-    df['Player'] = disambiguate_names(df['Player'])
+    df = load_scores(csv_path)
     
     print(f"Number of teams: {len(df)}")
     print(f"Number of weeks: {len([col for col in df.columns if col.startswith('W')])}")
@@ -656,14 +858,15 @@ def main():
         print("Using the league's real schedule format"
               + (f" with divisions {divisions}" if divisions else ""))
     print(f"Playoff teams: {structure['n_playoff_teams']}")
+    for note in structure['notes']:
+        print(f"Note: {note}")
 
     # Run simulation
     num_schedules = 10000
-    simulator = PlayoffSimulator(df, n_playoff_teams=structure['n_playoff_teams'],
-                                 generator=structure['generator'])
+    simulator = simulator_through_week(df, structure)
     
     print(f"\nRunning {num_schedules:,} schedule simulations...")
-    results_df = simulator.run_simulation(num_schedules)
+    results_df = simulator.run_simulation(num_schedules, verbose=True)
     
     # Display results
     print("\nPlayoff Probabilities:")

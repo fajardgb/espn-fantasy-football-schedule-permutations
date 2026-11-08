@@ -204,4 +204,5 @@ def test_load_league_structure_falls_back_without_files(season, tmp_path):
     scores = pd.read_csv(tmp_path / 'scores.csv')
     structure = load_league_structure(scores, tmp_path / 'missing.csv',
                                       tmp_path / 'missing.json')
-    assert structure == {'generator': None, 'n_playoff_teams': 6}
+    assert structure['generator'] is None and structure['actual_schedule'] is None
+    assert structure['n_playoff_teams'] == 6

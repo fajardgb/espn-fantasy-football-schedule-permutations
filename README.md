@@ -89,6 +89,23 @@ uv run python get_espn_league_data.py
 ```
 uv run python simulate_schedule_permutations.py
 ```
+3. Build the shareable HTML report (optional)
+```
+uv run python build_report.py
+```
+This writes one self-contained `.html` file with interactive charts and a **"through week N"** slider that shows how the luck built up over the season. Open it in any browser, send it to your league, or host it as a static page. Options:
+- `--sims 20000` sets the number of simulated schedules per week (default 10000)
+- `--seed 7` changes the random seed (default 42)
+- `--offline` embeds the charting library so the file works without internet (adds ~5 MB)
+
+Add `#week=5` to the end of the report's URL to open it at a given week.
+
+The report contains:
+- **Playoff odds** for each team
+- **Schedule luck**: actual vs. expected win %, colored by luck index
+- **What if you had their schedule?**: a heatmap of every team's record if it had played every other team's real schedule
+- **Where each team finishes**: the distribution of final seeds for each team, one small chart per team
+- A table view of the numbers
 
 ## Running the tests
 ```
@@ -105,6 +122,7 @@ Everything is written to `output/league<LEAGUE_ID>_year<YEAR>/`:
 |------|-------------|
 | `league<ID>_year<YEAR>_playoff_probabilities.png` | Bar chart of each team's playoff probability |
 | `league<ID>_year<YEAR>_luck_scatterplot.png` | Actual vs. expected win % scatterplot, colored by luck index |
+| `league<ID>_year<YEAR>_report.html` | Shareable interactive report (from `build_report.py`) |
 | `data/fantasy_scores_wide_league<ID>_y<YEAR>.csv` | Each team's ESPN team ID, division, record, and weekly scores (completed regular-season weeks only) |
 | `data/schedule_league<ID>_y<YEAR>.csv` | The league's full regular-season schedule, including weeks not yet played |
 | `data/league_settings_league<ID>_y<YEAR>.json` | League rules used by the simulation: playoff team count, playoff tiebreaker, season length, tie rule, and divisions |
