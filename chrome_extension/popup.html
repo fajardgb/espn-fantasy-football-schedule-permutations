@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Schedule Luck setup</title>
+<link rel="stylesheet" href="popup.css">
+<script type="module" src="popup.js"></script>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Schedule luck setup</h1>
+    <p class="sub">Your league details for the schedule-luck tool.</p>
+  </header>
+
+  <p class="banner" id="page-banner" hidden></p>
+
+  <section class="fields">
+    <label class="field">
+      <span class="name">League ID</span>
+      <input id="league-id" inputmode="numeric" autocomplete="off" spellcheck="false" placeholder="e.g. 12345678">
+    </label>
+    <label class="field">
+      <span class="name">Season</span>
+      <input id="year" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="e.g. 2025">
+    </label>
+    <p class="error" id="input-error" role="alert" hidden></p>
+  </section>
+
+  <section class="cookies" aria-labelledby="cookies-title">
+    <h2 id="cookies-title">ESPN login <span class="hint">(needed for private leagues)</span></h2>
+    <div class="cookie">
+      <span class="name">ESPN_S2</span>
+      <code id="espn-s2">…</code>
+    </div>
+    <div class="cookie">
+      <span class="name">SWID</span>
+      <code id="swid">…</code>
+    </div>
+    <p class="status" id="login-status"></p>
+  </section>
+
+  <section class="check" aria-live="polite">
+    <p class="status" id="league-status"></p>
+  </section>
+
+  <div class="actions">
+    <button id="copy-env" class="primary" type="button">Copy as .env</button>
+    <button id="reveal" type="button" aria-pressed="false">Show values</button>
+  </div>
+  <p class="copied" id="copied" role="status"></p>
+
+  <details>
+    <summary>What do I do with this?</summary>
+    <ol>
+      <li>Click <b>Copy as .env</b>.</li>
+      <li>In the project folder, open the file named <code>.env</code> (or create it), replace everything in it with what you copied, and save.</li>
+      <li>Run <code>uv run python run_all.py</code>.</li>
+    </ol>
+    <p>Your login values never leave this browser: the extension only reads them and copies them to your clipboard. Treat them like a password and don’t share them.</p>
+  </details>
+</main>
+</body>
+</html>

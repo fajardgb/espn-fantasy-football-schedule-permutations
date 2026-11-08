@@ -86,7 +86,9 @@ cp .env_example .env
 ```
 (On Windows PowerShell: `Copy-Item .env_example .env`.) Files starting with a dot can be hidden. On a Mac, press `Cmd + Shift + .` in Finder to show them.
 
-Open `.env` in any text editor and fill in the four values below. When you're done it should look like this (with your own values):
+> **Shortcut: use the Chrome extension.** The [Schedule Luck setup extension](./chrome_extension/) finds all four values for you. Open your league on ESPN, click the extension, click **Copy as .env**, and paste the result into `.env`. Installing it takes about a minute (see [its instructions](./chrome_extension/README.md)). If you use it, you can skip Steps 1 and 2 below.
+
+To fill it in by hand, open `.env` in any text editor and fill in the four values below. When you're done it should look like this (with your own values):
 ```
 LEAGUE_ID=12345678
 YEAR=2025
@@ -174,6 +176,11 @@ uv run pytest
 ```
 With pip, install pytest first (`pip install pytest`), then run `pytest`.
 The tests cover league sizes from 4 to 16 teams (odd and even), different season lengths, divisions, ties, head-to-head tiebreakers, setup errors, and parsing ESPN API responses. API tests use anonymized copies of real ESPN responses in `tests/fixtures/`, so no credentials or network access are needed.
+
+The Chrome extension has its own tests, which need [Node.js](https://nodejs.org/) 20 or newer:
+```
+cd chrome_extension && npm test
+```
 
 ## Outputs
 Everything is written to `output/league<LEAGUE_ID>_year<YEAR>/`:
