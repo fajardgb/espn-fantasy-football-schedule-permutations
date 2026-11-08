@@ -191,7 +191,7 @@ export function actualRecords(league, week) {
  * @returns {{results: object[], seedCounts: number[][]}} results sorted by
  *   playoff % (best first); seedCounts[team][k] = simulations finishing seed k+1
  */
-export function runSimulation(league, { week, numSchedules = 10000, seed = 42 } = {}) {
+export function runSimulation(league, { week, numSchedules = 100000, seed = 42 } = {}) {
   const season = seasonThrough(league, week ?? league.weeks.length);
   const { n } = season;
   const random = seededRandom(seed);
@@ -280,7 +280,7 @@ export function swapMatrix(league, week) {
  *   called after each cutoff; between cutoffs the browser gets a chance to repaint
  * @param {object} [options.meta] extra league fields (id, year, name, generated)
  */
-export async function buildReportData(league, { numSchedules = 10000, seed = 42, onProgress, meta = {} } = {}) {
+export async function buildReportData(league, { numSchedules = 100000, seed = 42, onProgress, meta = {} } = {}) {
   const total = league.weeks.length;
   const weeks = [];
   for (let week = 1; week <= total; week++) {

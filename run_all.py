@@ -3,7 +3,7 @@ Run everything in one go: download your league from ESPN, simulate the
 schedules, save the plots, and build the shareable HTML report.
 
 Usage:
-    uv run python run_all.py [--sims 10000] [--seed 42] [--offline] [--skip-download] [--no-open]
+    uv run python run_all.py [--sims 100000] [--seed 42] [--offline] [--skip-download] [--no-open]
 
 Your league details are read from the .env file (see the README).
 """

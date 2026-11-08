@@ -14,6 +14,10 @@
   --seq-high: #104281;
   --note-bg: #fff6e0;
   --note-border: #eda100;
+  --more: #2a78d6;
+  --fewer: #e34948;
+  --same: #e6e5e0;
+  --own: #52514e;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -32,6 +36,10 @@
     --seq-high: #9ec5f4;
     --note-bg: #2b2414;
     --note-border: #c98500;
+    --more: #3987e5;
+    --fewer: #e66767;
+    --same: #3a3a37;
+    --own: #c3c2b7;
   }
 }
 :root[data-theme="dark"] {
@@ -50,6 +58,10 @@
   --seq-high: #9ec5f4;
   --note-bg: #2b2414;
   --note-border: #c98500;
+  --more: #3987e5;
+  --fewer: #e66767;
+  --same: #3a3a37;
+  --own: #c3c2b7;
 }
 * { box-sizing: border-box; }
 body {
@@ -115,3 +127,19 @@ th, td { padding: 6px 10px; text-align: right; border-bottom: 1px solid var(--bo
 th:first-child, td:first-child { text-align: left; }
 th { color: var(--text-secondary); font-weight: 600; }
 footer { margin-top: 28px; color: var(--text-muted); font-size: 13px; text-align: center; }
+
+/* "What if you had their schedule?" controls, summary and color key */
+.swap-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin: 4px 0 12px; }
+.swap-team { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.swap-team[hidden] { display: none; }
+.swap-team select {
+  font: inherit; font-weight: 400; padding: 6px 10px; border-radius: 6px;
+  border: 1px solid var(--border); background: var(--surface-0); color: var(--text-primary); max-width: 60vw;
+}
+.toggle { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; padding: 2px; background: var(--surface-0); }
+.toggle button {
+  font: inherit; font-size: 14px; padding: 5px 12px; border: 0; border-radius: 6px;
+  background: transparent; color: var(--text-secondary); cursor: pointer;
+}
+.toggle button[aria-pressed="true"] { background: var(--surface-1); color: var(--text-primary); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.12); }
+.toggle button:focus-visible, .swap-team select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }

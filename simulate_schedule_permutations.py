@@ -824,7 +824,7 @@ def create_visualization(results_df: pd.DataFrame, league_id: str, year: int,
     # plt.show()
 
 
-def run_league_simulation(league_id, year, num_schedules: int = 10000,
+def run_league_simulation(league_id, year, num_schedules: int = 100000,
                           seed: int = 42) -> pd.DataFrame:
     """
     Simulate a league's season from its downloaded data, then save the

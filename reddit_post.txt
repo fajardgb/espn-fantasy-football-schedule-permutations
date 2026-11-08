@@ -1,0 +1,52 @@
+TITLE:
+I built a free Chrome extension that shows how much schedule luck decided your ESPN league (playoff odds, "what if you had their schedule", and more)
+
+BODY:
+Last season I scored the 2nd-most points in my 12-team league and still missed the playoffs. I wanted to know how unlucky that actually was, so I built a tool to measure it, and then turned it into a Chrome extension so anyone in an ESPN league can run it on their own league in a couple of clicks.
+
+**What it does**
+
+It takes every team's real weekly scores and replays them against 100,000 random schedules that keep your league's real format (divisions, playoff spots, tiebreakers). Then it shows:
+
+* **Playoff odds:** how often each team makes the playoffs across all those schedules
+* **Schedule luck:** each team's actual win % vs. the win % their scores "deserved," so you can see who got lucky and who got robbed
+* **What if you had their schedule?:** pick a team and see what its record would have been with every other team's schedule, next to its actual record, color-coded by how many more (blue) or fewer (red) wins it would have had. In the example league, one team that went 6-8 would have done better with 8 of the other 11 teams' schedules. You can also show the whole league at once.
+* **Where each team finishes:** the spread of final seeds for each team
+* A week-by-week view that shows how the luck built up over the season
+
+When it's done, you can download the whole thing as a **PDF** and drop it in your league chat.
+
+**How to install it (about 2 minutes)**
+
+It isn't on the Chrome Web Store yet, so you add it manually:
+
+1. Go to the GitHub page: https://github.com/fajardgb/espn-fantasy-football-schedule-permutations
+2. Click the green **Code** button, then **Download ZIP**, and unzip it.
+3. In Chrome, go to `chrome://extensions` and turn on **Developer mode** (top right).
+4. Click **Load unpacked** and select the `chrome_extension` folder inside what you unzipped.
+5. Click the puzzle-piece icon in Chrome's toolbar and pin **Fantasy Schedule Luck**.
+
+It also works in Edge and Brave.
+
+**How to use it**
+
+1. Log in to ESPN and open your league on fantasy.espn.com (league home, standings, any league page).
+2. Click the extension's icon. It fills in your league automatically.
+3. Click **Build report**. It takes a few seconds.
+4. Click **Download PDF** to share it.
+
+Works for private leagues too, as long as you're logged in to ESPN in that browser.
+
+**Privacy**
+
+* Everything runs in your own browser. There's no server, no account, and nothing is collected.
+* Your ESPN login never leaves your browser. The extension only uses it to load your league's data from ESPN, exactly like viewing your league normally.
+* The PDF only contains team names, records and scores, the same things everyone in your league can already see.
+* It's open source, so you can read every line of code on GitHub.
+
+**Limitations**
+
+* ESPN leagues only, football only.
+* Head-to-head and total-points tiebreakers are modeled. If your league uses a different tiebreaker, the report tells you and falls back to total points.
+
+Not affiliated with ESPN. Would love feedback, bug reports, or feature ideas. Drop them in the comments or open an issue on GitHub. And post your league's unluckiest team!

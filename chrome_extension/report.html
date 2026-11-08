@@ -8,14 +8,19 @@
 <link rel="stylesheet" href="report/report.css">
 <link rel="stylesheet" href="report_page.css">
 <script src="vendor/plotly.min.js"></script>
+<script src="vendor/jspdf.umd.min.js"></script>
 <script src="report/report.js"></script>
 <script type="module" src="report_page.js"></script>
 </head>
 <body>
 <div class="page-bar" id="page-bar" hidden>
   <div class="page-bar-inner">
-    <span class="page-bar-text">Share this report: the file doesn’t include your ESPN login.</span>
-    <button type="button" id="download" class="primary">Download report (.html)</button>
+    <span class="page-bar-text">Share with your league. The full season is saved, and your ESPN login isn’t included.</span>
+    <span class="page-bar-actions">
+      <button type="button" id="download-html" class="secondary">Web page (.html)</button>
+      <button type="button" id="download-pdf" class="primary">Download PDF</button>
+    </span>
+    <span class="download-error" id="download-error" role="alert" hidden></span>
   </div>
 </div>
 

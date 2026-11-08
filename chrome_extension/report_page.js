@@ -8,8 +8,9 @@ import { API_VIEWS, parseLeague } from './lib/espn.js';
 import { describeLeagueResponse, leagueApiUrl, validateInputs } from './lib/league.js';
 import { buildReportData } from './lib/simulate.js';
 import { standaloneHtml } from './lib/standalone.js';
+import { buildReportPdf } from './report_pdf.js';
 
-const NUM_SCHEDULES = 10000;
+const NUM_SCHEDULES = 100000;
 
 const $ = (id) => document.getElementById(id);
 
@@ -57,8 +58,8 @@ async function downloadLeague(leagueId, year) {
 
 // ----------------------------------------------------------- download file
 
-function fileName(league) {
-  return `league${league.id}_year${league.year}_report.html`;
+function fileName(league, extension) {
+  return `league${league.id}_year${league.year}_report.${extension}`;
 }
 
 /** A standalone .html file, built from the same files as build_report.py's reports. */
@@ -70,20 +71,43 @@ async function reportFile(data) {
   return standaloneHtml({ template, css, js, data });
 }
 
-async function saveReport(data) {
-  const button = $('download');
+function saveBlob(blob, name) {
+  const url = URL.createObjectURL(blob);
+  const link = Object.assign(document.createElement('a'), { href: url, download: name });
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+}
+
+/** Run a download from a button, showing that it's working and any failure. */
+async function withButton(button, busyLabel, task) {
+  const label = button.textContent;
   button.disabled = true;
+  button.textContent = busyLabel;
+  $('download-error').hidden = true;
   try {
-    const blob = new Blob([await reportFile(data)], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const link = Object.assign(document.createElement('a'), { href: url, download: fileName(data.league) });
-    document.body.append(link);
-    link.click();
-    link.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    await task();
+  } catch (error) {
+    console.error(error);
+    $('download-error').textContent = `Couldn’t make the file: ${error?.message || error}`;
+    $('download-error').hidden = false;
   } finally {
     button.disabled = false;
+    button.textContent = label;
   }
+}
+
+function savePdf(data) {
+  return withButton($('download-pdf'), 'Making PDF…', async () => {
+    saveBlob(await buildReportPdf(data), fileName(data.league, 'pdf'));
+  });
+}
+
+function saveHtml(data) {
+  return withButton($('download-html'), 'Saving…', async () => {
+    saveBlob(new Blob([await reportFile(data)], { type: 'text/html' }), fileName(data.league, 'html'));
+  });
 }
 
 // -------------------------------------------------------------------- main
@@ -123,7 +147,8 @@ async function main() {
 
   $('progress').dataset.state = 'done';
   $('page-bar').hidden = false;
-  $('download').addEventListener('click', () => saveReport(data));
+  $('download-pdf').addEventListener('click', () => savePdf(data));
+  $('download-html').addEventListener('click', () => saveHtml(data));
   window.renderReport(data, $('report-root'));
 }
 

@@ -2,7 +2,7 @@
 
 In my 2025 fantasy football season, I scored the 2nd-most points in my 12-team league and still missed the playoffs. That raised a question: how unlucky was I, really? This project answers it for any ESPN league.
 
-Here's an example from an anonymized 12-team league, where 6 teams make the playoffs. **Owner 6** scored the 5th-most points but went 6-8 and missed the playoffs. Replaying the same weekly scores against 10,000 random schedules, Owner 6 makes the playoffs 68% of the time. Owner 3 *did* make it at 7-7, despite scoring about 100 fewer points.
+Here's an example from an anonymized 12-team league, where 6 teams make the playoffs. **Owner 6** scored the 5th-most points but went 6-8 and missed the playoffs. Replaying the same weekly scores against 100,000 random schedules, Owner 6 makes the playoffs 68% of the time. Owner 3 *did* make it at 7-7, despite scoring about 100 fewer points.
 
 ![playoff_probabilities](./output_example/leaguedemo_year2025/leaguedemo_year2025_playoff_probabilities.png)
 
@@ -54,7 +54,7 @@ In the example league, Owner 6's scores were good enough to win about 54% of the
 |---|---|---|
 | Install | Add the extension to Chrome (about a minute) | Install uv, download the project, set up a `.env` file |
 | Run | Open your league on ESPN, click **Build report** | `uv run python run_all.py` |
-| You get | The interactive report, with a button to download it as a shareable file | The same report, plus PNG plots and CSV files |
+| You get | The report in your browser, plus a **PDF** to share with your league | The same report as a web page, plus PNG plots and CSV files |
 
 ## Chrome extension
 1. Download this project: click the green **Code** button on the [GitHub page](https://github.com/fajardgb/espn-fantasy-football-schedule-permutations) → **Download ZIP**, and unzip it.
@@ -156,7 +156,7 @@ If you installed with pip, drop the `uv run` prefix from the commands below.
 uv run python run_all.py
 ```
 This downloads your league from ESPN, runs the simulations, saves the plots, and builds the shareable report. When it's done, the report opens in your browser. Options:
-- `--sims 20000`: number of simulated schedules (default 10000; more is more precise but slower)
+- `--sims 20000`: number of simulated schedules (default 100000; fewer is faster, more is more precise)
 - `--offline`: embed the charting library in the report so it works without internet (adds ~5 MB)
 - `--skip-download`: reuse the data downloaded last time instead of fetching it again
 - `--no-open`: don't open the report automatically

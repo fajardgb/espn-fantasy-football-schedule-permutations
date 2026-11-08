@@ -6,7 +6,7 @@ Every slider position is simulated ahead of time here, so the page needs no
 server: open it locally, email it, or host it as a static file.
 
 Usage:
-    uv run python build_report.py [--sims 10000] [--seed 42] [--offline]
+    uv run python build_report.py [--sims 100000] [--seed 42] [--offline]
 """
 
 import argparse
@@ -42,12 +42,15 @@ def grid_shape(n_teams: int, max_columns: int = MAX_GRID_COLUMNS) -> tuple[int, 
 
 
 def build_report_data(scores_df: pd.DataFrame, structure: dict,
-                      num_schedules: int = 10000, seed: int = 42) -> dict:
+                      num_schedules: int = 100000, seed: int = 42,
+                      on_progress=None) -> dict:
     """
     Simulate every "through week N" cutoff and collect what the charts need.
 
     Without the league's schedule file only the full season can be simulated
     (actual records at earlier weeks are unknown), so the slider has one stop.
+
+    on_progress, if given, is called as on_progress(done, total) after each week.
     """
     week_columns = [c for c in scores_df.columns if c.startswith('W')]
     n_weeks = len(week_columns)
@@ -87,6 +90,8 @@ def build_report_data(scores_df: pd.DataFrame, structure: dict,
                 'records': [[format_record(matrix[x][y]) for y in teams] for x in teams],
             }
         weeks.append(entry)
+        if on_progress:
+            on_progress(len(weeks), len(cutoffs))
 
     generator = structure['generator']
     divisions = sorted(set(generator.slot_divisions.values()) - {''}) if generator else []
@@ -127,7 +132,7 @@ def render_html(data: dict, title: str, offline: bool = False) -> str:
     return re.sub(r'__(TITLE|PLOTLY|CSS|JS|DATA)__', lambda m: pieces[m.group(1)], template)
 
 
-def build_report(league_id, year, num_schedules: int = 10000, seed: int = 42,
+def build_report(league_id, year, num_schedules: int = 100000, seed: int = 42,
                  offline: bool = False) -> Path:
     """
     Build the HTML report for a league from its downloaded data.
@@ -151,7 +156,10 @@ def build_report(league_id, year, num_schedules: int = 10000, seed: int = 42,
 
     n_weeks = len([c for c in scores.columns if c.startswith('W')])
     print(f"Simulating {num_schedules:,} schedules for each of {n_weeks} week cutoffs...")
-    data = build_report_data(scores, structure, num_schedules, seed)
+    def show_progress(done, total):
+        print(f"  week {done} of {total} done", end='\n' if done == total else '\r', flush=True)
+
+    data = build_report_data(scores, structure, num_schedules, seed, on_progress=show_progress)
     data['league'].update({'id': str(league_id), 'year': int(year),
                            'generated': date.today().isoformat()})
 
@@ -164,8 +172,8 @@ def build_report(league_id, year, num_schedules: int = 10000, seed: int = 42,
 
 def add_report_arguments(parser: argparse.ArgumentParser) -> None:
     """Command-line options shared with run_all.py."""
-    parser.add_argument('--sims', type=int, default=10000,
-                        help='simulated schedules (per week in the report; default 10000)')
+    parser.add_argument('--sims', type=int, default=100000,
+                        help='simulated schedules (per week in the report; default 100000)')
     parser.add_argument('--seed', type=int, default=42, help='random seed (default 42)')
     parser.add_argument('--offline', action='store_true',
                         help='embed Plotly in the report so it works without internet (~5 MB)')
