@@ -96,6 +96,12 @@ section.check .status { margin: 0; }
 .status[data-level="good"] { color: var(--text-primary); }
 
 .actions { display: flex; gap: 8px; }
+.actions button { flex: 1; }
+button.big { width: 100%; padding: 10px 12px; font-size: 14px; }
+.build-hint { margin: -6px 0 0; color: var(--text-muted); text-align: center; font-size: 12px; }
+section.python h2 { margin-bottom: 8px; }
+section.python .copied:empty { display: none; }
+section.python .copied { margin: 8px 0 0; }
 button {
   font: inherit; font-weight: 600; padding: 7px 12px; border-radius: 6px; cursor: pointer;
   border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary);

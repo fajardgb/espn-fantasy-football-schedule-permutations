@@ -44,14 +44,20 @@
     <p class="status" id="league-status"></p>
   </section>
 
-  <div class="actions">
-    <button id="copy-env" class="primary" type="button">Copy as .env</button>
-    <button id="reveal" type="button" aria-pressed="false">Show values</button>
-  </div>
-  <p class="copied" id="copied" role="status"></p>
+  <button id="build-report" class="primary big" type="button">Build report</button>
+  <p class="build-hint">Simulates your league right here in the browser. No install needed.</p>
+
+  <section class="python" aria-labelledby="python-title">
+    <h2 id="python-title">Using the Python tool instead?</h2>
+    <div class="actions">
+      <button id="copy-env" type="button">Copy as .env</button>
+      <button id="reveal" type="button" aria-pressed="false">Show values</button>
+    </div>
+    <p class="copied" id="copied" role="status"></p>
+  </section>
 
   <details>
-    <summary>What do I do with this?</summary>
+    <summary>What does Copy as .env do?</summary>
     <ol>
       <li>Click <b>Copy as .env</b>.</li>
       <li>In the project folder, open the file named <code>.env</code> (or create it), replace everything in it with what you copied, and save.</li>

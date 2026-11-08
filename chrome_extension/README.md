@@ -1,44 +1,63 @@
-# Schedule Luck: League Setup (Chrome extension)
+# Fantasy Schedule Luck (Chrome extension)
 
-This small Chrome extension fills in your `.env` file for you. Open your league on ESPN, click the extension, and click **Copy as .env**. You don't need developer tools or have to hunt for cookies.
+Build the schedule luck report for your ESPN fantasy football league right in your browser. There's nothing to install besides the extension, and no terminal or Python needed.
 
-It finds:
-- your **league ID** and **season**, from the address of the ESPN page you're on
-- your **ESPN_S2** and **SWID** login cookies, from your browser (needed for private leagues)
+Open your league on ESPN, click the extension, and click **Build report**. A new tab downloads your league, simulates 10,000 random schedules for every week of the season, and shows the full interactive report:
+- **Playoff odds** for each team
+- **Schedule luck**: actual vs. expected win %
+- **What if you had their schedule?**: every team's record on every other team's real schedule
+- **Where each team finishes**: each team's spread of final seeds
+- A **"through week N"** picker that shows how the luck built up over the season
 
-It also checks with ESPN that the league can be reached with those details. It shows the league's name if everything works, or explains what's wrong.
+Click **Download report (.html)** to save it as a single file you can send to your league. It opens in any browser.
 
 ## Install (takes about a minute)
 The extension isn't in the Chrome Web Store yet, so you install it from this folder:
 
-1. Download this project (see the main [README](../README.md#setup-one-time)).
+1. Download this project: on the [GitHub page](https://github.com/fajardgb/espn-fantasy-football-schedule-permutations), click the green **Code** button → **Download ZIP**, and unzip it.
 2. In Chrome, go to `chrome://extensions`.
 3. Turn on **Developer mode** (top right).
 4. Click **Load unpacked** and choose this `chrome_extension` folder.
-5. Optional: click the puzzle-piece icon in Chrome's toolbar and pin **Fantasy Schedule Luck: League Setup** so it's always visible.
+5. Click the puzzle-piece icon in Chrome's toolbar and pin **Fantasy Schedule Luck** so it's always visible.
 
 It also works in other Chromium browsers, such as Edge and Brave (use `edge://extensions` or `brave://extensions`).
+
+**Updating:** after downloading a newer version of the project, go to `chrome://extensions` and click the reload arrow on the extension's card.
 
 ## Use
 1. Log in to ESPN and open your league on [fantasy.espn.com](https://fantasy.espn.com/football/). Any page with the league in its address works (league home, standings, your team).
 2. Click the extension's icon. The league ID and season fill in, and you'll see:
-   - **✓ Logged in to ESPN in this browser:** the login cookies were found.
-   - **✓ "Your League Name" · 12 teams:** ESPN confirmed the league can be reached with these details.
-3. Click **Copy as .env**, then paste it into the `.env` file in the project folder, replacing what's there.
-4. Run `uv run python run_all.py`.
+   - **✓ Logged in to ESPN in this browser:** needed for private leagues.
+   - **✓ "Your League Name" · 12 teams:** ESPN confirmed the league can be reached.
+3. Click **Build report**. It takes a few seconds.
 
-If the season isn't in the page address, the extension picks the most recent season. You can change the league ID or season by typing in the boxes, and the check runs again.
+If the season isn't in the page address, the extension picks the most recent season. You can type a different league ID or season in the boxes.
+
+**Using the Python tool instead?** The popup's **Copy as .env** button copies your league details and login values in the format the Python tool's `.env` file needs.
 
 ## Privacy and permissions
-- **Your login values never leave your browser.** The extension only reads them, shows them masked, and copies them to your clipboard when you click the button. It has no server and doesn't collect anything.
-- The one network request it makes goes to ESPN's own fantasy service. It's the same request your browser makes when you view your league, and it's used to confirm the league can be reached.
+- **Your ESPN login never leaves your browser.** The extension has no server and collects nothing. It uses your login only to ask ESPN for your league's data, exactly as your browser does when you view your league.
+- **Downloaded reports don't include your login.** They contain team names, records and scores, the same things anyone in your league can see.
 - Chrome describes the permissions as:
-  - **"Read and change your data on espn.com"**: needed to read the ESPN login cookies and make that one request. The extension doesn't change anything.
+  - **"Read and change your data on espn.com"**: needed to use your ESPN login and download your league. The extension doesn't change anything on ESPN.
   - Reading the current tab's address only happens when you click the extension (the `activeTab` permission), so it can't see your browsing otherwise.
 
-Treat what you copy like a password: anyone with your `ESPN_S2` and `SWID` can use your ESPN account.
+Treat what **Copy as .env** copies like a password: anyone with your `ESPN_S2` and `SWID` can use your ESPN account. Don't paste them anywhere public, including when asking for help.
 
-## For developers
-- `lib/league.js`: pure logic (URL parsing, default season, `.env` text, ESPN response messages), shared with the popup. Kept free of `chrome.*` calls so it can be tested in Node and reused by a future in-browser report.
-- `popup.html` / `popup.js` / `popup.css`: the popup.
-- Tests: `cd chrome_extension && npm test` (uses Node's built-in test runner; no dependencies).
+## How it works (for developers)
+| File | What it does |
+|---|---|
+| `popup.html` / `popup.js` / `popup.css` | The popup: finds the league and login, checks access, opens the report |
+| `report.html` / `report_page.js` / `report_page.css` | The report tab: downloads the league, runs the simulation, shows progress, offers the download |
+| `lib/league.js` | Popup helpers: reading league pages' addresses, `.env` text, ESPN error messages |
+| `lib/espn.js` | Reads ESPN's league data (JavaScript port of `get_espn_league_data.py`) |
+| `lib/simulate.js` | The simulation and report data (port of `simulate_schedule_permutations.py` and `build_report.py`) |
+| `lib/standalone.js` | Assembles the downloadable `.html` file |
+| `report/` | The report's page, styles and charts. **Shared with the Python tool**, which reads them from here, so both make identical reports |
+| `vendor/plotly.min.js` | Plotly 4.1.1 (MIT license), the charting library. Extensions can't load code from the internet, so it's bundled |
+
+**Tests:** `npm test` (Node.js 20 or newer, no dependencies to install). The simulation is checked against reference results from the Python code in `tests/golden/`:
+- Parsing, actual records and the schedule-swap matrix must match exactly.
+- Playoff odds and expected win % must agree within sampling error.
+
+After changing the Python logic, regenerate the reference results from the project root with `uv run python chrome_extension/tests/make_golden.py`. A Python test fails until you do.

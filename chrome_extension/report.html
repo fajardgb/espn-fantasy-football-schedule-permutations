@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schedule luck report</title>
+<link rel="icon" href="icons/icon32.png">
+<link rel="stylesheet" href="report/report.css">
+<link rel="stylesheet" href="report_page.css">
+<script src="vendor/plotly.min.js"></script>
+<script src="report/report.js"></script>
+<script type="module" src="report_page.js"></script>
+</head>
+<body>
+<div class="page-bar" id="page-bar" hidden>
+  <div class="page-bar-inner">
+    <span class="page-bar-text">Share this report: the file doesn’t include your ESPN login.</span>
+    <button type="button" id="download" class="primary">Download report (.html)</button>
+  </div>
+</div>
+
+<main class="progress" id="progress">
+  <h1 id="progress-title">Building your schedule luck report…</h1>
+  <ol class="steps">
+    <li id="step-download" data-state="active">
+      <span class="dot" aria-hidden="true"></span>
+      <span class="text">Downloading your league from ESPN</span>
+    </li>
+    <li id="step-simulate" data-state="waiting">
+      <span class="dot" aria-hidden="true"></span>
+      <span class="text">Simulating schedules <span id="simulate-detail"></span></span>
+    </li>
+  </ol>
+  <div class="bar" role="progressbar" aria-labelledby="progress-title" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <div class="bar-fill" id="bar-fill"></div>
+  </div>
+  <div class="problem" id="problem" role="alert" hidden></div>
+</main>
+
+<div id="report-root"></div>
+</body>
+</html>

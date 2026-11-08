@@ -12,6 +12,7 @@ Usage:
 import argparse
 import json
 import math
+import re
 from datetime import date
 from pathlib import Path
 
@@ -28,7 +29,10 @@ from simulate_schedule_permutations import (
 # Pinned to the plotly.js version bundled with the plotly Python package
 PLOTLY_CDN = 'https://cdn.jsdelivr.net/npm/plotly.js-dist-min@4.1.1/plotly.min.js'
 MAX_GRID_COLUMNS = 7
-TEMPLATE_PATH = Path(__file__).parent / 'report_template.html'
+# The report's page, layout and charts are shared with the Chrome extension,
+# which can only load files from inside its own folder, so they live there.
+REPORT_ASSETS = Path(__file__).parent / 'chrome_extension' / 'report'
+TEMPLATE_PATH = REPORT_ASSETS / 'report_template.html'
 
 
 def grid_shape(n_teams: int, max_columns: int = MAX_GRID_COLUMNS) -> tuple[int, int]:
@@ -111,11 +115,16 @@ def render_html(data: dict, title: str, offline: bool = False) -> str:
 
     # Keep '</script>' inside strings from closing the data block early
     payload = json.dumps(data).replace('</', '<\\/')
+    pieces = {
+        'TITLE': title,
+        'PLOTLY': plotly_tag,
+        'CSS': (REPORT_ASSETS / 'report.css').read_text(encoding='utf-8'),
+        'JS': (REPORT_ASSETS / 'report.js').read_text(encoding='utf-8'),
+        'DATA': payload,
+    }
     template = TEMPLATE_PATH.read_text(encoding='utf-8')
-    return (template
-            .replace('__TITLE__', title)
-            .replace('__PLOTLY__', plotly_tag)
-            .replace('__DATA__', payload))
+    # One pass, so text inside one piece is never mistaken for a placeholder
+    return re.sub(r'__(TITLE|PLOTLY|CSS|JS|DATA)__', lambda m: pieces[m.group(1)], template)
 
 
 def build_report(league_id, year, num_schedules: int = 10000, seed: int = 42,

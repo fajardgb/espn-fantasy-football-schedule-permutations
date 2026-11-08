@@ -1,0 +1,3424 @@
+{
+ "fixture": "espn_completed_season.json",
+ "simulations": 20000,
+ "teams": [
+  {
+   "id": 1,
+   "name": "Owner 7",
+   "division": "East"
+  },
+  {
+   "id": 2,
+   "name": "Owner 9",
+   "division": "West"
+  },
+  {
+   "id": 4,
+   "name": "Owner 3",
+   "division": "West"
+  },
+  {
+   "id": 5,
+   "name": "Owner 11",
+   "division": "East"
+  },
+  {
+   "id": 7,
+   "name": "Owner 4",
+   "division": "East"
+  },
+  {
+   "id": 8,
+   "name": "Owner 2",
+   "division": "West"
+  },
+  {
+   "id": 10,
+   "name": "Owner 1",
+   "division": "West"
+  },
+  {
+   "id": 12,
+   "name": "Owner 12",
+   "division": "West"
+  },
+  {
+   "id": 13,
+   "name": "Owner 8",
+   "division": "East"
+  },
+  {
+   "id": 14,
+   "name": "Owner 13",
+   "division": "West"
+  },
+  {
+   "id": 15,
+   "name": "Owner 5",
+   "division": "East"
+  },
+  {
+   "id": 16,
+   "name": "Owner 6",
+   "division": "East"
+  }
+ ],
+ "weeks": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14
+ ],
+ "scores": {
+  "Owner 7": [
+   109.12,
+   86.28,
+   92.02,
+   121.08,
+   146.42,
+   82.26,
+   83.16,
+   112.2,
+   129.12,
+   107.4,
+   115.36,
+   79.86,
+   90.94,
+   106.46
+  ],
+  "Owner 9": [
+   110.42,
+   113.0,
+   103.38,
+   130.44,
+   118.24,
+   123.94,
+   97.84,
+   85.12,
+   126.72,
+   132.52,
+   105.32,
+   106.26,
+   107.82,
+   65.82
+  ],
+  "Owner 3": [
+   117.22,
+   123.58,
+   101.36,
+   150.9,
+   88.72,
+   141.88,
+   86.94,
+   150.52,
+   80.3,
+   134.92,
+   70.1,
+   99.48,
+   132.54,
+   126.9
+  ],
+  "Owner 11": [
+   80.98,
+   114.04,
+   123.44,
+   88.4,
+   83.1,
+   105.32,
+   115.84,
+   108.36,
+   67.82,
+   105.52,
+   74.6,
+   133.66,
+   107.7,
+   62.6
+  ],
+  "Owner 4": [
+   113.58,
+   87.6,
+   126.62,
+   100.56,
+   137.78,
+   97.44,
+   93.42,
+   85.28,
+   129.0,
+   92.82,
+   117.32,
+   123.04,
+   114.64,
+   108.82
+  ],
+  "Owner 2": [
+   88.68,
+   162.6,
+   101.22,
+   127.82,
+   113.92,
+   110.94,
+   108.78,
+   127.98,
+   100.34,
+   98.9,
+   75.94,
+   122.56,
+   102.68,
+   64.96
+  ],
+  "Owner 1": [
+   128.06,
+   133.92,
+   116.22,
+   117.16,
+   127.52,
+   103.4,
+   134.16,
+   131.32,
+   117.12,
+   140.44,
+   114.18,
+   112.92,
+   115.12,
+   147.84
+  ],
+  "Owner 12": [
+   132.62,
+   104.44,
+   133.82,
+   104.98,
+   101.16,
+   78.94,
+   153.08,
+   95.8,
+   128.7,
+   142.9,
+   110.42,
+   174.46,
+   69.32,
+   160.94
+  ],
+  "Owner 8": [
+   126.86,
+   113.0,
+   91.62,
+   143.48,
+   137.98,
+   145.68,
+   142.72,
+   117.68,
+   141.96,
+   118.34,
+   107.42,
+   96.82,
+   103.04,
+   126.66
+  ],
+  "Owner 13": [
+   93.54,
+   140.78,
+   135.6,
+   117.52,
+   174.74,
+   106.58,
+   188.96,
+   137.28,
+   141.4,
+   142.2,
+   145.34,
+   150.74,
+   100.84,
+   125.58
+  ],
+  "Owner 5": [
+   105.82,
+   111.7,
+   110.56,
+   162.2,
+   118.0,
+   91.8,
+   121.82,
+   101.02,
+   144.34,
+   129.88,
+   153.98,
+   145.58,
+   117.66,
+   130.74
+  ],
+  "Owner 6": [
+   101.38,
+   116.14,
+   124.64,
+   127.06,
+   83.2,
+   173.74,
+   135.26,
+   111.32,
+   116.8,
+   97.54,
+   187.02,
+   118.32,
+   134.9,
+   78.14
+  ]
+ },
+ "schedule": [
+  [
+   [
+    "Owner 7",
+    "Owner 11"
+   ],
+   [
+    "Owner 3",
+    "Owner 12"
+   ],
+   [
+    "Owner 4",
+    "Owner 6"
+   ],
+   [
+    "Owner 1",
+    "Owner 9"
+   ],
+   [
+    "Owner 8",
+    "Owner 5"
+   ],
+   [
+    "Owner 13",
+    "Owner 2"
+   ]
+  ],
+  [
+   [
+    "Owner 9",
+    "Owner 2"
+   ],
+   [
+    "Owner 3",
+    "Owner 13"
+   ],
+   [
+    "Owner 11",
+    "Owner 5"
+   ],
+   [
+    "Owner 4",
+    "Owner 8"
+   ],
+   [
+    "Owner 12",
+    "Owner 1"
+   ],
+   [
+    "Owner 6",
+    "Owner 7"
+   ]
+  ],
+  [
+   [
+    "Owner 7",
+    "Owner 8"
+   ],
+   [
+    "Owner 2",
+    "Owner 3"
+   ],
+   [
+    "Owner 1",
+    "Owner 13"
+   ],
+   [
+    "Owner 12",
+    "Owner 9"
+   ],
+   [
+    "Owner 5",
+    "Owner 4"
+   ],
+   [
+    "Owner 6",
+    "Owner 11"
+   ]
+  ],
+  [
+   [
+    "Owner 7",
+    "Owner 5"
+   ],
+   [
+    "Owner 9",
+    "Owner 3"
+   ],
+   [
+    "Owner 11",
+    "Owner 4"
+   ],
+   [
+    "Owner 1",
+    "Owner 2"
+   ],
+   [
+    "Owner 8",
+    "Owner 6"
+   ],
+   [
+    "Owner 13",
+    "Owner 12"
+   ]
+  ],
+  [
+   [
+    "Owner 3",
+    "Owner 1"
+   ],
+   [
+    "Owner 4",
+    "Owner 7"
+   ],
+   [
+    "Owner 12",
+    "Owner 2"
+   ],
+   [
+    "Owner 8",
+    "Owner 11"
+   ],
+   [
+    "Owner 13",
+    "Owner 9"
+   ],
+   [
+    "Owner 6",
+    "Owner 5"
+   ]
+  ],
+  [
+   [
+    "Owner 7",
+    "Owner 1"
+   ],
+   [
+    "Owner 11",
+    "Owner 9"
+   ],
+   [
+    "Owner 4",
+    "Owner 3"
+   ],
+   [
+    "Owner 8",
+    "Owner 13"
+   ],
+   [
+    "Owner 5",
+    "Owner 2"
+   ],
+   [
+    "Owner 6",
+    "Owner 12"
+   ]
+  ],
+  [
+   [
+    "Owner 9",
+    "Owner 7"
+   ],
+   [
+    "Owner 3",
+    "Owner 8"
+   ],
+   [
+    "Owner 2",
+    "Owner 6"
+   ],
+   [
+    "Owner 1",
+    "Owner 5"
+   ],
+   [
+    "Owner 12",
+    "Owner 4"
+   ],
+   [
+    "Owner 13",
+    "Owner 11"
+   ]
+  ],
+  [
+   [
+    "Owner 7",
+    "Owner 13"
+   ],
+   [
+    "Owner 11",
+    "Owner 3"
+   ],
+   [
+    "Owner 4",
+    "Owner 2"
+   ],
+   [
+    "Owner 8",
+    "Owner 12"
+   ],
+   [
+    "Owner 5",
+    "Owner 9"
+   ],
+   [
+    "Owner 6",
+    "Owner 1"
+   ]
+  ],
+  [
+   [
+    "Owner 9",
+    "Owner 6"
+   ],
+   [
+    "Owner 3",
+    "Owner 7"
+   ],
+   [
+    "Owner 2",
+    "Owner 8"
+   ],
+   [
+    "Owner 1",
+    "Owner 4"
+   ],
+   [
+    "Owner 12",
+    "Owner 11"
+   ],
+   [
+    "Owner 13",
+    "Owner 5"
+   ]
+  ],
+  [
+   [
+    "Owner 7",
+    "Owner 12"
+   ],
+   [
+    "Owner 11",
+    "Owner 2"
+   ],
+   [
+    "Owner 4",
+    "Owner 9"
+   ],
+   [
+    "Owner 8",
+    "Owner 1"
+   ],
+   [
+    "Owner 5",
+    "Owner 3"
+   ],
+   [
+    "Owner 6",
+    "Owner 13"
+   ]
+  ],
+  [
+   [
+    "Owner 9",
+    "Owner 8"
+   ],
+   [
+    "Owner 3",
+    "Owner 6"
+   ],
+   [
+    "Owner 2",
+    "Owner 7"
+   ],
+   [
+    "Owner 1",
+    "Owner 11"
+   ],
+   [
+    "Owner 12",
+    "Owner 5"
+   ],
+   [
+    "Owner 13",
+    "Owner 4"
+   ]
+  ],
+  [
+   [
+    "Owner 9",
+    "Owner 11"
+   ],
+   [
+    "Owner 3",
+    "Owner 4"
+   ],
+   [
+    "Owner 2",
+    "Owner 5"
+   ],
+   [
+    "Owner 1",
+    "Owner 7"
+   ],
+   [
+    "Owner 12",
+    "Owner 6"
+   ],
+   [
+    "Owner 13",
+    "Owner 8"
+   ]
+  ],
+  [
+   [
+    "Owner 7",
+    "Owner 9"
+   ],
+   [
+    "Owner 11",
+    "Owner 13"
+   ],
+   [
+    "Owner 4",
+    "Owner 12"
+   ],
+   [
+    "Owner 8",
+    "Owner 3"
+   ],
+   [
+    "Owner 5",
+    "Owner 1"
+   ],
+   [
+    "Owner 6",
+    "Owner 2"
+   ]
+  ],
+  [
+   [
+    "Owner 9",
+    "Owner 5"
+   ],
+   [
+    "Owner 3",
+    "Owner 11"
+   ],
+   [
+    "Owner 2",
+    "Owner 4"
+   ],
+   [
+    "Owner 1",
+    "Owner 6"
+   ],
+   [
+    "Owner 12",
+    "Owner 8"
+   ],
+   [
+    "Owner 13",
+    "Owner 7"
+   ]
+  ]
+ ],
+ "settings": {
+  "playoff_team_count": 6,
+  "playoff_seeding_rule": "TOTAL_POINTS_SCORED",
+  "regular_season_weeks": 14,
+  "matchup_tie_rule": "NONE",
+  "divisions": [
+   "East",
+   "West"
+  ]
+ },
+ "n_playoff_teams": 6,
+ "notes": [],
+ "cutoffs": [
+  {
+   "week": 1,
+   "actual_records": {
+    "Owner 7": "1-0",
+    "Owner 9": "0-1",
+    "Owner 3": "0-1",
+    "Owner 11": "0-1",
+    "Owner 4": "1-0",
+    "Owner 2": "0-1",
+    "Owner 1": "1-0",
+    "Owner 12": "1-0",
+    "Owner 8": "1-0",
+    "Owner 13": "1-0",
+    "Owner 5": "0-1",
+    "Owner 6": "0-1"
+   },
+   "swap": {
+    "Owner 7": {
+     "Owner 7": "1-0",
+     "Owner 9": "0-1",
+     "Owner 3": "0-1",
+     "Owner 11": "1-0",
+     "Owner 4": "1-0",
+     "Owner 2": "1-0",
+     "Owner 1": "0-1",
+     "Owner 12": "0-1",
+     "Owner 8": "1-0",
+     "Owner 13": "1-0",
+     "Owner 5": "0-1",
+     "Owner 6": "0-1"
+    },
+    "Owner 9": {
+     "Owner 7": "1-0",
+     "Owner 9": "0-1",
+     "Owner 3": "0-1",
+     "Owner 11": "1-0",
+     "Owner 4": "1-0",
+     "Owner 2": "1-0",
+     "Owner 1": "0-1",
+     "Owner 12": "0-1",
+     "Owner 8": "1-0",
+     "Owner 13": "1-0",
+     "Owner 5": "0-1",
+     "Owner 6": "0-1"
+    },
+    "Owner 3": {
+     "Owner 7": "1-0",
+     "Owner 9": "0-1",
+     "Owner 3": "0-1",
+     "Owner 11": "1-0",
+     "Owner 4": "1-0",
+     "Owner 2": "1-0",
+     "Owner 1": "1-0",
+     "Owner 12": "0-1",
+     "Owner 8": "1-0",
+     "Owner 13": "1-0",
+     "Owner 5": "0-1",
+     "Owner 6": "1-0"
+    },
+    "Owner 11": {
+     "Owner 7": "0-1",
+     "Owner 9": "0-1",
+     "Owner 3": "0-1",
+     "Owner 11": "0-1",
+     "Owner 4": "0-1",
+     "Owner 2": "0-1",
+     "Owner 1": "0-1",
+     "Owner 12": "0-1",
+     "Owner 8": "0-1",
+     "Owner 13": "0-1",
+     "Owner 5": "0-1",
+     "Owner 6": "0-1"
+    },
+    "Owner 4": {
+     "Owner 7": "1-0",
+     "Owner 9": "0-1",
+     "Owner 3": "0-1",
+     "Owner 11": "1-0",
+     "Owner 4": "1-0",
+     "Owner 2": "1-0",
+     "Owner 1": "1-0",
+     "Owner 12": "0-1",
+     "Owner 8": "1-0",
+     "Owner 13": "1-0",
+     "Owner 5": "0-1",
+     "Owner 6": "1-0"
+    },
+    "Owner 2": {
+     "Owner 7": "1-0",
+     "Owner 9": "0-1",
+     "Owner 3": "0-1",
+     "Owner 11": "0-1",
+     "Owner 4": "0-1",
+     "Owner 2": "0-1",
+     "Owner 1": "0-1",
+     "Owner 12": "0-1",
+     "Owner 8": "0-1",
+     "Owner 13": "0-1",
+     "Owner 5": "0-1",
+     "Owner 6": "0-1"
+    },
+    "Owner 1": {
+     "Owner 7": "1-0",
+     "Owner 9": "1-0",
+     "Owner 3": "0-1",
+     "Owner 11": "1-0",
+     "Owner 4": "1-0",
+     "Owner 2": "1-0",
+     "Owner 1": "1-0",
+     "Owner 12": "1-0",
+     "Owner 8": "1-0",
+     "Owner 13": "1-0",
+     "Owner 5": "1-0",
+     "Owner 6": "1-0"
+    },
+    "Owner 12": {
+     "Owner 7": "1-0",
+     "Owner 9": "1-0",
+     "Owner 3": "1-0",
+     "Owner 11": "1-0",
+     "Owner 4": "1-0",
+     "Owner 2": "1-0",
+     "Owner 1": "1-0",
+     "Owner 12": "1-0",
+     "Owner 8": "1-0",
+     "Owner 13": "1-0",
+     "Owner 5": "1-0",
+     "Owner 6": "1-0"
+    },
+    "Owner 8": {
+     "Owner 7": "1-0",
+     "Owner 9": "0-1",
+     "Owner 3": "0-1",
+     "Owner 11": "1-0",
+     "Owner 4": "1-0",
+     "Owner 2": "1-0",
+     "Owner 1": "1-0",
+     "Owner 12": "1-0",
+     "Owner 8": "1-0",
+     "Owner 13": "1-0",
+     "Owner 5": "1-0",
+     "Owner 6": "1-0"
+    },
+    "Owner 13": {
+     "Owner 7": "1-0",
+     "Owner 9": "0-1",
+     "Owner 3": "0-1",
+     "Owner 11": "0-1",
+     "Owner 4": "0-1",
+     "Owner 2": "1-0",
+     "Owner 1": "0-1",
+     "Owner 12": "0-1",
+     "Owner 8": "0-1",
+     "Owner 13": "1-0",
+     "Owner 5": "0-1",
+     "Owner 6": "0-1"
+    },
+    "Owner 5": {
+     "Owner 7": "1-0",
+     "Owner 9": "0-1",
+     "Owner 3": "0-1",
+     "Owner 11": "0-1",
+     "Owner 4": "1-0",
+     "Owner 2": "1-0",
+     "Owner 1": "0-1",
+     "Owner 12": "0-1",
+     "Owner 8": "0-1",
+     "Owner 13": "1-0",
+     "Owner 5": "0-1",
+     "Owner 6": "0-1"
+    },
+    "Owner 6": {
+     "Owner 7": "1-0",
+     "Owner 9": "0-1",
+     "Owner 3": "0-1",
+     "Owner 11": "0-1",
+     "Owner 4": "0-1",
+     "Owner 2": "1-0",
+     "Owner 1": "0-1",
+     "Owner 12": "0-1",
+     "Owner 8": "0-1",
+     "Owner 13": "1-0",
+     "Owner 5": "0-1",
+     "Owner 6": "0-1"
+    }
+   },
+   "simulated": {
+    "Owner 12": {
+     "playoff": 100.0,
+     "expected": 100.0
+    },
+    "Owner 1": {
+     "playoff": 91.345,
+     "expected": 91.345
+    },
+    "Owner 8": {
+     "playoff": 81.9,
+     "expected": 81.9
+    },
+    "Owner 3": {
+     "playoff": 72.615,
+     "expected": 72.615
+    },
+    "Owner 4": {
+     "playoff": 63.9,
+     "expected": 63.9
+    },
+    "Owner 9": {
+     "playoff": 54.235,
+     "expected": 54.235
+    },
+    "Owner 7": {
+     "playoff": 45.51,
+     "expected": 45.51
+    },
+    "Owner 5": {
+     "playoff": 36.06,
+     "expected": 36.06
+    },
+    "Owner 6": {
+     "playoff": 27.395,
+     "expected": 27.395
+    },
+    "Owner 13": {
+     "playoff": 18.05,
+     "expected": 18.05
+    },
+    "Owner 2": {
+     "playoff": 8.99,
+     "expected": 8.99
+    },
+    "Owner 11": {
+     "playoff": 0.0,
+     "expected": 0.0
+    }
+   }
+  },
+  {
+   "week": 2,
+   "actual_records": {
+    "Owner 7": "1-1",
+    "Owner 9": "0-2",
+    "Owner 3": "0-2",
+    "Owner 11": "1-1",
+    "Owner 4": "1-1",
+    "Owner 2": "1-1",
+    "Owner 1": "2-0",
+    "Owner 12": "1-1",
+    "Owner 8": "2-0",
+    "Owner 13": "2-0",
+    "Owner 5": "0-2",
+    "Owner 6": "1-1"
+   },
+   "swap": {
+    "Owner 7": {
+     "Owner 7": "1-1",
+     "Owner 9": "0-2",
+     "Owner 3": "0-2",
+     "Owner 11": "1-1",
+     "Owner 4": "1-1",
+     "Owner 2": "1-1",
+     "Owner 1": "0-2",
+     "Owner 12": "0-2",
+     "Owner 8": "1-1",
+     "Owner 13": "1-1",
+     "Owner 5": "0-2",
+     "Owner 6": "0-2"
+    },
+    "Owner 9": {
+     "Owner 7": "1-1",
+     "Owner 9": "0-2",
+     "Owner 3": "0-2",
+     "Owner 11": "2-0",
+     "Owner 4": "1-0-1",
+     "Owner 2": "1-1",
+     "Owner 1": "1-1",
+     "Owner 12": "0-2",
+     "Owner 8": "2-0",
+     "Owner 13": "1-1",
+     "Owner 5": "0-2",
+     "Owner 6": "1-1"
+    },
+    "Owner 3": {
+     "Owner 7": "2-0",
+     "Owner 9": "0-2",
+     "Owner 3": "0-2",
+     "Owner 11": "2-0",
+     "Owner 4": "2-0",
+     "Owner 2": "2-0",
+     "Owner 1": "2-0",
+     "Owner 12": "0-2",
+     "Owner 8": "2-0",
+     "Owner 13": "1-1",
+     "Owner 5": "1-1",
+     "Owner 6": "2-0"
+    },
+    "Owner 11": {
+     "Owner 7": "0-2",
+     "Owner 9": "0-2",
+     "Owner 3": "0-2",
+     "Owner 11": "1-1",
+     "Owner 4": "1-1",
+     "Owner 2": "1-1",
+     "Owner 1": "1-1",
+     "Owner 12": "0-2",
+     "Owner 8": "1-1",
+     "Owner 13": "0-2",
+     "Owner 5": "1-1",
+     "Owner 6": "1-1"
+    },
+    "Owner 4": {
+     "Owner 7": "1-1",
+     "Owner 9": "0-2",
+     "Owner 3": "0-2",
+     "Owner 11": "1-1",
+     "Owner 4": "1-1",
+     "Owner 2": "1-1",
+     "Owner 1": "1-1",
+     "Owner 12": "0-2",
+     "Owner 8": "1-1",
+     "Owner 13": "1-1",
+     "Owner 5": "0-2",
+     "Owner 6": "2-0"
+    },
+    "Owner 2": {
+     "Owner 7": "2-0",
+     "Owner 9": "1-1",
+     "Owner 3": "1-1",
+     "Owner 11": "1-1",
+     "Owner 4": "1-1",
+     "Owner 2": "1-1",
+     "Owner 1": "1-1",
+     "Owner 12": "1-1",
+     "Owner 8": "1-1",
+     "Owner 13": "1-1",
+     "Owner 5": "1-1",
+     "Owner 6": "1-1"
+    },
+    "Owner 1": {
+     "Owner 7": "2-0",
+     "Owner 9": "1-1",
+     "Owner 3": "0-2",
+     "Owner 11": "2-0",
+     "Owner 4": "2-0",
+     "Owner 2": "2-0",
+     "Owner 1": "2-0",
+     "Owner 12": "2-0",
+     "Owner 8": "2-0",
+     "Owner 13": "2-0",
+     "Owner 5": "2-0",
+     "Owner 6": "2-0"
+    },
+    "Owner 12": {
+     "Owner 7": "1-1",
+     "Owner 9": "1-1",
+     "Owner 3": "1-1",
+     "Owner 11": "1-1",
+     "Owner 4": "1-1",
+     "Owner 2": "1-1",
+     "Owner 1": "1-1",
+     "Owner 12": "1-1",
+     "Owner 8": "2-0",
+     "Owner 13": "1-1",
+     "Owner 5": "1-1",
+     "Owner 6": "2-0"
+    },
+    "Owner 8": {
+     "Owner 7": "1-1",
+     "Owner 9": "0-2",
+     "Owner 3": "0-2",
+     "Owner 11": "2-0",
+     "Owner 4": "2-0",
+     "Owner 2": "1-0-1",
+     "Owner 1": "2-0",
+     "Owner 12": "1-1",
+     "Owner 8": "2-0",
+     "Owner 13": "1-1",
+     "Owner 5": "1-1",
+     "Owner 6": "2-0"
+    },
+    "Owner 13": {
+     "Owner 7": "2-0",
+     "Owner 9": "0-2",
+     "Owner 3": "1-1",
+     "Owner 11": "1-1",
+     "Owner 4": "1-1",
+     "Owner 2": "2-0",
+     "Owner 1": "1-1",
+     "Owner 12": "1-1",
+     "Owner 8": "1-1",
+     "Owner 13": "2-0",
+     "Owner 5": "1-1",
+     "Owner 6": "1-1"
+    },
+    "Owner 5": {
+     "Owner 7": "1-1",
+     "Owner 9": "0-2",
+     "Owner 3": "0-2",
+     "Owner 11": "0-2",
+     "Owner 4": "1-1",
+     "Owner 2": "1-1",
+     "Owner 1": "1-1",
+     "Owner 12": "0-2",
+     "Owner 8": "1-1",
+     "Owner 13": "1-1",
+     "Owner 5": "0-2",
+     "Owner 6": "1-1"
+    },
+    "Owner 6": {
+     "Owner 7": "2-0",
+     "Owner 9": "0-2",
+     "Owner 3": "0-2",
+     "Owner 11": "1-1",
+     "Owner 4": "1-1",
+     "Owner 2": "2-0",
+     "Owner 1": "1-1",
+     "Owner 12": "0-2",
+     "Owner 8": "1-1",
+     "Owner 13": "1-1",
+     "Owner 5": "1-1",
+     "Owner 6": "1-1"
+    }
+   }
+  },
+  {
+   "week": 3,
+   "actual_records": {
+    "Owner 7": "2-1",
+    "Owner 9": "0-3",
+    "Owner 3": "1-2",
+    "Owner 11": "1-2",
+    "Owner 4": "2-1",
+    "Owner 2": "1-2",
+    "Owner 1": "2-1",
+    "Owner 12": "2-1",
+    "Owner 8": "2-1",
+    "Owner 13": "3-0",
+    "Owner 5": "0-3",
+    "Owner 6": "2-1"
+   },
+   "swap": {
+    "Owner 7": {
+     "Owner 7": "2-1",
+     "Owner 9": "0-3",
+     "Owner 3": "0-3",
+     "Owner 11": "1-2",
+     "Owner 4": "1-2",
+     "Owner 2": "1-2",
+     "Owner 1": "0-3",
+     "Owner 12": "0-3",
+     "Owner 8": "2-1",
+     "Owner 13": "1-2",
+     "Owner 5": "0-3",
+     "Owner 6": "0-3"
+    },
+    "Owner 9": {
+     "Owner 7": "2-1",
+     "Owner 9": "0-3",
+     "Owner 3": "1-2",
+     "Owner 11": "2-1",
+     "Owner 4": "1-1-1",
+     "Owner 2": "2-1",
+     "Owner 1": "1-2",
+     "Owner 12": "0-3",
+     "Owner 8": "3-0",
+     "Owner 13": "1-2",
+     "Owner 5": "0-3",
+     "Owner 6": "1-2"
+    },
+    "Owner 3": {
+     "Owner 7": "3-0",
+     "Owner 9": "0-3",
+     "Owner 3": "1-2",
+     "Owner 11": "2-1",
+     "Owner 4": "2-1",
+     "Owner 2": "3-0",
+     "Owner 1": "2-1",
+     "Owner 12": "0-3",
+     "Owner 8": "3-0",
+     "Owner 13": "1-2",
+     "Owner 5": "1-2",
+     "Owner 6": "2-1"
+    },
+    "Owner 11": {
+     "Owner 7": "1-2",
+     "Owner 9": "0-3",
+     "Owner 3": "1-2",
+     "Owner 11": "1-2",
+     "Owner 4": "2-1",
+     "Owner 2": "2-1",
+     "Owner 1": "1-2",
+     "Owner 12": "1-2",
+     "Owner 8": "2-1",
+     "Owner 13": "1-2",
+     "Owner 5": "1-2",
+     "Owner 6": "1-2"
+    },
+    "Owner 4": {
+     "Owner 7": "2-1",
+     "Owner 9": "0-3",
+     "Owner 3": "1-2",
+     "Owner 11": "2-1",
+     "Owner 4": "2-1",
+     "Owner 2": "2-1",
+     "Owner 1": "1-2",
+     "Owner 12": "1-2",
+     "Owner 8": "2-1",
+     "Owner 13": "2-1",
+     "Owner 5": "1-2",
+     "Owner 6": "3-0"
+    },
+    "Owner 2": {
+     "Owner 7": "3-0",
+     "Owner 9": "1-2",
+     "Owner 3": "1-2",
+     "Owner 11": "1-2",
+     "Owner 4": "1-2",
+     "Owner 2": "1-2",
+     "Owner 1": "1-2",
+     "Owner 12": "1-2",
+     "Owner 8": "2-1",
+     "Owner 13": "1-2",
+     "Owner 5": "1-2",
+     "Owner 6": "1-2"
+    },
+    "Owner 1": {
+     "Owner 7": "3-0",
+     "Owner 9": "1-2",
+     "Owner 3": "1-2",
+     "Owner 11": "2-1",
+     "Owner 4": "3-0",
+     "Owner 2": "3-0",
+     "Owner 1": "2-1",
+     "Owner 12": "3-0",
+     "Owner 8": "3-0",
+     "Owner 13": "2-1",
+     "Owner 5": "2-1",
+     "Owner 6": "2-1"
+    },
+    "Owner 12": {
+     "Owner 7": "2-1",
+     "Owner 9": "2-1",
+     "Owner 3": "2-1",
+     "Owner 11": "2-1",
+     "Owner 4": "2-1",
+     "Owner 2": "2-1",
+     "Owner 1": "1-2",
+     "Owner 12": "2-1",
+     "Owner 8": "3-0",
+     "Owner 13": "2-1",
+     "Owner 5": "2-1",
+     "Owner 6": "3-0"
+    },
+    "Owner 8": {
+     "Owner 7": "1-2",
+     "Owner 9": "0-3",
+     "Owner 3": "0-3",
+     "Owner 11": "2-1",
+     "Owner 4": "2-1",
+     "Owner 2": "1-1-1",
+     "Owner 1": "2-1",
+     "Owner 12": "1-2",
+     "Owner 8": "2-1",
+     "Owner 13": "1-2",
+     "Owner 5": "1-2",
+     "Owner 6": "2-1"
+    },
+    "Owner 13": {
+     "Owner 7": "3-0",
+     "Owner 9": "1-2",
+     "Owner 3": "2-1",
+     "Owner 11": "2-1",
+     "Owner 4": "2-1",
+     "Owner 2": "3-0",
+     "Owner 1": "2-1",
+     "Owner 12": "2-1",
+     "Owner 8": "2-1",
+     "Owner 13": "3-0",
+     "Owner 5": "2-1",
+     "Owner 6": "2-1"
+    },
+    "Owner 5": {
+     "Owner 7": "2-1",
+     "Owner 9": "0-3",
+     "Owner 3": "1-2",
+     "Owner 11": "0-3",
+     "Owner 4": "1-2",
+     "Owner 2": "2-1",
+     "Owner 1": "1-2",
+     "Owner 12": "1-2",
+     "Owner 8": "2-1",
+     "Owner 13": "1-2",
+     "Owner 5": "0-3",
+     "Owner 6": "1-2"
+    },
+    "Owner 6": {
+     "Owner 7": "3-0",
+     "Owner 9": "0-3",
+     "Owner 3": "1-2",
+     "Owner 11": "2-1",
+     "Owner 4": "2-1",
+     "Owner 2": "3-0",
+     "Owner 1": "1-2",
+     "Owner 12": "1-2",
+     "Owner 8": "2-1",
+     "Owner 13": "2-1",
+     "Owner 5": "1-2",
+     "Owner 6": "2-1"
+    }
+   }
+  },
+  {
+   "week": 4,
+   "actual_records": {
+    "Owner 7": "2-2",
+    "Owner 9": "0-4",
+    "Owner 3": "2-2",
+    "Owner 11": "1-3",
+    "Owner 4": "3-1",
+    "Owner 2": "2-2",
+    "Owner 1": "2-2",
+    "Owner 12": "2-2",
+    "Owner 8": "3-1",
+    "Owner 13": "4-0",
+    "Owner 5": "1-3",
+    "Owner 6": "2-2"
+   },
+   "swap": {
+    "Owner 7": {
+     "Owner 7": "2-2",
+     "Owner 9": "0-4",
+     "Owner 3": "0-4",
+     "Owner 11": "2-2",
+     "Owner 4": "2-2",
+     "Owner 2": "2-2",
+     "Owner 1": "0-4",
+     "Owner 12": "1-3",
+     "Owner 8": "2-2",
+     "Owner 13": "2-2",
+     "Owner 5": "0-4",
+     "Owner 6": "0-4"
+    },
+    "Owner 9": {
+     "Owner 7": "2-2",
+     "Owner 9": "0-4",
+     "Owner 3": "1-3",
+     "Owner 11": "3-1",
+     "Owner 4": "2-1-1",
+     "Owner 2": "3-1",
+     "Owner 1": "2-2",
+     "Owner 12": "1-3",
+     "Owner 8": "4-0",
+     "Owner 13": "2-2",
+     "Owner 5": "1-3",
+     "Owner 6": "1-3"
+    },
+    "Owner 3": {
+     "Owner 7": "3-1",
+     "Owner 9": "1-3",
+     "Owner 3": "2-2",
+     "Owner 11": "3-1",
+     "Owner 4": "3-1",
+     "Owner 2": "4-0",
+     "Owner 1": "3-1",
+     "Owner 12": "1-3",
+     "Owner 8": "4-0",
+     "Owner 13": "2-2",
+     "Owner 5": "2-2",
+     "Owner 6": "3-1"
+    },
+    "Owner 11": {
+     "Owner 7": "1-3",
+     "Owner 9": "0-4",
+     "Owner 3": "1-3",
+     "Owner 11": "1-3",
+     "Owner 4": "2-2",
+     "Owner 2": "2-2",
+     "Owner 1": "1-3",
+     "Owner 12": "1-3",
+     "Owner 8": "2-2",
+     "Owner 13": "1-3",
+     "Owner 5": "1-3",
+     "Owner 6": "1-3"
+    },
+    "Owner 4": {
+     "Owner 7": "2-2",
+     "Owner 9": "0-4",
+     "Owner 3": "1-3",
+     "Owner 11": "3-1",
+     "Owner 4": "3-1",
+     "Owner 2": "2-2",
+     "Owner 1": "1-3",
+     "Owner 12": "1-3",
+     "Owner 8": "2-2",
+     "Owner 13": "2-2",
+     "Owner 5": "1-3",
+     "Owner 6": "3-1"
+    },
+    "Owner 2": {
+     "Owner 7": "3-1",
+     "Owner 9": "1-3",
+     "Owner 3": "1-3",
+     "Owner 11": "2-2",
+     "Owner 4": "2-2",
+     "Owner 2": "2-2",
+     "Owner 1": "2-2",
+     "Owner 12": "2-2",
+     "Owner 8": "3-1",
+     "Owner 13": "2-2",
+     "Owner 5": "2-2",
+     "Owner 6": "1-3"
+    },
+    "Owner 1": {
+     "Owner 7": "3-1",
+     "Owner 9": "1-3",
+     "Owner 3": "1-3",
+     "Owner 11": "3-1",
+     "Owner 4": "4-0",
+     "Owner 2": "3-1",
+     "Owner 1": "2-2",
+     "Owner 12": "3-1",
+     "Owner 8": "3-1",
+     "Owner 13": "3-1",
+     "Owner 5": "2-2",
+     "Owner 6": "2-2"
+    },
+    "Owner 12": {
+     "Owner 7": "2-2",
+     "Owner 9": "2-2",
+     "Owner 3": "2-2",
+     "Owner 11": "3-1",
+     "Owner 4": "3-1",
+     "Owner 2": "2-2",
+     "Owner 1": "1-3",
+     "Owner 12": "2-2",
+     "Owner 8": "3-1",
+     "Owner 13": "2-2",
+     "Owner 5": "2-2",
+     "Owner 6": "3-1"
+    },
+    "Owner 8": {
+     "Owner 7": "1-3",
+     "Owner 9": "0-4",
+     "Owner 3": "1-3",
+     "Owner 11": "3-1",
+     "Owner 4": "3-1",
+     "Owner 2": "2-1-1",
+     "Owner 1": "3-1",
+     "Owner 12": "2-2",
+     "Owner 8": "3-1",
+     "Owner 13": "2-2",
+     "Owner 5": "2-2",
+     "Owner 6": "3-1"
+    },
+    "Owner 13": {
+     "Owner 7": "3-1",
+     "Owner 9": "1-3",
+     "Owner 3": "2-2",
+     "Owner 11": "3-1",
+     "Owner 4": "3-1",
+     "Owner 2": "4-0",
+     "Owner 1": "2-2",
+     "Owner 12": "3-1",
+     "Owner 8": "2-2",
+     "Owner 13": "4-0",
+     "Owner 5": "2-2",
+     "Owner 6": "2-2"
+    },
+    "Owner 5": {
+     "Owner 7": "3-1",
+     "Owner 9": "1-3",
+     "Owner 3": "2-2",
+     "Owner 11": "1-3",
+     "Owner 4": "2-2",
+     "Owner 2": "3-1",
+     "Owner 1": "2-2",
+     "Owner 12": "2-2",
+     "Owner 8": "3-1",
+     "Owner 13": "2-2",
+     "Owner 5": "1-3",
+     "Owner 6": "2-2"
+    },
+    "Owner 6": {
+     "Owner 7": "3-1",
+     "Owner 9": "0-4",
+     "Owner 3": "1-3",
+     "Owner 11": "3-1",
+     "Owner 4": "3-1",
+     "Owner 2": "4-0",
+     "Owner 1": "1-3",
+     "Owner 12": "2-2",
+     "Owner 8": "2-2",
+     "Owner 13": "3-1",
+     "Owner 5": "2-2",
+     "Owner 6": "2-2"
+    }
+   }
+  },
+  {
+   "week": 5,
+   "actual_records": {
+    "Owner 7": "3-2",
+    "Owner 9": "0-5",
+    "Owner 3": "2-3",
+    "Owner 11": "1-4",
+    "Owner 4": "3-2",
+    "Owner 2": "3-2",
+    "Owner 1": "3-2",
+    "Owner 12": "2-3",
+    "Owner 8": "4-1",
+    "Owner 13": "5-0",
+    "Owner 5": "2-3",
+    "Owner 6": "2-3"
+   },
+   "swap": {
+    "Owner 7": {
+     "Owner 7": "3-2",
+     "Owner 9": "0-5",
+     "Owner 3": "1-4",
+     "Owner 11": "3-2",
+     "Owner 4": "3-2",
+     "Owner 2": "3-2",
+     "Owner 1": "1-4",
+     "Owner 12": "2-3",
+     "Owner 8": "3-2",
+     "Owner 13": "3-2",
+     "Owner 5": "1-4",
+     "Owner 6": "1-4"
+    },
+    "Owner 9": {
+     "Owner 7": "2-3",
+     "Owner 9": "0-5",
+     "Owner 3": "1-4",
+     "Owner 11": "3-2",
+     "Owner 4": "2-2-1",
+     "Owner 2": "4-1",
+     "Owner 1": "3-2",
+     "Owner 12": "2-3",
+     "Owner 8": "5-0",
+     "Owner 13": "2-3",
+     "Owner 5": "2-3",
+     "Owner 6": "2-3"
+    },
+    "Owner 3": {
+     "Owner 7": "3-2",
+     "Owner 9": "1-4",
+     "Owner 3": "2-3",
+     "Owner 11": "3-2",
+     "Owner 4": "3-2",
+     "Owner 2": "4-1",
+     "Owner 1": "3-2",
+     "Owner 12": "1-4",
+     "Owner 8": "5-0",
+     "Owner 13": "2-3",
+     "Owner 5": "3-2",
+     "Owner 6": "3-2"
+    },
+    "Owner 11": {
+     "Owner 7": "1-4",
+     "Owner 9": "0-5",
+     "Owner 3": "1-4",
+     "Owner 11": "1-4",
+     "Owner 4": "2-3",
+     "Owner 2": "2-3",
+     "Owner 1": "1-4",
+     "Owner 12": "1-4",
+     "Owner 8": "2-3",
+     "Owner 13": "1-4",
+     "Owner 5": "1-4",
+     "Owner 6": "1-4"
+    },
+    "Owner 4": {
+     "Owner 7": "2-3",
+     "Owner 9": "0-5",
+     "Owner 3": "2-3",
+     "Owner 11": "3-2",
+     "Owner 4": "3-2",
+     "Owner 2": "3-2",
+     "Owner 1": "2-3",
+     "Owner 12": "2-3",
+     "Owner 8": "3-2",
+     "Owner 13": "3-2",
+     "Owner 5": "2-3",
+     "Owner 6": "4-1"
+    },
+    "Owner 2": {
+     "Owner 7": "3-2",
+     "Owner 9": "1-4",
+     "Owner 3": "1-4",
+     "Owner 11": "2-3",
+     "Owner 4": "2-3",
+     "Owner 2": "3-2",
+     "Owner 1": "3-2",
+     "Owner 12": "3-2",
+     "Owner 8": "4-1",
+     "Owner 13": "2-3",
+     "Owner 5": "3-2",
+     "Owner 6": "1-4"
+    },
+    "Owner 1": {
+     "Owner 7": "3-2",
+     "Owner 9": "1-4",
+     "Owner 3": "2-3",
+     "Owner 11": "3-2",
+     "Owner 4": "4-1",
+     "Owner 2": "4-1",
+     "Owner 1": "3-2",
+     "Owner 12": "4-1",
+     "Owner 8": "4-1",
+     "Owner 13": "4-1",
+     "Owner 5": "3-2",
+     "Owner 6": "3-2"
+    },
+    "Owner 12": {
+     "Owner 7": "2-3",
+     "Owner 9": "2-3",
+     "Owner 3": "2-3",
+     "Owner 11": "3-2",
+     "Owner 4": "3-2",
+     "Owner 2": "2-3",
+     "Owner 1": "2-3",
+     "Owner 12": "2-3",
+     "Owner 8": "4-1",
+     "Owner 13": "2-3",
+     "Owner 5": "3-2",
+     "Owner 6": "3-2"
+    },
+    "Owner 8": {
+     "Owner 7": "2-3",
+     "Owner 9": "0-5",
+     "Owner 3": "2-3",
+     "Owner 11": "4-1",
+     "Owner 4": "3-2",
+     "Owner 2": "3-1-1",
+     "Owner 1": "4-1",
+     "Owner 12": "3-2",
+     "Owner 8": "4-1",
+     "Owner 13": "3-2",
+     "Owner 5": "3-2",
+     "Owner 6": "4-1"
+    },
+    "Owner 13": {
+     "Owner 7": "4-1",
+     "Owner 9": "2-3",
+     "Owner 3": "3-2",
+     "Owner 11": "4-1",
+     "Owner 4": "4-1",
+     "Owner 2": "5-0",
+     "Owner 1": "3-2",
+     "Owner 12": "4-1",
+     "Owner 8": "3-2",
+     "Owner 13": "5-0",
+     "Owner 5": "3-2",
+     "Owner 6": "3-2"
+    },
+    "Owner 5": {
+     "Owner 7": "3-2",
+     "Owner 9": "1-4",
+     "Owner 3": "2-3",
+     "Owner 11": "1-4",
+     "Owner 4": "2-3",
+     "Owner 2": "4-1",
+     "Owner 1": "3-2",
+     "Owner 12": "3-2",
+     "Owner 8": "4-1",
+     "Owner 13": "2-3",
+     "Owner 5": "2-3",
+     "Owner 6": "3-2"
+    },
+    "Owner 6": {
+     "Owner 7": "3-2",
+     "Owner 9": "0-5",
+     "Owner 3": "1-4",
+     "Owner 11": "3-2",
+     "Owner 4": "3-2",
+     "Owner 2": "4-1",
+     "Owner 1": "1-4",
+     "Owner 12": "2-3",
+     "Owner 8": "3-2",
+     "Owner 13": "3-2",
+     "Owner 5": "2-3",
+     "Owner 6": "2-3"
+    }
+   }
+  },
+  {
+   "week": 6,
+   "actual_records": {
+    "Owner 7": "3-3",
+    "Owner 9": "1-5",
+    "Owner 3": "3-3",
+    "Owner 11": "1-5",
+    "Owner 4": "3-3",
+    "Owner 2": "4-2",
+    "Owner 1": "4-2",
+    "Owner 12": "2-4",
+    "Owner 8": "5-1",
+    "Owner 13": "5-1",
+    "Owner 5": "2-4",
+    "Owner 6": "3-3"
+   },
+   "swap": {
+    "Owner 7": {
+     "Owner 7": "3-3",
+     "Owner 9": "0-6",
+     "Owner 3": "1-5",
+     "Owner 11": "3-3",
+     "Owner 4": "3-3",
+     "Owner 2": "3-3",
+     "Owner 1": "1-5",
+     "Owner 12": "2-4",
+     "Owner 8": "3-3",
+     "Owner 13": "3-3",
+     "Owner 5": "1-5",
+     "Owner 6": "2-4"
+    },
+    "Owner 9": {
+     "Owner 7": "3-3",
+     "Owner 9": "1-5",
+     "Owner 3": "2-4",
+     "Owner 11": "4-2",
+     "Owner 4": "2-3-1",
+     "Owner 2": "5-1",
+     "Owner 1": "4-2",
+     "Owner 12": "2-4",
+     "Owner 8": "6-0",
+     "Owner 13": "2-4",
+     "Owner 5": "3-3",
+     "Owner 6": "3-3"
+    },
+    "Owner 3": {
+     "Owner 7": "4-2",
+     "Owner 9": "2-4",
+     "Owner 3": "3-3",
+     "Owner 11": "4-2",
+     "Owner 4": "4-2",
+     "Owner 2": "5-1",
+     "Owner 1": "4-2",
+     "Owner 12": "1-5",
+     "Owner 8": "6-0",
+     "Owner 13": "2-4",
+     "Owner 5": "4-2",
+     "Owner 6": "4-2"
+    },
+    "Owner 11": {
+     "Owner 7": "2-4",
+     "Owner 9": "0-6",
+     "Owner 3": "2-4",
+     "Owner 11": "1-5",
+     "Owner 4": "2-4",
+     "Owner 2": "3-3",
+     "Owner 1": "2-4",
+     "Owner 12": "1-5",
+     "Owner 8": "2-4",
+     "Owner 13": "1-5",
+     "Owner 5": "1-5",
+     "Owner 6": "2-4"
+    },
+    "Owner 4": {
+     "Owner 7": "2-4",
+     "Owner 9": "0-6",
+     "Owner 3": "2-4",
+     "Owner 11": "3-3",
+     "Owner 4": "3-3",
+     "Owner 2": "4-2",
+     "Owner 1": "3-3",
+     "Owner 12": "2-4",
+     "Owner 8": "3-3",
+     "Owner 13": "3-3",
+     "Owner 5": "2-4",
+     "Owner 6": "5-1"
+    },
+    "Owner 2": {
+     "Owner 7": "4-2",
+     "Owner 9": "2-4",
+     "Owner 3": "2-4",
+     "Owner 11": "2-4",
+     "Owner 4": "2-4",
+     "Owner 2": "4-2",
+     "Owner 1": "4-2",
+     "Owner 12": "3-3",
+     "Owner 8": "5-1",
+     "Owner 13": "2-4",
+     "Owner 5": "4-2",
+     "Owner 6": "2-4"
+    },
+    "Owner 1": {
+     "Owner 7": "4-2",
+     "Owner 9": "1-5",
+     "Owner 3": "3-3",
+     "Owner 11": "3-3",
+     "Owner 4": "4-2",
+     "Owner 2": "5-1",
+     "Owner 1": "4-2",
+     "Owner 12": "4-2",
+     "Owner 8": "4-2",
+     "Owner 13": "4-2",
+     "Owner 5": "3-3",
+     "Owner 6": "4-2"
+    },
+    "Owner 12": {
+     "Owner 7": "2-4",
+     "Owner 9": "2-4",
+     "Owner 3": "2-4",
+     "Owner 11": "3-3",
+     "Owner 4": "3-3",
+     "Owner 2": "2-4",
+     "Owner 1": "2-4",
+     "Owner 12": "2-4",
+     "Owner 8": "4-2",
+     "Owner 13": "2-4",
+     "Owner 5": "3-3",
+     "Owner 6": "3-3"
+    },
+    "Owner 8": {
+     "Owner 7": "3-3",
+     "Owner 9": "1-5",
+     "Owner 3": "3-3",
+     "Owner 11": "5-1",
+     "Owner 4": "4-2",
+     "Owner 2": "4-1-1",
+     "Owner 1": "5-1",
+     "Owner 12": "3-3",
+     "Owner 8": "5-1",
+     "Owner 13": "4-2",
+     "Owner 5": "4-2",
+     "Owner 6": "5-1"
+    },
+    "Owner 13": {
+     "Owner 7": "5-1",
+     "Owner 9": "3-3",
+     "Owner 3": "4-2",
+     "Owner 11": "4-2",
+     "Owner 4": "4-2",
+     "Owner 2": "6-0",
+     "Owner 1": "4-2",
+     "Owner 12": "4-2",
+     "Owner 8": "3-3",
+     "Owner 13": "5-1",
+     "Owner 5": "3-3",
+     "Owner 6": "4-2"
+    },
+    "Owner 5": {
+     "Owner 7": "3-3",
+     "Owner 9": "1-5",
+     "Owner 3": "2-4",
+     "Owner 11": "1-5",
+     "Owner 4": "2-4",
+     "Owner 2": "4-2",
+     "Owner 1": "4-2",
+     "Owner 12": "3-3",
+     "Owner 8": "4-2",
+     "Owner 13": "2-4",
+     "Owner 5": "2-4",
+     "Owner 6": "4-2"
+    },
+    "Owner 6": {
+     "Owner 7": "4-2",
+     "Owner 9": "1-5",
+     "Owner 3": "2-4",
+     "Owner 11": "4-2",
+     "Owner 4": "4-2",
+     "Owner 2": "5-1",
+     "Owner 1": "2-4",
+     "Owner 12": "3-3",
+     "Owner 8": "4-2",
+     "Owner 13": "4-2",
+     "Owner 5": "3-3",
+     "Owner 6": "3-3"
+    }
+   }
+  },
+  {
+   "week": 7,
+   "actual_records": {
+    "Owner 7": "3-4",
+    "Owner 9": "2-5",
+    "Owner 3": "3-4",
+    "Owner 11": "1-6",
+    "Owner 4": "3-4",
+    "Owner 2": "4-3",
+    "Owner 1": "5-2",
+    "Owner 12": "3-4",
+    "Owner 8": "6-1",
+    "Owner 13": "6-1",
+    "Owner 5": "2-5",
+    "Owner 6": "4-3"
+   },
+   "swap": {
+    "Owner 7": {
+     "Owner 7": "3-4",
+     "Owner 9": "0-7",
+     "Owner 3": "1-6",
+     "Owner 11": "3-4",
+     "Owner 4": "3-4",
+     "Owner 2": "3-4",
+     "Owner 1": "1-6",
+     "Owner 12": "2-5",
+     "Owner 8": "3-4",
+     "Owner 13": "3-4",
+     "Owner 5": "1-6",
+     "Owner 6": "2-5"
+    },
+    "Owner 9": {
+     "Owner 7": "4-3",
+     "Owner 9": "2-5",
+     "Owner 3": "2-5",
+     "Owner 11": "4-3",
+     "Owner 4": "2-4-1",
+     "Owner 2": "5-2",
+     "Owner 1": "4-3",
+     "Owner 12": "3-4",
+     "Owner 8": "7-0",
+     "Owner 13": "2-5",
+     "Owner 5": "3-4",
+     "Owner 6": "3-4"
+    },
+    "Owner 3": {
+     "Owner 7": "4-3",
+     "Owner 9": "3-4",
+     "Owner 3": "3-4",
+     "Owner 11": "4-3",
+     "Owner 4": "4-3",
+     "Owner 2": "5-2",
+     "Owner 1": "4-3",
+     "Owner 12": "1-6",
+     "Owner 8": "6-1",
+     "Owner 13": "2-5",
+     "Owner 5": "4-3",
+     "Owner 6": "4-3"
+    },
+    "Owner 11": {
+     "Owner 7": "3-4",
+     "Owner 9": "1-6",
+     "Owner 3": "2-5",
+     "Owner 11": "1-6",
+     "Owner 4": "2-5",
+     "Owner 2": "3-4",
+     "Owner 1": "2-5",
+     "Owner 12": "2-5",
+     "Owner 8": "3-4",
+     "Owner 13": "1-6",
+     "Owner 5": "1-6",
+     "Owner 6": "3-4"
+    },
+    "Owner 4": {
+     "Owner 7": "2-5",
+     "Owner 9": "1-6",
+     "Owner 3": "2-5",
+     "Owner 11": "3-4",
+     "Owner 4": "3-4",
+     "Owner 2": "4-3",
+     "Owner 1": "3-4",
+     "Owner 12": "2-5",
+     "Owner 8": "4-3",
+     "Owner 13": "3-4",
+     "Owner 5": "2-5",
+     "Owner 6": "5-2"
+    },
+    "Owner 2": {
+     "Owner 7": "5-2",
+     "Owner 9": "3-4",
+     "Owner 3": "2-5",
+     "Owner 11": "2-5",
+     "Owner 4": "2-5",
+     "Owner 2": "4-3",
+     "Owner 1": "4-3",
+     "Owner 12": "4-3",
+     "Owner 8": "6-1",
+     "Owner 13": "2-5",
+     "Owner 5": "4-3",
+     "Owner 6": "2-5"
+    },
+    "Owner 1": {
+     "Owner 7": "5-2",
+     "Owner 9": "2-5",
+     "Owner 3": "3-4",
+     "Owner 11": "3-4",
+     "Owner 4": "4-3",
+     "Owner 2": "5-2",
+     "Owner 1": "5-2",
+     "Owner 12": "5-2",
+     "Owner 8": "5-2",
+     "Owner 13": "5-2",
+     "Owner 5": "4-3",
+     "Owner 6": "5-2"
+    },
+    "Owner 12": {
+     "Owner 7": "3-4",
+     "Owner 9": "3-4",
+     "Owner 3": "3-4",
+     "Owner 11": "3-4",
+     "Owner 4": "4-3",
+     "Owner 2": "3-4",
+     "Owner 1": "3-4",
+     "Owner 12": "3-4",
+     "Owner 8": "5-2",
+     "Owner 13": "3-4",
+     "Owner 5": "4-3",
+     "Owner 6": "4-3"
+    },
+    "Owner 8": {
+     "Owner 7": "4-3",
+     "Owner 9": "2-5",
+     "Owner 3": "4-3",
+     "Owner 11": "5-2",
+     "Owner 4": "4-3",
+     "Owner 2": "5-1-1",
+     "Owner 1": "6-1",
+     "Owner 12": "4-3",
+     "Owner 8": "6-1",
+     "Owner 13": "5-2",
+     "Owner 5": "5-2",
+     "Owner 6": "6-1"
+    },
+    "Owner 13": {
+     "Owner 7": "6-1",
+     "Owner 9": "4-3",
+     "Owner 3": "5-2",
+     "Owner 11": "5-2",
+     "Owner 4": "5-2",
+     "Owner 2": "7-0",
+     "Owner 1": "5-2",
+     "Owner 12": "5-2",
+     "Owner 8": "4-3",
+     "Owner 13": "6-1",
+     "Owner 5": "4-3",
+     "Owner 6": "5-2"
+    },
+    "Owner 5": {
+     "Owner 7": "4-3",
+     "Owner 9": "2-5",
+     "Owner 3": "2-5",
+     "Owner 11": "1-6",
+     "Owner 4": "2-5",
+     "Owner 2": "4-3",
+     "Owner 1": "4-3",
+     "Owner 12": "4-3",
+     "Owner 8": "5-2",
+     "Owner 13": "3-4",
+     "Owner 5": "2-5",
+     "Owner 6": "5-2"
+    },
+    "Owner 6": {
+     "Owner 7": "5-2",
+     "Owner 9": "2-5",
+     "Owner 3": "2-5",
+     "Owner 11": "4-3",
+     "Owner 4": "4-3",
+     "Owner 2": "6-1",
+     "Owner 1": "3-4",
+     "Owner 12": "4-3",
+     "Owner 8": "5-2",
+     "Owner 13": "5-2",
+     "Owner 5": "4-3",
+     "Owner 6": "4-3"
+    }
+   },
+   "simulated": {
+    "Owner 13": {
+     "playoff": 98.915,
+     "expected": 71.42
+    },
+    "Owner 8": {
+     "playoff": 91.705,
+     "expected": 65.616
+    },
+    "Owner 1": {
+     "playoff": 78.76,
+     "expected": 59.816
+    },
+    "Owner 6": {
+     "playoff": 77.26,
+     "expected": 56.937
+    },
+    "Owner 3": {
+     "playoff": 58.465,
+     "expected": 53.325
+    },
+    "Owner 5": {
+     "playoff": 46.13,
+     "expected": 46.394
+    },
+    "Owner 9": {
+     "playoff": 44.625,
+     "expected": 51.301
+    },
+    "Owner 2": {
+     "playoff": 43.135,
+     "expected": 46.864
+    },
+    "Owner 12": {
+     "playoff": 37.945,
+     "expected": 49.438
+    },
+    "Owner 4": {
+     "playoff": 16.515,
+     "expected": 40.274
+    },
+    "Owner 11": {
+     "playoff": 3.935,
+     "expected": 30.024
+    },
+    "Owner 7": {
+     "playoff": 2.61,
+     "expected": 28.591
+    }
+   }
+  },
+  {
+   "week": 8,
+   "actual_records": {
+    "Owner 7": "3-5",
+    "Owner 9": "2-6",
+    "Owner 3": "4-4",
+    "Owner 11": "1-7",
+    "Owner 4": "3-5",
+    "Owner 2": "5-3",
+    "Owner 1": "6-2",
+    "Owner 12": "3-5",
+    "Owner 8": "7-1",
+    "Owner 13": "7-1",
+    "Owner 5": "3-5",
+    "Owner 6": "4-4"
+   },
+   "swap": {
+    "Owner 7": {
+     "Owner 7": "3-5",
+     "Owner 9": "1-7",
+     "Owner 3": "2-6",
+     "Owner 11": "3-5",
+     "Owner 4": "3-5",
+     "Owner 2": "4-4",
+     "Owner 1": "2-6",
+     "Owner 12": "2-6",
+     "Owner 8": "4-4",
+     "Owner 13": "3-5",
+     "Owner 5": "2-6",
+     "Owner 6": "2-6"
+    },
+    "Owner 9": {
+     "Owner 7": "4-4",
+     "Owner 9": "2-6",
+     "Owner 3": "2-6",
+     "Owner 11": "4-4",
+     "Owner 4": "2-5-1",
+     "Owner 2": "5-3",
+     "Owner 1": "4-4",
+     "Owner 12": "3-5",
+     "Owner 8": "7-1",
+     "Owner 13": "2-6",
+     "Owner 5": "3-5",
+     "Owner 6": "3-5"
+    },
+    "Owner 3": {
+     "Owner 7": "5-3",
+     "Owner 9": "4-4",
+     "Owner 3": "4-4",
+     "Owner 11": "5-3",
+     "Owner 4": "5-3",
+     "Owner 2": "6-2",
+     "Owner 1": "5-3",
+     "Owner 12": "2-6",
+     "Owner 8": "7-1",
+     "Owner 13": "3-5",
+     "Owner 5": "5-3",
+     "Owner 6": "5-3"
+    },
+    "Owner 11": {
+     "Owner 7": "3-5",
+     "Owner 9": "2-6",
+     "Owner 3": "2-6",
+     "Owner 11": "1-7",
+     "Owner 4": "2-6",
+     "Owner 2": "4-4",
+     "Owner 1": "2-6",
+     "Owner 12": "2-6",
+     "Owner 8": "4-4",
+     "Owner 13": "1-7",
+     "Owner 5": "2-6",
+     "Owner 6": "3-5"
+    },
+    "Owner 4": {
+     "Owner 7": "2-6",
+     "Owner 9": "1-7",
+     "Owner 3": "2-6",
+     "Owner 11": "3-5",
+     "Owner 4": "3-5",
+     "Owner 2": "4-4",
+     "Owner 1": "3-5",
+     "Owner 12": "2-6",
+     "Owner 8": "4-4",
+     "Owner 13": "3-5",
+     "Owner 5": "3-5",
+     "Owner 6": "5-3"
+    },
+    "Owner 2": {
+     "Owner 7": "5-3",
+     "Owner 9": "4-4",
+     "Owner 3": "3-5",
+     "Owner 11": "2-6",
+     "Owner 4": "3-5",
+     "Owner 2": "5-3",
+     "Owner 1": "5-3",
+     "Owner 12": "5-3",
+     "Owner 8": "7-1",
+     "Owner 13": "3-5",
+     "Owner 5": "5-3",
+     "Owner 6": "2-6"
+    },
+    "Owner 1": {
+     "Owner 7": "5-3",
+     "Owner 9": "3-5",
+     "Owner 3": "4-4",
+     "Owner 11": "3-5",
+     "Owner 4": "5-3",
+     "Owner 2": "6-2",
+     "Owner 1": "6-2",
+     "Owner 12": "6-2",
+     "Owner 8": "6-2",
+     "Owner 13": "6-2",
+     "Owner 5": "5-3",
+     "Owner 6": "6-2"
+    },
+    "Owner 12": {
+     "Owner 7": "3-5",
+     "Owner 9": "3-5",
+     "Owner 3": "3-5",
+     "Owner 11": "3-5",
+     "Owner 4": "4-4",
+     "Owner 2": "4-4",
+     "Owner 1": "3-5",
+     "Owner 12": "3-5",
+     "Owner 8": "5-3",
+     "Owner 13": "3-5",
+     "Owner 5": "5-3",
+     "Owner 6": "4-4"
+    },
+    "Owner 8": {
+     "Owner 7": "4-4",
+     "Owner 9": "3-5",
+     "Owner 3": "5-3",
+     "Owner 11": "5-3",
+     "Owner 4": "4-4",
+     "Owner 2": "6-1-1",
+     "Owner 1": "7-1",
+     "Owner 12": "5-3",
+     "Owner 8": "7-1",
+     "Owner 13": "6-2",
+     "Owner 5": "6-2",
+     "Owner 6": "6-2"
+    },
+    "Owner 13": {
+     "Owner 7": "7-1",
+     "Owner 9": "5-3",
+     "Owner 3": "6-2",
+     "Owner 11": "5-3",
+     "Owner 4": "6-2",
+     "Owner 2": "8-0",
+     "Owner 1": "6-2",
+     "Owner 12": "6-2",
+     "Owner 8": "5-3",
+     "Owner 13": "7-1",
+     "Owner 5": "5-3",
+     "Owner 6": "6-2"
+    },
+    "Owner 5": {
+     "Owner 7": "4-4",
+     "Owner 9": "3-5",
+     "Owner 3": "2-6",
+     "Owner 11": "1-7",
+     "Owner 4": "2-6",
+     "Owner 2": "5-3",
+     "Owner 1": "4-4",
+     "Owner 12": "4-4",
+     "Owner 8": "6-2",
+     "Owner 13": "3-5",
+     "Owner 5": "3-5",
+     "Owner 6": "5-3"
+    },
+    "Owner 6": {
+     "Owner 7": "5-3",
+     "Owner 9": "3-5",
+     "Owner 3": "3-5",
+     "Owner 11": "4-4",
+     "Owner 4": "4-4",
+     "Owner 2": "7-1",
+     "Owner 1": "3-5",
+     "Owner 12": "4-4",
+     "Owner 8": "6-2",
+     "Owner 13": "5-3",
+     "Owner 5": "5-3",
+     "Owner 6": "4-4"
+    }
+   }
+  },
+  {
+   "week": 9,
+   "actual_records": {
+    "Owner 7": "4-5",
+    "Owner 9": "3-6",
+    "Owner 3": "4-5",
+    "Owner 11": "1-8",
+    "Owner 4": "4-5",
+    "Owner 2": "5-4",
+    "Owner 1": "6-3",
+    "Owner 12": "4-5",
+    "Owner 8": "8-1",
+    "Owner 13": "7-2",
+    "Owner 5": "4-5",
+    "Owner 6": "4-5"
+   },
+   "swap": {
+    "Owner 7": {
+     "Owner 7": "4-5",
+     "Owner 9": "2-7",
+     "Owner 3": "3-6",
+     "Owner 11": "4-5",
+     "Owner 4": "4-5",
+     "Owner 2": "4-5",
+     "Owner 1": "3-6",
+     "Owner 12": "3-6",
+     "Owner 8": "5-4",
+     "Owner 13": "3-6",
+     "Owner 5": "2-7",
+     "Owner 6": "3-6"
+    },
+    "Owner 9": {
+     "Owner 7": "5-4",
+     "Owner 9": "3-6",
+     "Owner 3": "2-7",
+     "Owner 11": "4-5",
+     "Owner 4": "3-5-1",
+     "Owner 2": "5-4",
+     "Owner 1": "4-5",
+     "Owner 12": "4-5",
+     "Owner 8": "8-1",
+     "Owner 13": "2-7",
+     "Owner 5": "3-6",
+     "Owner 6": "4-5"
+    },
+    "Owner 3": {
+     "Owner 7": "5-4",
+     "Owner 9": "4-5",
+     "Owner 3": "4-5",
+     "Owner 11": "5-4",
+     "Owner 4": "5-4",
+     "Owner 2": "6-3",
+     "Owner 1": "5-4",
+     "Owner 12": "3-6",
+     "Owner 8": "7-2",
+     "Owner 13": "3-6",
+     "Owner 5": "5-4",
+     "Owner 6": "5-4"
+    },
+    "Owner 11": {
+     "Owner 7": "3-6",
+     "Owner 9": "2-7",
+     "Owner 3": "2-7",
+     "Owner 11": "1-8",
+     "Owner 4": "2-7",
+     "Owner 2": "4-5",
+     "Owner 1": "2-7",
+     "Owner 12": "2-7",
+     "Owner 8": "4-5",
+     "Owner 13": "1-8",
+     "Owner 5": "2-7",
+     "Owner 6": "3-6"
+    },
+    "Owner 4": {
+     "Owner 7": "3-6",
+     "Owner 9": "2-7",
+     "Owner 3": "2-7",
+     "Owner 11": "4-5",
+     "Owner 4": "4-5",
+     "Owner 2": "4-5",
+     "Owner 1": "4-5",
+     "Owner 12": "3-6",
+     "Owner 8": "5-4",
+     "Owner 13": "3-6",
+     "Owner 5": "3-6",
+     "Owner 6": "6-3"
+    },
+    "Owner 2": {
+     "Owner 7": "6-3",
+     "Owner 9": "4-5",
+     "Owner 3": "3-6",
+     "Owner 11": "2-7",
+     "Owner 4": "3-6",
+     "Owner 2": "5-4",
+     "Owner 1": "5-4",
+     "Owner 12": "6-3",
+     "Owner 8": "7-2",
+     "Owner 13": "3-6",
+     "Owner 5": "5-4",
+     "Owner 6": "2-7"
+    },
+    "Owner 1": {
+     "Owner 7": "6-3",
+     "Owner 9": "4-5",
+     "Owner 3": "4-5",
+     "Owner 11": "3-6",
+     "Owner 4": "5-4",
+     "Owner 2": "6-3",
+     "Owner 1": "6-3",
+     "Owner 12": "7-2",
+     "Owner 8": "7-2",
+     "Owner 13": "6-3",
+     "Owner 5": "5-4",
+     "Owner 6": "6-3"
+    },
+    "Owner 12": {
+     "Owner 7": "4-5",
+     "Owner 9": "4-5",
+     "Owner 3": "3-6",
+     "Owner 11": "4-5",
+     "Owner 4": "5-4",
+     "Owner 2": "4-5",
+     "Owner 1": "3-6",
+     "Owner 12": "4-5",
+     "Owner 8": "6-3",
+     "Owner 13": "3-6",
+     "Owner 5": "5-4",
+     "Owner 6": "5-4"
+    },
+    "Owner 8": {
+     "Owner 7": "5-4",
+     "Owner 9": "4-5",
+     "Owner 3": "6-3",
+     "Owner 11": "6-3",
+     "Owner 4": "5-4",
+     "Owner 2": "7-1-1",
+     "Owner 1": "8-1",
+     "Owner 12": "6-3",
+     "Owner 8": "8-1",
+     "Owner 13": "6-3",
+     "Owner 5": "7-2",
+     "Owner 6": "7-2"
+    },
+    "Owner 13": {
+     "Owner 7": "8-1",
+     "Owner 9": "6-3",
+     "Owner 3": "7-2",
+     "Owner 11": "6-3",
+     "Owner 4": "7-2",
+     "Owner 2": "8-1",
+     "Owner 1": "7-2",
+     "Owner 12": "7-2",
+     "Owner 8": "6-3",
+     "Owner 13": "7-2",
+     "Owner 5": "5-4",
+     "Owner 6": "7-2"
+    },
+    "Owner 5": {
+     "Owner 7": "5-4",
+     "Owner 9": "4-5",
+     "Owner 3": "3-6",
+     "Owner 11": "2-7",
+     "Owner 4": "3-6",
+     "Owner 2": "6-3",
+     "Owner 1": "5-4",
+     "Owner 12": "5-4",
+     "Owner 8": "7-2",
+     "Owner 13": "4-5",
+     "Owner 5": "4-5",
+     "Owner 6": "6-3"
+    },
+    "Owner 6": {
+     "Owner 7": "6-3",
+     "Owner 9": "3-6",
+     "Owner 3": "3-6",
+     "Owner 11": "4-5",
+     "Owner 4": "4-5",
+     "Owner 2": "7-2",
+     "Owner 1": "3-6",
+     "Owner 12": "5-4",
+     "Owner 8": "7-2",
+     "Owner 13": "5-4",
+     "Owner 5": "5-4",
+     "Owner 6": "4-5"
+    }
+   }
+  },
+  {
+   "week": 10,
+   "actual_records": {
+    "Owner 7": "4-6",
+    "Owner 9": "4-6",
+    "Owner 3": "5-5",
+    "Owner 11": "2-8",
+    "Owner 4": "4-6",
+    "Owner 2": "5-5",
+    "Owner 1": "7-3",
+    "Owner 12": "5-5",
+    "Owner 8": "8-2",
+    "Owner 13": "8-2",
+    "Owner 5": "4-6",
+    "Owner 6": "4-6"
+   },
+   "swap": {
+    "Owner 7": {
+     "Owner 7": "4-6",
+     "Owner 9": "3-7",
+     "Owner 3": "3-7",
+     "Owner 11": "5-5",
+     "Owner 4": "4-6",
+     "Owner 2": "5-5",
+     "Owner 1": "3-7",
+     "Owner 12": "3-7",
+     "Owner 8": "5-5",
+     "Owner 13": "4-6",
+     "Owner 5": "2-8",
+     "Owner 6": "3-7"
+    },
+    "Owner 9": {
+     "Owner 7": "5-5",
+     "Owner 9": "4-6",
+     "Owner 3": "3-7",
+     "Owner 11": "5-5",
+     "Owner 4": "4-5-1",
+     "Owner 2": "6-4",
+     "Owner 1": "5-5",
+     "Owner 12": "5-5",
+     "Owner 8": "8-2",
+     "Owner 13": "3-7",
+     "Owner 5": "3-7",
+     "Owner 6": "4-6"
+    },
+    "Owner 3": {
+     "Owner 7": "5-5",
+     "Owner 9": "5-5",
+     "Owner 3": "5-5",
+     "Owner 11": "6-4",
+     "Owner 4": "6-4",
+     "Owner 2": "7-3",
+     "Owner 1": "6-4",
+     "Owner 12": "4-6",
+     "Owner 8": "7-3",
+     "Owner 13": "4-6",
+     "Owner 5": "6-4",
+     "Owner 6": "5-5"
+    },
+    "Owner 11": {
+     "Owner 7": "3-7",
+     "Owner 9": "3-7",
+     "Owner 3": "2-8",
+     "Owner 11": "2-8",
+     "Owner 4": "2-8",
+     "Owner 2": "5-5",
+     "Owner 1": "2-8",
+     "Owner 12": "2-8",
+     "Owner 8": "4-6",
+     "Owner 13": "2-8",
+     "Owner 5": "2-8",
+     "Owner 6": "3-7"
+    },
+    "Owner 4": {
+     "Owner 7": "3-7",
+     "Owner 9": "2-8",
+     "Owner 3": "2-8",
+     "Owner 11": "4-6",
+     "Owner 4": "4-6",
+     "Owner 2": "4-6",
+     "Owner 1": "4-6",
+     "Owner 12": "3-7",
+     "Owner 8": "5-5",
+     "Owner 13": "3-7",
+     "Owner 5": "3-7",
+     "Owner 6": "6-4"
+    },
+    "Owner 2": {
+     "Owner 7": "6-4",
+     "Owner 9": "5-5",
+     "Owner 3": "3-7",
+     "Owner 11": "2-8",
+     "Owner 4": "3-7",
+     "Owner 2": "5-5",
+     "Owner 1": "5-5",
+     "Owner 12": "6-4",
+     "Owner 8": "7-3",
+     "Owner 13": "4-6",
+     "Owner 5": "5-5",
+     "Owner 6": "2-8"
+    },
+    "Owner 1": {
+     "Owner 7": "6-4",
+     "Owner 9": "5-5",
+     "Owner 3": "5-5",
+     "Owner 11": "4-6",
+     "Owner 4": "6-4",
+     "Owner 2": "7-3",
+     "Owner 1": "7-3",
+     "Owner 12": "8-2",
+     "Owner 8": "8-2",
+     "Owner 13": "7-3",
+     "Owner 5": "6-4",
+     "Owner 6": "6-4"
+    },
+    "Owner 12": {
+     "Owner 7": "5-5",
+     "Owner 9": "5-5",
+     "Owner 3": "4-6",
+     "Owner 11": "5-5",
+     "Owner 4": "6-4",
+     "Owner 2": "5-5",
+     "Owner 1": "4-6",
+     "Owner 12": "5-5",
+     "Owner 8": "7-3",
+     "Owner 13": "4-6",
+     "Owner 5": "6-4",
+     "Owner 6": "6-4"
+    },
+    "Owner 8": {
+     "Owner 7": "5-5",
+     "Owner 9": "5-5",
+     "Owner 3": "6-4",
+     "Owner 11": "7-3",
+     "Owner 4": "5-5",
+     "Owner 2": "8-1-1",
+     "Owner 1": "8-2",
+     "Owner 12": "7-3",
+     "Owner 8": "8-2",
+     "Owner 13": "7-3",
+     "Owner 5": "7-3",
+     "Owner 6": "7-3"
+    },
+    "Owner 13": {
+     "Owner 7": "8-2",
+     "Owner 9": "7-3",
+     "Owner 3": "8-2",
+     "Owner 11": "7-3",
+     "Owner 4": "8-2",
+     "Owner 2": "9-1",
+     "Owner 1": "8-2",
+     "Owner 12": "8-2",
+     "Owner 8": "7-3",
+     "Owner 13": "8-2",
+     "Owner 5": "6-4",
+     "Owner 6": "8-2"
+    },
+    "Owner 5": {
+     "Owner 7": "5-5",
+     "Owner 9": "5-5",
+     "Owner 3": "3-7",
+     "Owner 11": "3-7",
+     "Owner 4": "3-7",
+     "Owner 2": "7-3",
+     "Owner 1": "6-4",
+     "Owner 12": "6-4",
+     "Owner 8": "7-3",
+     "Owner 13": "5-5",
+     "Owner 5": "4-6",
+     "Owner 6": "6-4"
+    },
+    "Owner 6": {
+     "Owner 7": "6-4",
+     "Owner 9": "4-6",
+     "Owner 3": "3-7",
+     "Owner 11": "4-6",
+     "Owner 4": "4-6",
+     "Owner 2": "7-3",
+     "Owner 1": "3-7",
+     "Owner 12": "5-5",
+     "Owner 8": "7-3",
+     "Owner 13": "5-5",
+     "Owner 5": "5-5",
+     "Owner 6": "4-6"
+    }
+   }
+  },
+  {
+   "week": 11,
+   "actual_records": {
+    "Owner 7": "5-6",
+    "Owner 9": "4-7",
+    "Owner 3": "5-6",
+    "Owner 11": "2-9",
+    "Owner 4": "4-7",
+    "Owner 2": "5-6",
+    "Owner 1": "8-3",
+    "Owner 12": "5-6",
+    "Owner 8": "9-2",
+    "Owner 13": "9-2",
+    "Owner 5": "5-6",
+    "Owner 6": "5-6"
+   },
+   "swap": {
+    "Owner 7": {
+     "Owner 7": "5-6",
+     "Owner 9": "4-7",
+     "Owner 3": "3-8",
+     "Owner 11": "6-5",
+     "Owner 4": "4-7",
+     "Owner 2": "6-5",
+     "Owner 1": "4-7",
+     "Owner 12": "3-8",
+     "Owner 8": "6-5",
+     "Owner 13": "4-7",
+     "Owner 5": "3-8",
+     "Owner 6": "4-7"
+    },
+    "Owner 9": {
+     "Owner 7": "6-5",
+     "Owner 9": "4-7",
+     "Owner 3": "3-8",
+     "Owner 11": "5-6",
+     "Owner 4": "4-6-1",
+     "Owner 2": "6-5",
+     "Owner 1": "6-5",
+     "Owner 12": "5-6",
+     "Owner 8": "8-3",
+     "Owner 13": "3-8",
+     "Owner 5": "3-8",
+     "Owner 6": "5-6"
+    },
+    "Owner 3": {
+     "Owner 7": "5-6",
+     "Owner 9": "5-6",
+     "Owner 3": "5-6",
+     "Owner 11": "6-5",
+     "Owner 4": "6-5",
+     "Owner 2": "7-4",
+     "Owner 1": "6-5",
+     "Owner 12": "4-7",
+     "Owner 8": "7-4",
+     "Owner 13": "4-7",
+     "Owner 5": "6-5",
+     "Owner 6": "5-6"
+    },
+    "Owner 11": {
+     "Owner 7": "3-8",
+     "Owner 9": "3-8",
+     "Owner 3": "2-9",
+     "Owner 11": "2-9",
+     "Owner 4": "2-9",
+     "Owner 2": "5-6",
+     "Owner 1": "2-9",
+     "Owner 12": "2-9",
+     "Owner 8": "4-7",
+     "Owner 13": "2-9",
+     "Owner 5": "2-9",
+     "Owner 6": "4-7"
+    },
+    "Owner 4": {
+     "Owner 7": "4-7",
+     "Owner 9": "3-8",
+     "Owner 3": "2-9",
+     "Owner 11": "5-6",
+     "Owner 4": "4-7",
+     "Owner 2": "5-6",
+     "Owner 1": "5-6",
+     "Owner 12": "3-8",
+     "Owner 8": "6-5",
+     "Owner 13": "3-8",
+     "Owner 5": "4-7",
+     "Owner 6": "7-4"
+    },
+    "Owner 2": {
+     "Owner 7": "6-5",
+     "Owner 9": "5-6",
+     "Owner 3": "3-8",
+     "Owner 11": "2-9",
+     "Owner 4": "3-8",
+     "Owner 2": "5-6",
+     "Owner 1": "6-5",
+     "Owner 12": "6-5",
+     "Owner 8": "7-4",
+     "Owner 13": "4-7",
+     "Owner 5": "5-6",
+     "Owner 6": "3-8"
+    },
+    "Owner 1": {
+     "Owner 7": "7-4",
+     "Owner 9": "6-5",
+     "Owner 3": "5-6",
+     "Owner 11": "5-6",
+     "Owner 4": "6-5",
+     "Owner 2": "7-4",
+     "Owner 1": "8-3",
+     "Owner 12": "8-3",
+     "Owner 8": "9-2",
+     "Owner 13": "7-4",
+     "Owner 5": "7-4",
+     "Owner 6": "7-4"
+    },
+    "Owner 12": {
+     "Owner 7": "6-5",
+     "Owner 9": "6-5",
+     "Owner 3": "4-7",
+     "Owner 11": "5-6",
+     "Owner 4": "6-5",
+     "Owner 2": "5-6",
+     "Owner 1": "5-6",
+     "Owner 12": "5-6",
+     "Owner 8": "8-3",
+     "Owner 13": "4-7",
+     "Owner 5": "6-5",
+     "Owner 6": "7-4"
+    },
+    "Owner 8": {
+     "Owner 7": "6-5",
+     "Owner 9": "6-5",
+     "Owner 3": "6-5",
+     "Owner 11": "7-4",
+     "Owner 4": "5-6",
+     "Owner 2": "8-2-1",
+     "Owner 1": "9-2",
+     "Owner 12": "7-4",
+     "Owner 8": "9-2",
+     "Owner 13": "7-4",
+     "Owner 5": "7-4",
+     "Owner 6": "8-3"
+    },
+    "Owner 13": {
+     "Owner 7": "9-2",
+     "Owner 9": "8-3",
+     "Owner 3": "8-3",
+     "Owner 11": "8-3",
+     "Owner 4": "9-2",
+     "Owner 2": "10-1",
+     "Owner 1": "9-2",
+     "Owner 12": "8-3",
+     "Owner 8": "8-3",
+     "Owner 13": "9-2",
+     "Owner 5": "7-4",
+     "Owner 6": "9-2"
+    },
+    "Owner 5": {
+     "Owner 7": "6-5",
+     "Owner 9": "6-5",
+     "Owner 3": "3-8",
+     "Owner 11": "4-7",
+     "Owner 4": "4-7",
+     "Owner 2": "8-3",
+     "Owner 1": "7-4",
+     "Owner 12": "7-4",
+     "Owner 8": "8-3",
+     "Owner 13": "6-5",
+     "Owner 5": "5-6",
+     "Owner 6": "7-4"
+    },
+    "Owner 6": {
+     "Owner 7": "7-4",
+     "Owner 9": "5-6",
+     "Owner 3": "4-7",
+     "Owner 11": "5-6",
+     "Owner 4": "5-6",
+     "Owner 2": "8-3",
+     "Owner 1": "4-7",
+     "Owner 12": "6-5",
+     "Owner 8": "8-3",
+     "Owner 13": "6-5",
+     "Owner 5": "6-5",
+     "Owner 6": "5-6"
+    }
+   }
+  },
+  {
+   "week": 12,
+   "actual_records": {
+    "Owner 7": "5-7",
+    "Owner 9": "4-8",
+    "Owner 3": "5-7",
+    "Owner 11": "3-9",
+    "Owner 4": "5-7",
+    "Owner 2": "5-7",
+    "Owner 1": "9-3",
+    "Owner 12": "6-6",
+    "Owner 8": "9-3",
+    "Owner 13": "10-2",
+    "Owner 5": "6-6",
+    "Owner 6": "5-7"
+   },
+   "swap": {
+    "Owner 7": {
+     "Owner 7": "5-7",
+     "Owner 9": "4-8",
+     "Owner 3": "3-9",
+     "Owner 11": "6-6",
+     "Owner 4": "4-8",
+     "Owner 2": "6-6",
+     "Owner 1": "4-8",
+     "Owner 12": "3-9",
+     "Owner 8": "6-6",
+     "Owner 13": "4-8",
+     "Owner 5": "3-9",
+     "Owner 6": "4-8"
+    },
+    "Owner 9": {
+     "Owner 7": "6-6",
+     "Owner 9": "4-8",
+     "Owner 3": "3-9",
+     "Owner 11": "5-7",
+     "Owner 4": "5-6-1",
+     "Owner 2": "6-6",
+     "Owner 1": "7-5",
+     "Owner 12": "5-7",
+     "Owner 8": "8-4",
+     "Owner 13": "4-8",
+     "Owner 5": "3-9",
+     "Owner 6": "5-7"
+    },
+    "Owner 3": {
+     "Owner 7": "5-7",
+     "Owner 9": "5-7",
+     "Owner 3": "5-7",
+     "Owner 11": "6-6",
+     "Owner 4": "6-6",
+     "Owner 2": "7-5",
+     "Owner 1": "7-5",
+     "Owner 12": "4-8",
+     "Owner 8": "7-5",
+     "Owner 13": "5-7",
+     "Owner 5": "6-6",
+     "Owner 6": "5-7"
+    },
+    "Owner 11": {
+     "Owner 7": "4-8",
+     "Owner 9": "4-8",
+     "Owner 3": "3-9",
+     "Owner 11": "3-9",
+     "Owner 4": "3-9",
+     "Owner 2": "5-7",
+     "Owner 1": "3-9",
+     "Owner 12": "3-9",
+     "Owner 8": "4-8",
+     "Owner 13": "3-9",
+     "Owner 5": "3-9",
+     "Owner 6": "4-8"
+    },
+    "Owner 4": {
+     "Owner 7": "5-7",
+     "Owner 9": "3-9",
+     "Owner 3": "3-9",
+     "Owner 11": "6-6",
+     "Owner 4": "5-7",
+     "Owner 2": "5-7",
+     "Owner 1": "6-6",
+     "Owner 12": "4-8",
+     "Owner 8": "6-6",
+     "Owner 13": "4-8",
+     "Owner 5": "5-7",
+     "Owner 6": "7-5"
+    },
+    "Owner 2": {
+     "Owner 7": "7-5",
+     "Owner 9": "5-7",
+     "Owner 3": "3-9",
+     "Owner 11": "3-9",
+     "Owner 4": "4-8",
+     "Owner 2": "5-7",
+     "Owner 1": "7-5",
+     "Owner 12": "7-5",
+     "Owner 8": "7-5",
+     "Owner 13": "5-7",
+     "Owner 5": "5-7",
+     "Owner 6": "3-9"
+    },
+    "Owner 1": {
+     "Owner 7": "8-4",
+     "Owner 9": "6-6",
+     "Owner 3": "5-7",
+     "Owner 11": "6-6",
+     "Owner 4": "7-5",
+     "Owner 2": "7-5",
+     "Owner 1": "9-3",
+     "Owner 12": "8-4",
+     "Owner 8": "9-3",
+     "Owner 13": "8-4",
+     "Owner 5": "7-5",
+     "Owner 6": "7-5"
+    },
+    "Owner 12": {
+     "Owner 7": "7-5",
+     "Owner 9": "7-5",
+     "Owner 3": "5-7",
+     "Owner 11": "6-6",
+     "Owner 4": "7-5",
+     "Owner 2": "6-6",
+     "Owner 1": "6-6",
+     "Owner 12": "6-6",
+     "Owner 8": "9-3",
+     "Owner 13": "5-7",
+     "Owner 5": "7-5",
+     "Owner 6": "8-4"
+    },
+    "Owner 8": {
+     "Owner 7": "6-6",
+     "Owner 9": "6-6",
+     "Owner 3": "6-6",
+     "Owner 11": "7-5",
+     "Owner 4": "5-7",
+     "Owner 2": "8-3-1",
+     "Owner 1": "10-2",
+     "Owner 12": "7-5",
+     "Owner 8": "9-3",
+     "Owner 13": "7-5",
+     "Owner 5": "7-5",
+     "Owner 6": "8-4"
+    },
+    "Owner 13": {
+     "Owner 7": "10-2",
+     "Owner 9": "9-3",
+     "Owner 3": "9-3",
+     "Owner 11": "9-3",
+     "Owner 4": "10-2",
+     "Owner 2": "11-1",
+     "Owner 1": "10-2",
+     "Owner 12": "9-3",
+     "Owner 8": "9-3",
+     "Owner 13": "10-2",
+     "Owner 5": "8-4",
+     "Owner 6": "9-3"
+    },
+    "Owner 5": {
+     "Owner 7": "7-5",
+     "Owner 9": "7-5",
+     "Owner 3": "4-8",
+     "Owner 11": "5-7",
+     "Owner 4": "5-7",
+     "Owner 2": "9-3",
+     "Owner 1": "8-4",
+     "Owner 12": "8-4",
+     "Owner 8": "8-4",
+     "Owner 13": "7-5",
+     "Owner 5": "6-6",
+     "Owner 6": "7-5"
+    },
+    "Owner 6": {
+     "Owner 7": "8-4",
+     "Owner 9": "5-7",
+     "Owner 3": "4-8",
+     "Owner 11": "6-6",
+     "Owner 4": "6-6",
+     "Owner 2": "8-4",
+     "Owner 1": "5-7",
+     "Owner 12": "6-6",
+     "Owner 8": "8-4",
+     "Owner 13": "7-5",
+     "Owner 5": "6-6",
+     "Owner 6": "5-7"
+    }
+   }
+  },
+  {
+   "week": 13,
+   "actual_records": {
+    "Owner 7": "5-8",
+    "Owner 9": "5-8",
+    "Owner 3": "6-7",
+    "Owner 11": "4-9",
+    "Owner 4": "6-7",
+    "Owner 2": "5-8",
+    "Owner 1": "9-4",
+    "Owner 12": "6-7",
+    "Owner 8": "9-4",
+    "Owner 13": "10-3",
+    "Owner 5": "7-6",
+    "Owner 6": "6-7"
+   },
+   "swap": {
+    "Owner 7": {
+     "Owner 7": "5-8",
+     "Owner 9": "4-9",
+     "Owner 3": "3-10",
+     "Owner 11": "6-7",
+     "Owner 4": "5-8",
+     "Owner 2": "6-7",
+     "Owner 1": "4-9",
+     "Owner 12": "3-10",
+     "Owner 8": "6-7",
+     "Owner 13": "4-9",
+     "Owner 5": "3-10",
+     "Owner 6": "4-9"
+    },
+    "Owner 9": {
+     "Owner 7": "7-6",
+     "Owner 9": "5-8",
+     "Owner 3": "4-9",
+     "Owner 11": "6-7",
+     "Owner 4": "6-6-1",
+     "Owner 2": "6-7",
+     "Owner 1": "7-6",
+     "Owner 12": "5-8",
+     "Owner 8": "8-5",
+     "Owner 13": "5-8",
+     "Owner 5": "3-10",
+     "Owner 6": "6-7"
+    },
+    "Owner 3": {
+     "Owner 7": "6-7",
+     "Owner 9": "6-7",
+     "Owner 3": "6-7",
+     "Owner 11": "7-6",
+     "Owner 4": "7-6",
+     "Owner 2": "7-6",
+     "Owner 1": "8-5",
+     "Owner 12": "5-8",
+     "Owner 8": "8-5",
+     "Owner 13": "6-7",
+     "Owner 5": "7-6",
+     "Owner 6": "6-7"
+    },
+    "Owner 11": {
+     "Owner 7": "4-9",
+     "Owner 9": "5-8",
+     "Owner 3": "4-9",
+     "Owner 11": "4-9",
+     "Owner 4": "4-9",
+     "Owner 2": "5-8",
+     "Owner 1": "3-10",
+     "Owner 12": "3-10",
+     "Owner 8": "4-9",
+     "Owner 13": "4-9",
+     "Owner 5": "3-10",
+     "Owner 6": "5-8"
+    },
+    "Owner 4": {
+     "Owner 7": "6-7",
+     "Owner 9": "4-9",
+     "Owner 3": "4-9",
+     "Owner 11": "7-6",
+     "Owner 4": "6-7",
+     "Owner 2": "5-8",
+     "Owner 1": "6-7",
+     "Owner 12": "5-8",
+     "Owner 8": "6-7",
+     "Owner 13": "5-8",
+     "Owner 5": "5-8",
+     "Owner 6": "8-5"
+    },
+    "Owner 2": {
+     "Owner 7": "7-6",
+     "Owner 9": "6-7",
+     "Owner 3": "3-10",
+     "Owner 11": "4-9",
+     "Owner 4": "5-8",
+     "Owner 2": "5-8",
+     "Owner 1": "7-6",
+     "Owner 12": "7-6",
+     "Owner 8": "7-6",
+     "Owner 13": "5-8",
+     "Owner 5": "5-8",
+     "Owner 6": "3-10"
+    },
+    "Owner 1": {
+     "Owner 7": "9-4",
+     "Owner 9": "7-6",
+     "Owner 3": "6-7",
+     "Owner 11": "7-6",
+     "Owner 4": "8-5",
+     "Owner 2": "7-6",
+     "Owner 1": "9-4",
+     "Owner 12": "9-4",
+     "Owner 8": "9-4",
+     "Owner 13": "9-4",
+     "Owner 5": "7-6",
+     "Owner 6": "8-5"
+    },
+    "Owner 12": {
+     "Owner 7": "7-6",
+     "Owner 9": "7-6",
+     "Owner 3": "5-8",
+     "Owner 11": "6-7",
+     "Owner 4": "7-6",
+     "Owner 2": "6-7",
+     "Owner 1": "6-7",
+     "Owner 12": "6-7",
+     "Owner 8": "9-4",
+     "Owner 13": "5-8",
+     "Owner 5": "7-6",
+     "Owner 6": "8-5"
+    },
+    "Owner 8": {
+     "Owner 7": "6-7",
+     "Owner 9": "7-6",
+     "Owner 3": "6-7",
+     "Owner 11": "8-5",
+     "Owner 4": "6-7",
+     "Owner 2": "8-4-1",
+     "Owner 1": "10-3",
+     "Owner 12": "7-6",
+     "Owner 8": "9-4",
+     "Owner 13": "7-6",
+     "Owner 5": "7-6",
+     "Owner 6": "9-4"
+    },
+    "Owner 13": {
+     "Owner 7": "10-3",
+     "Owner 9": "10-3",
+     "Owner 3": "9-4",
+     "Owner 11": "9-4",
+     "Owner 4": "11-2",
+     "Owner 2": "11-2",
+     "Owner 1": "10-3",
+     "Owner 12": "9-4",
+     "Owner 8": "9-4",
+     "Owner 13": "10-3",
+     "Owner 5": "8-5",
+     "Owner 6": "9-4"
+    },
+    "Owner 5": {
+     "Owner 7": "8-5",
+     "Owner 9": "8-5",
+     "Owner 3": "5-8",
+     "Owner 11": "6-7",
+     "Owner 4": "6-7",
+     "Owner 2": "9-4",
+     "Owner 1": "9-4",
+     "Owner 12": "9-4",
+     "Owner 8": "8-5",
+     "Owner 13": "8-5",
+     "Owner 5": "7-6",
+     "Owner 6": "8-5"
+    },
+    "Owner 6": {
+     "Owner 7": "9-4",
+     "Owner 9": "6-7",
+     "Owner 3": "5-8",
+     "Owner 11": "7-6",
+     "Owner 4": "7-6",
+     "Owner 2": "9-4",
+     "Owner 1": "6-7",
+     "Owner 12": "7-6",
+     "Owner 8": "9-4",
+     "Owner 13": "8-5",
+     "Owner 5": "7-6",
+     "Owner 6": "6-7"
+    }
+   }
+  },
+  {
+   "week": 14,
+   "actual_records": {
+    "Owner 7": "5-9",
+    "Owner 9": "5-9",
+    "Owner 3": "7-7",
+    "Owner 11": "4-10",
+    "Owner 4": "7-7",
+    "Owner 2": "5-9",
+    "Owner 1": "10-4",
+    "Owner 12": "7-7",
+    "Owner 8": "9-5",
+    "Owner 13": "11-3",
+    "Owner 5": "8-6",
+    "Owner 6": "6-8"
+   },
+   "swap": {
+    "Owner 7": {
+     "Owner 7": "5-9",
+     "Owner 9": "4-10",
+     "Owner 3": "4-10",
+     "Owner 11": "6-8",
+     "Owner 4": "6-8",
+     "Owner 2": "6-8",
+     "Owner 1": "5-9",
+     "Owner 12": "3-11",
+     "Owner 8": "6-8",
+     "Owner 13": "4-10",
+     "Owner 5": "4-10",
+     "Owner 6": "4-10"
+    },
+    "Owner 9": {
+     "Owner 7": "7-7",
+     "Owner 9": "5-9",
+     "Owner 3": "5-9",
+     "Owner 11": "6-8",
+     "Owner 4": "7-6-1",
+     "Owner 2": "6-8",
+     "Owner 1": "7-7",
+     "Owner 12": "5-9",
+     "Owner 8": "8-6",
+     "Owner 13": "5-9",
+     "Owner 5": "3-11",
+     "Owner 6": "6-8"
+    },
+    "Owner 3": {
+     "Owner 7": "7-7",
+     "Owner 9": "6-8",
+     "Owner 3": "7-7",
+     "Owner 11": "8-6",
+     "Owner 4": "8-6",
+     "Owner 2": "8-6",
+     "Owner 1": "9-5",
+     "Owner 12": "6-8",
+     "Owner 8": "8-6",
+     "Owner 13": "7-7",
+     "Owner 5": "8-6",
+     "Owner 6": "6-8"
+    },
+    "Owner 11": {
+     "Owner 7": "4-10",
+     "Owner 9": "5-9",
+     "Owner 3": "4-10",
+     "Owner 11": "4-10",
+     "Owner 4": "4-10",
+     "Owner 2": "5-9",
+     "Owner 1": "3-11",
+     "Owner 12": "3-11",
+     "Owner 8": "4-10",
+     "Owner 13": "4-10",
+     "Owner 5": "3-11",
+     "Owner 6": "5-9"
+    },
+    "Owner 4": {
+     "Owner 7": "6-8",
+     "Owner 9": "4-10",
+     "Owner 3": "5-9",
+     "Owner 11": "7-7",
+     "Owner 4": "7-7",
+     "Owner 2": "6-8",
+     "Owner 1": "7-7",
+     "Owner 12": "5-9",
+     "Owner 8": "6-8",
+     "Owner 13": "6-8",
+     "Owner 5": "6-8",
+     "Owner 6": "8-6"
+    },
+    "Owner 2": {
+     "Owner 7": "7-7",
+     "Owner 9": "6-8",
+     "Owner 3": "4-10",
+     "Owner 11": "4-10",
+     "Owner 4": "5-9",
+     "Owner 2": "5-9",
+     "Owner 1": "7-7",
+     "Owner 12": "7-7",
+     "Owner 8": "7-7",
+     "Owner 13": "5-9",
+     "Owner 5": "5-9",
+     "Owner 6": "3-11"
+    },
+    "Owner 1": {
+     "Owner 7": "10-4",
+     "Owner 9": "8-6",
+     "Owner 3": "7-7",
+     "Owner 11": "8-6",
+     "Owner 4": "9-5",
+     "Owner 2": "8-6",
+     "Owner 1": "10-4",
+     "Owner 12": "10-4",
+     "Owner 8": "9-5",
+     "Owner 13": "10-4",
+     "Owner 5": "8-6",
+     "Owner 6": "9-5"
+    },
+    "Owner 12": {
+     "Owner 7": "8-6",
+     "Owner 9": "8-6",
+     "Owner 3": "6-8",
+     "Owner 11": "7-7",
+     "Owner 4": "8-6",
+     "Owner 2": "7-7",
+     "Owner 1": "7-7",
+     "Owner 12": "7-7",
+     "Owner 8": "10-4",
+     "Owner 13": "6-8",
+     "Owner 5": "8-6",
+     "Owner 6": "9-5"
+    },
+    "Owner 8": {
+     "Owner 7": "7-7",
+     "Owner 9": "7-7",
+     "Owner 3": "7-7",
+     "Owner 11": "8-6",
+     "Owner 4": "7-7",
+     "Owner 2": "9-4-1",
+     "Owner 1": "11-3",
+     "Owner 12": "7-7",
+     "Owner 8": "9-5",
+     "Owner 13": "8-6",
+     "Owner 5": "8-6",
+     "Owner 6": "9-5"
+    },
+    "Owner 13": {
+     "Owner 7": "11-3",
+     "Owner 9": "10-4",
+     "Owner 3": "10-4",
+     "Owner 11": "9-5",
+     "Owner 4": "12-2",
+     "Owner 2": "12-2",
+     "Owner 1": "11-3",
+     "Owner 12": "9-5",
+     "Owner 8": "9-5",
+     "Owner 13": "11-3",
+     "Owner 5": "9-5",
+     "Owner 6": "9-5"
+    },
+    "Owner 5": {
+     "Owner 7": "9-5",
+     "Owner 9": "9-5",
+     "Owner 3": "6-8",
+     "Owner 11": "7-7",
+     "Owner 4": "7-7",
+     "Owner 2": "10-4",
+     "Owner 1": "10-4",
+     "Owner 12": "10-4",
+     "Owner 8": "8-6",
+     "Owner 13": "9-5",
+     "Owner 5": "8-6",
+     "Owner 6": "8-6"
+    },
+    "Owner 6": {
+     "Owner 7": "9-5",
+     "Owner 9": "6-8",
+     "Owner 3": "6-8",
+     "Owner 11": "7-7",
+     "Owner 4": "8-6",
+     "Owner 2": "9-5",
+     "Owner 1": "6-8",
+     "Owner 12": "7-7",
+     "Owner 8": "9-5",
+     "Owner 13": "8-6",
+     "Owner 5": "8-6",
+     "Owner 6": "6-8"
+    }
+   },
+   "simulated": {
+    "Owner 13": {
+     "playoff": 99.38,
+     "expected": 72.146
+    },
+    "Owner 1": {
+     "playoff": 90.795,
+     "expected": 62.428
+    },
+    "Owner 5": {
+     "playoff": 89.46,
+     "expected": 60.184
+    },
+    "Owner 8": {
+     "playoff": 82.045,
+     "expected": 57.413
+    },
+    "Owner 12": {
+     "playoff": 70.805,
+     "expected": 54.516
+    },
+    "Owner 6": {
+     "playoff": 67.215,
+     "expected": 53.801
+    },
+    "Owner 3": {
+     "playoff": 55.31,
+     "expected": 52.586
+    },
+    "Owner 9": {
+     "playoff": 16.99,
+     "expected": 42.534
+    },
+    "Owner 4": {
+     "playoff": 16.605,
+     "expected": 42.862
+    },
+    "Owner 2": {
+     "playoff": 7.835,
+     "expected": 39.096
+    },
+    "Owner 7": {
+     "playoff": 3.095,
+     "expected": 33.755
+    },
+    "Owner 11": {
+     "playoff": 0.465,
+     "expected": 28.679
+    }
+   }
+  }
+ ]
+}

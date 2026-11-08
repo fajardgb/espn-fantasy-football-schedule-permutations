@@ -167,6 +167,22 @@ async function copyEnv() {
   setTimeout(() => { copied.textContent = ''; }, 6000);
 }
 
+// ------------------------------------------------------------------- report
+
+function openReport() {
+  const { leagueId, year } = inputs();
+  const error = validateInputs({ leagueId, year });
+  if (error) {
+    $('input-error').textContent = error;
+    $('input-error').hidden = false;
+    $(/^\d+$/.test(leagueId) ? 'year' : 'league-id').focus();
+    return;
+  }
+  const query = new URLSearchParams({ league: leagueId, year });
+  chrome.tabs.create({ url: chrome.runtime.getURL(`report.html?${query}`) });
+  window.close();
+}
+
 // --------------------------------------------------------------------- start
 
 async function init() {
@@ -195,6 +211,7 @@ async function init() {
   renderCookies();
   $('reveal').addEventListener('click', () => { state.revealed = !state.revealed; renderCookies(); });
   $('copy-env').addEventListener('click', copyEnv);
+  $('build-report').addEventListener('click', openReport);
   for (const id of ['league-id', 'year']) $(id).addEventListener('input', scheduleCheck);
   checkLeague();
 }

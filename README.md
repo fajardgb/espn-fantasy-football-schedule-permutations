@@ -48,7 +48,24 @@ Teams on the dashed diagonal got exactly the record their scores earned. Teams a
 In the example league, Owner 6's scores were good enough to win about 54% of the time across all simulated schedules, yet they finished 6-8 (43%). That's a luck index of −11, the unluckiest team in the league. At the other end, Owner 1 went 10-4 (71%) with scores that earned about 62%, a luck index of +9.
 
 
-# Installation
+# Two ways to use it
+
+| | **Chrome extension** (easiest) | **Python tool** |
+|---|---|---|
+| Install | Add the extension to Chrome (about a minute) | Install uv, download the project, set up a `.env` file |
+| Run | Open your league on ESPN, click **Build report** | `uv run python run_all.py` |
+| You get | The interactive report, with a button to download it as a shareable file | The same report, plus PNG plots and CSV files |
+
+## Chrome extension
+1. Download this project: click the green **Code** button on the [GitHub page](https://github.com/fajardgb/espn-fantasy-football-schedule-permutations) → **Download ZIP**, and unzip it.
+2. In Chrome, go to `chrome://extensions`, turn on **Developer mode** (top right), click **Load unpacked**, and choose the `chrome_extension` folder inside the project.
+3. Log in to ESPN, open your league on [fantasy.espn.com](https://fantasy.espn.com/football/), click the extension's icon (pin it from the puzzle-piece menu), and click **Build report**.
+
+Everything runs in your browser, and your ESPN login never leaves it. See the [extension's README](./chrome_extension/README.md) for details.
+
+The rest of this page covers the Python tool.
+
+# Installation (Python tool)
 ## Before you start
 You'll need:
 - **uv**, a tool that installs Python and everything this project needs in one step. Install it by following the one-line instructions at [docs.astral.sh/uv](https://docs.astral.sh/uv/getting-started/installation/). uv downloads the right Python version (3.14) automatically, so you don't need to install Python yourself.
@@ -86,7 +103,7 @@ cp .env_example .env
 ```
 (On Windows PowerShell: `Copy-Item .env_example .env`.) Files starting with a dot can be hidden. On a Mac, press `Cmd + Shift + .` in Finder to show them.
 
-> **Shortcut: use the Chrome extension.** The [Schedule Luck setup extension](./chrome_extension/) finds all four values for you. Open your league on ESPN, click the extension, click **Copy as .env**, and paste the result into `.env`. Installing it takes about a minute (see [its instructions](./chrome_extension/README.md)). If you use it, you can skip Steps 1 and 2 below.
+> **Shortcut: use the Chrome extension.** The [Chrome extension](./chrome_extension/) finds all four values for you. Open your league on ESPN, click the extension, click **Copy as .env**, and paste the result into `.env`. Installing it takes about a minute (see [its instructions](./chrome_extension/README.md)). If you use it, you can skip Steps 1 and 2 below.
 
 To fill it in by hand, open `.env` in any text editor and fill in the four values below. When you're done it should look like this (with your own values):
 ```
@@ -123,7 +140,7 @@ These two values are "cookies": small pieces of text your browser stores to reme
 4. Clear the filter, type `SWID`, and copy its value the same way. That's your **SWID**. It looks like `{1A2B3C4D-...}`. Copy it exactly as shown, including the curly braces if there are any.
 5. Paste each value into `.env` right after the `=` sign, with no spaces or quotes.
 
-> **Keep these private.** Your `ESPN_S2` and `SWID` act like a password: anyone who has them can use your ESPN account. Don't share your `.env` file or post the values anywhere. (`.env` is already excluded from git.)
+> **Keep these private.** Your `ESPN_S2` and `SWID` act like a password: anyone who has them can use your ESPN account. Don't share your `.env` file or post the values anywhere, including when asking for help (`ESPN_S2=...` is enough). If they've been shared by accident, log out of ESPN and back in to get new ones. (`.env` is already excluded from git.)
 
 ### Troubleshooting
 The scripts explain what went wrong in plain language. The most common problems:
@@ -181,6 +198,7 @@ The Chrome extension has its own tests, which need [Node.js](https://nodejs.org/
 ```
 cd chrome_extension && npm test
 ```
+The extension runs a JavaScript copy of the simulation, which is tested against reference results from the Python code. If you change the Python logic, regenerate them with `uv run python chrome_extension/tests/make_golden.py` (a Python test fails until you do).
 
 ## Outputs
 Everything is written to `output/league<LEAGUE_ID>_year<YEAR>/`:

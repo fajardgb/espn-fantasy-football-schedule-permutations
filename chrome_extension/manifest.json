@@ -1,11 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "Fantasy Schedule Luck: League Setup",
+  "name": "Fantasy Schedule Luck",
   "short_name": "Schedule Luck",
-  "version": "0.1.0",
-  "description": "Finds your ESPN fantasy football league ID, season and login cookies, and copies them as a .env file for the schedule-luck tool.",
+  "version": "0.2.0",
+  "description": "See how much schedule luck shaped your ESPN fantasy football season: playoff odds, luck, and what-if schedules, built right in your browser.",
   "action": {
-    "default_title": "Set up schedule luck for this league",
+    "default_title": "Build a schedule luck report for this league",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",
@@ -19,6 +19,11 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "permissions": ["cookies", "activeTab"],
-  "host_permissions": ["https://*.espn.com/*"]
+  "permissions": [
+    "cookies",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://*.espn.com/*"
+  ]
 }
