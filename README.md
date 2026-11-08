@@ -1,15 +1,17 @@
 # ESPN Fantasy Football playoff probability analysis
 
-In my 2025 fantasy football season, I experienced a frustrating outcome: despite scoring the 2nd highest points in a 12-team league, I failed to make the playoffs (top-6 team advance). This result (shown below) prompted me to ask: How unlucky was I, really? 
+In my 2025 fantasy football season, I scored the 2nd-most points in my 12-team league and still missed the playoffs. That raised a question: how unlucky was I, really? This project answers it for any ESPN league.
 
-![output_example](./output_example/league12345_year2025/league12345_year2025_playoff_probabilities.png)
+Here's an example from an anonymized 12-team league, where 6 teams make the playoffs. **Owner 6** scored the 5th-most points but went 6-8 and missed the playoffs. Replaying the same weekly scores against 10,000 random schedules, Owner 6 makes the playoffs 68% of the time. Owner 3 *did* make it at 7-7, despite scoring about 100 fewer points.
+
+![playoff_probabilities](./output_example/leaguedemo_year2025/leaguedemo_year2025_playoff_probabilities.png)
 
 ## Understanding schedule luck
 Fantasy football has inherent randomness. Your record doesn't just depend on how well your team performs - it also depends on when you face each opponent. You could have a great week but lose to the one person who had an even better week. Conversely, you could squeak by with a mediocre score because you happened to face the lowest-scoring team that week.
 
 ## The simulation approach
 
-To quantify exactly how unlucky my season was, I created a Monte Carlo simulation that:
+To quantify how lucky or unlucky each team's season was, the project runs a Monte Carlo simulation that:
 
 1. Preserves actual performance: Uses the real weekly scores each team achieved throughout the season
 2. Randomizes matchups: Generates thousands of alternative schedules by randomly reassigning teams to the slots of the league's real schedule, so every simulated season keeps the league's actual format (division games, repeat matchups, byes)
@@ -23,19 +25,19 @@ The league's format and rules are read from ESPN, so the simulation adapts to:
 
 - **Any league size, odd or even:** in odd leagues one team has a bye each week. Byes don't count as games, so they don't affect win percentage.
 - **Divisions:** teams are reassigned to schedule slots completely at random, so a team can land in either division. Being placed in a tough or weak division is treated as part of the luck being measured.
-- **Playoff rules:** the number of playoff teams comes from the league settings. Each division winner gets a spot, then the remaining spots go to the best records in the league. Teams are ranked by win percentage, with total points scored as the tiebreaker. This matches the playoff seeds ESPN assigns.
+- **Playoff rules:** the number of playoff teams comes from the league settings. Each division winner gets a spot, then the remaining spots go to the best records in the league. Teams are ranked by win percentage, with ties broken by the league's tiebreaker (total points scored, or head-to-head record). This matches the playoff seeds ESPN assigns.
 - **Ties:** equal weekly scores count as a tie (half a win) for both teams.
 - **Seasons in progress:** only completed weeks are simulated, and playoff weeks are never counted as regular-season games.
 
 If the schedule and settings files are missing (for example, data fetched with an older version of this tool), the simulation falls back to random round-robin schedules with no divisions and 6 playoff teams.
 
-Not yet modeled: playoff tiebreakers other than total points scored, and matchup tie rules other than allowing ties. The simulation prints a warning if a league uses one.
+Not yet modeled: playoff tiebreakers other than total points and head-to-head, and matchup tie rules other than allowing ties. If a league uses one, the simulation falls back to total points and allowing ties, and the report shows a note saying so.
 
 ## Measuring luck
 
-Playoff odds show *what* the schedule cost me, but not *how much* luck was involved. To measure that directly, the simulation also produces a luck scatterplot:
+Playoff odds show *what* the schedule cost a team, but not *how much* luck was involved. To measure that directly, the simulation also produces a luck scatterplot:
 
-![luck_scatterplot](./output_example/league12345_year2025/league12345_year2025_luck_scatterplot.png)
+![luck_scatterplot](./output_example/leaguedemo_year2025/leaguedemo_year2025_luck_scatterplot.png)
 
 - **Expected Win % (x-axis):** a team's average win percentage across all simulated schedules (ties count as half a win)
 - **Actual Win % (y-axis):** the team's real record (ties count as half a win)
@@ -43,7 +45,7 @@ Playoff odds show *what* the schedule cost me, but not *how much* luck was invol
 
 Teams on the dashed diagonal got exactly the record their scores earned. Teams above it (top-left, **lucky**) won more games than their scores deserved; teams below it (bottom-right, **unlucky**) won fewer.
 
-In my case, my scores were good enough to win about 60% of the time across all possible schedules, yet I finished 5-9 (36%). That's a luck index of −24, the unluckiest team in the league.
+In the example league, Owner 6's scores were good enough to win about 54% of the time across all simulated schedules, yet they finished 6-8 (43%). That's a luck index of −11, the unluckiest team in the league. At the other end, Owner 1 went 10-4 (71%) with scores that earned about 62%, a luck index of +9.
 
 
 # Installation
@@ -205,4 +207,4 @@ The results CSV contains these columns:
 
 Example outputs:
 - [`output_example/leaguedemo_year2025/`](./output_example/leaguedemo_year2025/): a complete set of outputs (report, plots, and data files) built from an anonymized real league.
-- [`output_example/league12345_year2025/`](./output_example/league12345_year2025/): the plots from my 2025 season shown at the top of this page. They were made before schedule and settings files existed, so they use random round-robin schedules without divisions.
+- [`output_example/league12345_year2025/`](./output_example/league12345_year2025/): the plots from my own 2025 season. They were made before schedule and settings files existed, so they use random round-robin schedules without divisions.
