@@ -446,8 +446,12 @@ footer { margin-top: 28px; color: var(--text-muted); font-size: 13px; text-align
       }],
       layout: baseLayout(t, {
         width, height, annotations,
-        margin: { l: 10, r: 10, t: 10, b: horizontalBar ? (width < 640 ? 100 : 64) : 10 },
+        // Tilted column labels lean right: leave room so the last one isn't cut off
+        // (the all-teams view's colorbar already leaves room on the right)
+        margin: { l: 10, r: !transpose && horizontalBar ? 110 : 10, t: 10,
+                  b: horizontalBar ? (width < 640 ? 100 : 64) : 10 },
         xaxis: axis(t, { title: transpose ? undefined : scheduleTitle, side: 'top', tickangle: transpose ? 0 : -40,
+                         ticklabeloverflow: 'allow',
                          showgrid: false, tickvals: [...Array(nc).keys()], ticktext: xLabels }),
         yaxis: axis(t, { title: transpose ? scheduleTitle : undefined, autorange: 'reversed', showgrid: false,
                          ticksuffix: '  ', tickvals: [...Array(nr).keys()], ticktext: yLabels }),

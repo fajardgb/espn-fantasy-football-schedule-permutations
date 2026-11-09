@@ -36,10 +36,12 @@ If the season isn't in the page address, the extension picks the most recent sea
 **Using the Python tool instead?** The popup's **Copy as .env** button copies your league details and login values in the format the Python tool's `.env` file needs.
 
 ## Privacy and permissions
+Full details are in the [privacy policy](../PRIVACY.md).
+
 - **Your ESPN login never leaves your browser.** The extension has no server and collects nothing. It uses your login only to ask ESPN for your league's data, exactly as your browser does when you view your league.
 - **Downloaded reports (PDF or web page) don't include your login.** They contain team names, records and scores, the same things anyone in your league can see.
 - Chrome describes the permissions as:
-  - **"Read and change your data on espn.com"**: needed to use your ESPN login and download your league. The extension doesn't change anything on ESPN.
+  - **"Read and change your data on fantasy.espn.com and lm-api-reads.fantasy.espn.com"**: needed to use your ESPN login and download your league from ESPN's fantasy service. The extension has no access to the rest of espn.com or any other site, and it doesn't change anything on ESPN.
   - Reading the current tab's address only happens when you click the extension (the `activeTab` permission), so it can't see your browsing otherwise.
 
 Treat what **Copy as .env** copies like a password: anyone with your `ESPN_S2` and `SWID` can use your ESPN account. Don't paste them anywhere public, including when asking for help.

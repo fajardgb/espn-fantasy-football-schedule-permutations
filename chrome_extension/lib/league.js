@@ -3,7 +3,10 @@
  * Pure functions only: no chrome.* or DOM access, so they run under `node --test`.
  */
 
-/** Any espn.com page works for reading the login cookies (they're set on .espn.com). */
+/**
+ * Where the login cookies are read from. They're set on .espn.com, so they apply
+ * here, and the extension only has access to fantasy.espn.com (see manifest.json).
+ */
 export const ESPN_COOKIE_URL = 'https://fantasy.espn.com/';
 export const ESPN_FANTASY_FOOTBALL_URL = 'https://fantasy.espn.com/football/';
 export const COOKIE_NAMES = { espnS2: 'espn_s2', swid: 'SWID' };

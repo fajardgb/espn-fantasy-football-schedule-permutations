@@ -1,9 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Fantasy Schedule Luck",
-  "short_name": "Schedule Luck",
-  "version": "0.2.0",
-  "description": "See how much schedule luck shaped your ESPN fantasy football season: playoff odds, luck, and what-if schedules, built right in your browser.",
+  "version": "0.2.2",
+  "description": "See how much schedule luck shaped your ESPN fantasy football season: playoff odds, luck and what-if schedules.",
   "action": {
     "default_title": "Build a schedule luck report for this league",
     "default_popup": "popup.html",
@@ -24,6 +23,7 @@
     "activeTab"
   ],
   "host_permissions": [
-    "https://*.espn.com/*"
+    "https://fantasy.espn.com/*",
+    "https://lm-api-reads.fantasy.espn.com/*"
   ]
 }
