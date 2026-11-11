@@ -192,3 +192,10 @@ def test_report_data_has_every_week(league):
     assert len(last['results']) == 12
     assert len(last['seeds']) == 12 and all(len(r) == 12 for r in last['seeds'].values())
     assert len(last['swap']['wins']) == 12
+
+
+def test_report_data_describes_league_format(league):
+    scores, structure = league
+    data = build_report_data(scores, structure, num_schedules=100)
+    assert data['league']['seeding_rule'] == structure['seeding_rule']
+    assert data['league']['real_schedule'] is True

@@ -310,6 +310,8 @@ export async function buildReportData(league, { numSchedules = 100000, seed = 42
       num_schedules: numSchedules,
       weeks_played: total,
       divisions: league.divisions,
+      seeding_rule: league.seedingRule,
+      real_schedule: true,
       notes: league.notes,
       grid: gridShape(league.teams.length),
       ...meta,

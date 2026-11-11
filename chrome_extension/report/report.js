@@ -13,6 +13,10 @@
 (function () {
   'use strict';
 
+  /** How a swapped schedule handles the week it would play itself. */
+  const SWAP_SELF_NOTE = 'When a team borrows another team’s schedule, the week that schedule faced the team itself '
+    + 'becomes a game against the schedule’s owner instead (the two teams simply trade places that week).';
+
   const REPORT_MARKUP = `
 <main>
   <header>
@@ -29,9 +33,16 @@
   <div class="notes" id="notes" hidden></div>
 
   <section>
+    <h2>Where each team finishes</h2>
+    <p>Share of simulations ending at each seed. Blue bars are playoff seeds; gray bars miss the playoffs.</p>
+    <div class="chart" id="chart-seeds"></div>
+  </section>
+
+  <section>
     <h2>Playoff odds</h2>
     <p>How often each team makes the playoffs if the same weekly scores are replayed against
-      thousands of random schedules with the league's real format.</p>
+      thousands of random schedules with the league's real format:</p>
+    <ul class="format" id="format"></ul>
     <div class="chart" id="chart-playoff"></div>
   </section>
 
@@ -49,6 +60,7 @@
       It shows how much a record came down to who you happened to play each week. Pick a team
       to see its record with each schedule, or show all teams at once (each row is a team, and
       the bold diagonal is each team's real record).</p>
+    <p class="fine">${SWAP_SELF_NOTE}</p>
     <div class="swap-controls">
       <label class="swap-team" id="swap-team-label">Team
         <select id="swap-team"></select>
@@ -62,14 +74,11 @@
   </section>
 
   <section>
-    <h2>Where each team finishes</h2>
-    <p>Share of simulations ending at each seed. Blue bars are playoff seeds; gray bars miss the playoffs.</p>
-    <div class="chart" id="chart-seeds"></div>
-  </section>
-
-  <section>
     <details>
       <summary>Table view</summary>
+      <div class="table-actions">
+        <button type="button" class="small-button" id="download-csv">Download CSV</button>
+      </div>
       <div class="table-wrap"><table id="table"></table></div>
     </details>
   </section>
@@ -391,9 +400,42 @@
     };
   }
 
+  /**
+   * The league's format as the simulation models it, as short phrases:
+   * playoff spots, division winners, tiebreaker and how schedules are made.
+   */
+  function formatDescription(L) {
+    const lines = [`${L.n_playoff_teams} of ${L.n_teams} teams make the playoffs`];
+    if (L.divisions.length) {
+      lines.push(`Division winners (${L.divisions.join(', ')}) get the top seeds`);
+    }
+    const rule = String(L.seeding_rule || '').toUpperCase();
+    lines.push(rule.includes('H2H') || rule.includes('HEAD')
+      ? 'Tied records are broken by head-to-head record, then total points'
+      : 'Tied records are broken by total points scored');
+    if (L.real_schedule === false) {
+      lines.push('Schedules are random round-robins (the real schedule wasn’t available)');
+    } else {
+      lines.push('Each simulated schedule keeps the real season’s pattern of weekly matchups'
+        + (L.divisions.length ? ', including division games,' : '')
+        + ' with the teams shuffled into different spots');
+    }
+    return lines;
+  }
+
+  const TABLE_HEADER = ['Team', 'Record', 'Points for', 'Actual win %', 'Expected win %', 'Luck (pts)', 'Playoff %'];
+
+  /** One week's table as CSV text (numbers unformatted, so spreadsheets can use them). */
+  function tableCsv(w) {
+    const cell = (v) => (/[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v));
+    const rows = w.results.map((r) => [r.team, r.record, r.points_for, r.actual, r.expected, r.luck, r.playoff]);
+    return [TABLE_HEADER, ...rows].map((row) => row.map(cell).join(',')).join('\r\n') + '\r\n';
+  }
+
   // Expose the figures so the extension can draw the same charts into a PDF
   window.ReportFigures = {
     LIGHT_THEME, playoffFigure, luckFigure, swapOneFigure, swapAllFigure, seedsFigure, tableFigure,
+    formatDescription, tableCsv, SWAP_SELF_NOTE,
   };
 
   // ------------------------------------------------------------- the page
@@ -420,6 +462,7 @@
     parts.push(`${L.num_schedules.toLocaleString()} simulated schedules per week`);
     $('subtitle').textContent = parts.join(' · ');
     $('footer').textContent = `Generated ${L.generated} · ESPN fantasy football schedule permutations`;
+    $('format').innerHTML = formatDescription(L).map((line) => `<li>${esc(line)}</li>`).join('');
     if (L.notes.length) {
       $('notes').innerHTML = L.notes.map((n) => `<p>${esc(n)}</p>`).join('');
       $('notes').hidden = false;
@@ -520,8 +563,21 @@
       }
     }
 
+    $('download-csv').addEventListener('click', () => {
+      const w = DATA.weeks[current];
+      // Byte order mark: lets Excel read team names with accents or emoji
+      const blob = new Blob(['\uFEFF' + tableCsv(w)], { type: 'text/csv;charset=utf-8' });
+      const name = [L.id ? `league${L.id}` : 'league', L.year ? `year${L.year}` : null, `through_week${w.week}`]
+        .filter(Boolean).join('_');
+      const link = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: `${name}.csv` });
+      document.body.append(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+    });
+
     function drawTable(w) {
-      const head = ['Team', 'Record', 'Points for', 'Actual win %', 'Expected win %', 'Luck (pts)', 'Playoff %'];
+      const head = TABLE_HEADER;
       const body = w.results.map((r) => `<tr><td>${esc(r.team)}</td><td>${r.record}</td>` +
         `<td>${r.points_for.toFixed(1)}</td><td>${fmtPct(r.actual)}</td><td>${fmtPct(r.expected)}</td>` +
         `<td>${fmtLuck(r.luck)}</td><td>${fmtPct(r.playoff)}</td></tr>`).join('');
@@ -533,12 +589,12 @@
       $('week-label').textContent = `${w.week} of ${L.weeks_played}`;
       paintWeeks();
       const t = theme();
-      draw('chart-playoff', playoffFigure(w, t, { width: widthOf('chart-playoff') }));
-      draw('chart-luck', luckFigure(w, t, { width: widthOf('chart-luck') }));
-      drawSwap(w, t);
       draw('chart-seeds', seedsFigure(w, t, {
         width: widthOf('chart-seeds'), nPlayoffTeams: L.n_playoff_teams, nTeams: L.n_teams, gridCols: L.grid.cols,
       }));
+      draw('chart-playoff', playoffFigure(w, t, { width: widthOf('chart-playoff') }));
+      draw('chart-luck', luckFigure(w, t, { width: widthOf('chart-luck') }));
+      drawSwap(w, t);
       drawTable(w);
     }
 

@@ -143,3 +143,15 @@ footer { margin-top: 28px; color: var(--text-muted); font-size: 13px; text-align
 }
 .toggle button[aria-pressed="true"] { background: var(--surface-1); color: var(--text-primary); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.12); }
 .toggle button:focus-visible, .swap-team select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* League format list under "Playoff odds", fine print, and the table's CSV button */
+.format { margin: 0 0 12px; padding-left: 20px; color: var(--text-secondary); }
+.format li { margin: 2px 0; }
+.fine { font-size: 0.9em; color: var(--text-muted); }
+.table-actions { margin-top: 12px; }
+.small-button {
+  font: inherit; font-size: 0.9em; padding: 6px 12px; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--grid); background: var(--surface-1); color: var(--text-primary);
+}
+.small-button:hover { border-color: var(--accent); }
+.small-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }

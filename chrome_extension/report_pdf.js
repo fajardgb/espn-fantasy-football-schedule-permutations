@@ -100,22 +100,24 @@ async function sections(data) {
     { text: ' ', size: 8, gapAfter: 8 },
   ]);
 
+  const seedsGroup = [heading('Where each team finishes', 'Share of simulations ending at each seed. Blue bars are playoff seeds; gray bars miss the playoffs.'),
+    await chartImage(F.seedsFigure(w, t, { width, nPlayoffTeams: L.n_playoff_teams, nTeams: L.n_teams, gridCols: L.grid.cols }))];
+  // One sentence in the PDF: "6 of 12 teams make the playoffs; division winners ..."
+  const format = F.formatDescription(L).map((s, i) => (i ? s[0].toLowerCase() + s.slice(1) : s)).join('; ');
   const groups = [
-    [header,
-     heading('Playoff odds', 'How often each team makes the playoffs if the same weekly scores are replayed against thousands of random schedules with the league’s real format.'),
+    [header, ...seedsGroup],
+    [heading('Playoff odds', `How often each team makes the playoffs if the same weekly scores are replayed against thousands of random schedules with the league’s real format: ${format}.`),
      await chartImage(F.playoffFigure(w, t, { width }))],
     [heading('Schedule luck', 'Expected win % is the average record across all simulated schedules. Teams above the dashed line won more than their scores earned (lucky); teams below won fewer (unlucky). Color shows the luck index: actual minus expected win %, in percentage points.'),
      await chartImage(F.luckFigure(w, t, { width }))],
   ];
   if (w.swap) {
     groups.push([
-      heading('What if you had their schedule?', 'Each team’s real weekly scores, replayed against every other team’s actual schedule. Each row is a team; each column is whose schedule it plays. Blue cells are more wins than the team’s real record, red cells fewer, gray the same. The bold diagonal is each team’s real record.'),
+      heading('What if you had their schedule?', `Each team’s real weekly scores, replayed against every other team’s actual schedule. Each row is a team; each column is whose schedule it plays. Blue cells are more wins than the team’s real record, red cells fewer, gray the same. The bold diagonal is each team’s real record. ${F.SWAP_SELF_NOTE}`),
       await chartImage(F.swapAllFigure(w, t, { width, order })),
     ]);
   }
   groups.push(
-    [heading('Where each team finishes', 'Share of simulations ending at each seed. Blue bars are playoff seeds; gray bars miss the playoffs.'),
-     await chartImage(F.seedsFigure(w, t, { width, nPlayoffTeams: L.n_playoff_teams, nTeams: L.n_teams, gridCols: L.grid.cols }))],
     [heading('The numbers', 'Luck is actual minus expected win %, in percentage points.'),
      await chartImage(F.tableFigure(w, t, { width, fontSize: 16, rowHeight: 34 }))],
   );
